@@ -138,3 +138,68 @@ Browser DevTools: window.__errorBus (DEV mode only)
 - Preserves original Error objects and stack traces
 - Automatic deduplication prevents error spam
 - Global handlers don't preventDefault (errors reach DevTools)
+
+---
+
+# BRICK-103-StateBus Documentation
+
+## One Line
+Thin coordination layer for shared reactive state between bricks using Svelte 5's $state rune.
+
+## Integration
+```typescript
+import { stateBus } from '$lib/buses';
+const counterState = stateBus.getState('app:counter');
+counterState.value = 42;
+$effect(() => console.log(counterState.value));
+```
+
+## Removal (Rule 5)
+
+1. Delete apps/web/src/lib/buses/StateBus/ folder
+2. Remove stateBus.svelte.ts and exports from apps/web/src/lib/buses/index.ts
+
+Result: Bricks can no longer share state easily. Each brick must manage its own state. Cross-brick coordination becomes difficult.
+
+## Events
+
+Publishes:
+- None - StateBus is reactive storage only, not an event system
+
+Subscribes to:
+- None - Uses Svelte's reactivity, not events
+
+## Config
+
+None - StateBus has no configuration file. All behavior is code-driven.
+
+## Dependencies
+
+- None
+
+## API
+
+```typescript
+stateBus.get(key): T | undefined           // Get current value
+stateBus.set(key, value): void            // Set value
+stateBus.getState(key): StateAccessor<T>  // Get reactive accessor
+stateBus.update(key, fn): void            // Update with function
+stateBus.getOrCreate(key, default): T     // Get or init with default
+stateBus.has(key): boolean                 // Check if exists
+stateBus.delete(key): void                 // Delete state
+stateBus.keys(): string[]                  // List all keys
+```
+
+## Testing
+
+npm test -- StateBus
+Browser DevTools: window.__stateBus (DEV mode only)
+
+## Notes
+
+- NOT a global state manager - only for shared state between bricks
+- Each brick should use $state for internal state
+- Lazy initialization - states created on first access
+- Type-safe via TypeScript module augmentation
+- No persistence - that's a separate brick's responsibility
+- No computed states - use Svelte's $derived
