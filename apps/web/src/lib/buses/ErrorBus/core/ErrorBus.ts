@@ -105,6 +105,9 @@ export class ErrorBus {
      * Attach global error handlers to capture uncaught errors
      */
     private attachGlobalHandlers(): void {
+        // Check if window exists (not in SSR)
+        if (typeof window === 'undefined') return;
+        
         if (this.globalHandlersAttached) return;
         
         // Only attach if configured to do so
@@ -146,6 +149,9 @@ export class ErrorBus {
      * Detach global error handlers (useful for testing)
      */
     detachGlobalHandlers(): void {
+        // Check if window exists (not in SSR)
+        if (typeof window === 'undefined') return;
+        
         if (!this.globalHandlersAttached) return;
         
         // Note: We can't actually remove the event listeners we added
