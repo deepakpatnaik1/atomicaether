@@ -1,0 +1,22 @@
+{
+  "name": "atomicaether",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "concurrently --kill-others \"npm run dev:api\" \"npm run dev:web\"",
+    "dev": "npm run start",
+    "dev:web": "npm run dev -w web",
+    "dev:api": "npm run dev -w api",
+    "build": "npm run build --workspaces --if-present",
+    "build:shared": "npm run build -w @atomicaether/shared",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "concurrently": "^9.2.0"
+  }
+}
