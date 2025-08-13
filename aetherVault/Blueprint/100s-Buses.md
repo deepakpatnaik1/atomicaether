@@ -67,3 +67,74 @@ Browser DevTools: window.__eventBus (DEV mode only)
 - Frontend-only by design (backend uses Hono middleware)
 - Uses native EventTarget - DevTools compatible
 - Type-safe via TypeScript generics and module augmentation
+
+---
+
+# BRICK-102-ErrorBus Documentation
+
+## One Line
+Facade over EventBus providing error-specific convenience methods, deduplication, and global error capture.
+
+## Integration
+```typescript
+import { errorBus } from '$lib/buses';
+errorBus.reportRecoverable(error, 'BrickName');
+errorBus.reportFatal(error, 'BrickName');
+errorBus.subscribe(handler);
+```
+
+## Removal (Rule 5)
+
+1. Delete apps/web/src/lib/buses/ErrorBus/ folder
+2. Remove errorBus.svelte.ts and exports from apps/web/src/lib/buses/index.ts
+3. Delete aetherVault/config/errorBus.json
+
+Result: App continues working, errors can still be published via eventBus.publish('error', context). Lose deduplication and global capture.
+
+## Events
+
+Publishes:
+- error - All errors flow through this event, payload: ErrorContext
+
+Subscribes to:
+- None - ErrorBus only publishes
+
+## Config
+
+aetherVault/config/errorBus.json
+```json
+{
+    "captureGlobalErrors": true,        // Catch window.onerror
+    "captureUnhandledRejections": true, // Catch promise rejections  
+    "logToConsole": true,               // Log to console
+    "deduplication": {
+        "enabled": true,                // Prevent error spam
+        "windowMs": 100                 // Time window
+    }
+}
+```
+
+## Dependencies
+
+- EventBus (uses it for transport)
+
+## API
+
+```typescript
+errorBus.report(error, source, recoverable?, metadata?): void
+errorBus.reportRecoverable(error, source, metadata?): void
+errorBus.reportFatal(error, source, metadata?): void
+errorBus.subscribe(handler): () => void  // Returns unsubscribe
+```
+
+## Testing
+
+npm test -- ErrorBus
+Browser DevTools: window.__errorBus (DEV mode only)
+
+## Notes
+
+- Facade pattern - uses EventBus underneath
+- Preserves original Error objects and stack traces
+- Automatic deduplication prevents error spam
+- Global handlers don't preventDefault (errors reach DevTools)

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from 'svelte';
-    import { eventBus } from '$lib/buses';
+    import { eventBus, errorBus } from '$lib/buses';
     
     // Example: Simple counter that broadcasts its changes
     let count = $state(0);
@@ -52,28 +52,76 @@
         });
     }
     
-    function triggerError() {
-        // Example of error handling via EventBus
-        eventBus.publish('error', {
-            error: new Error('Example error'),
-            source: 'HomePage',
-            recoverable: true
-        });
+    function triggerRecoverableError() {
+        // Example of recoverable error via ErrorBus
+        errorBus.reportRecoverable(
+            new Error('Network timeout - please try again'),
+            'HomePage',
+            { action: 'fetch_data', attempt: 1 }
+        );
+    }
+    
+    function triggerFatalError() {
+        // Example of fatal error via ErrorBus
+        errorBus.reportFatal(
+            new Error('Database connection lost'),
+            'HomePage',
+            { component: 'demo' }
+        );
+    }
+    
+    function triggerDuplicateErrors() {
+        // Test deduplication - only first should go through
+        const error = new Error('Duplicate error test');
+        for (let i = 0; i < 5; i++) {
+            errorBus.report(error, 'HomePage', true);
+        }
+    }
+    
+    function triggerUncaughtError() {
+        // This will be caught by window.onerror
+        setTimeout(() => {
+            throw new Error('Uncaught error from setTimeout');
+        }, 0);
+    }
+    
+    function triggerUnhandledRejection() {
+        // This will be caught by unhandledrejection handler
+        Promise.reject(new Error('Unhandled promise rejection'));
     }
 </script>
 
 <main>
-    <h1>EventBus Demo</h1>
+    <h1>EventBus & ErrorBus Demo</h1>
     
     <section>
-        <h2>Counter Example</h2>
+        <h2>Counter Example (EventBus)</h2>
         <p>Count: {count}</p>
         <button onclick={increment}>
             Increment & Broadcast
         </button>
-        <button onclick={triggerError}>
-            Trigger Error Event
-        </button>
+    </section>
+    
+    <section>
+        <h2>Error Examples (ErrorBus)</h2>
+        <div class="button-grid">
+            <button onclick={triggerRecoverableError} class="recoverable">
+                Recoverable Error
+            </button>
+            <button onclick={triggerFatalError} class="fatal">
+                Fatal Error
+            </button>
+            <button onclick={triggerDuplicateErrors}>
+                Duplicate Errors (×5)
+            </button>
+            <button onclick={triggerUncaughtError} class="uncaught">
+                Uncaught Error
+            </button>
+            <button onclick={triggerUnhandledRejection} class="uncaught">
+                Unhandled Rejection
+            </button>
+        </div>
+        <p class="hint">ErrorBus features: deduplication, global capture, metadata</p>
     </section>
     
     <section>
@@ -91,8 +139,13 @@
     
     <section>
         <h2>Debug Info</h2>
-        <p>Open browser console and type: <code>window.__eventBus</code> (DEV only)</p>
-        <p>Try: <code>window.__eventBus.publish('counter:changed', {'{'} value: 99, timestamp: Date.now() {'}'})</code></p>
+        <p>Open browser console and try:</p>
+        <ul>
+            <li><code>window.__eventBus</code> - Access EventBus</li>
+            <li><code>window.__errorBus</code> - Access ErrorBus</li>
+            <li><code>window.__errorBus.reportFatal(new Error('Test'), 'Console')</code></li>
+            <li><code>throw new Error('Test global capture')</code> - Will be caught by ErrorBus</li>
+        </ul>
     </section>
 </main>
 
@@ -133,6 +186,43 @@
     
     button:hover {
         background: #0051D5;
+    }
+    
+    .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+    
+    button.recoverable {
+        background: #FF9500;
+    }
+    
+    button.recoverable:hover {
+        background: #DB7F00;
+    }
+    
+    button.fatal {
+        background: #FF3B30;
+    }
+    
+    button.fatal:hover {
+        background: #D70015;
+    }
+    
+    button.uncaught {
+        background: #AF52DE;
+    }
+    
+    button.uncaught:hover {
+        background: #8E35BD;
+    }
+    
+    .hint {
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
     }
     
     ul {
