@@ -13,7 +13,9 @@
     "dev:api": "npm run dev -w api",
     "build": "npm run build --workspaces --if-present",
     "build:shared": "npm run build -w @atomicaether/shared",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "demo": "npm run demo -w web",
+    "create-demo": "npm run create-demo -w web"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

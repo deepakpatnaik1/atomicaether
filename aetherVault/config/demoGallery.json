@@ -1,0 +1,44 @@
+{
+  "layout": {
+    "cardsPerRow": "auto-fill",
+    "minCardWidth": "280px",
+    "maxCardWidth": "1fr",
+    "gap": "1rem",
+    "containerMaxWidth": "1400px"
+  },
+  "features": {
+    "showStats": true,
+    "showFilters": true,
+    "showSearch": true,
+    "groupBySeries": true,
+    "showBrokenDemos": false,
+    "showEmptyGroups": false
+  },
+  "styling": {
+    "cardStyle": "elevated",
+    "animations": true,
+    "hoverEffects": true,
+    "seriesColors": {
+      "000s": "#6b7280",
+      "100s": "#3b82f6",
+      "200s": "#10b981",
+      "300s": "#f59e0b",
+      "400s": "#8b5cf6",
+      "500s": "#ec4899",
+      "600s": "#14b8a6",
+      "700s": "#f97316",
+      "800s": "#84cc16",
+      "900s": "#06b6d4"
+    }
+  },
+  "routing": {
+    "basePath": "/demo",
+    "galleryPath": "/demo"
+  },
+  "text": {
+    "title": "Demo Gallery",
+    "subtitle": "Interactive demos for all AtomicAether bricks",
+    "emptyState": "No demos found. Create demos in /src/routes/demo/*/",
+    "searchPlaceholder": "Search demos..."
+  }
+}

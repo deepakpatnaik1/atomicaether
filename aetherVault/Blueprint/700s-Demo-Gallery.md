@@ -83,6 +83,99 @@ http://localhost:5173/demo/demo-template
 
 ---
 
+# BRICK-703-DemoGallery Documentation
+
+## One Line
+Beautiful card-based gallery UI for browsing and filtering all discovered demos.
+
+## Integration
+```typescript
+// Use as standalone Svelte component
+import DemoGallery from '$lib/bricks/DemoGallery/core/DemoGallery.svelte';
+
+// In your route
+<DemoGallery />
+```
+
+## Removal (Rule 5)
+
+1. Delete apps/web/src/lib/bricks/DemoGallery/ folder
+2. Remove /demo route that uses DemoGallery
+3. Delete aetherVault/config/demoGallery.json
+
+Result: Individual demos continue working. No gallery UI. Would need alternative navigation method.
+
+## Events
+
+Publishes:
+  - demo:selected - When user clicks a demo card, payload: { demoId: string }
+  - gallery:filtered - When filters change, payload: { filteredCount: number }
+
+Subscribes to:
+  - None currently (will subscribe to demo:registered from DemoRegistry)
+
+## Config
+
+aetherVault/config/demoGallery.json
+```json
+{
+    "layout": {
+        "cardsPerRow": "auto-fill",      // Grid layout
+        "minCardWidth": "280px",          // Minimum card size
+        "gap": "1rem"                     // Space between cards
+    },
+    "features": {
+        "showStats": true,                // Stats bar at top
+        "showFilters": true,              // Filter controls
+        "groupBySeries": true,            // Group demos by series
+        "showBrokenDemos": false          // Hide broken demos
+    },
+    "styling": {
+        "cardStyle": "elevated",          // Card appearance
+        "animations": true,               // Hover effects
+        "seriesColors": {                 // Series color coding
+            "700s": "#f97316"
+        }
+    }
+}
+```
+
+## Dependencies
+
+  - BRICK-701-DemoRegistry - For discovering and fetching demos
+  - Will integrate with EventBus when available
+
+## API
+
+Component props:
+```typescript
+// DemoGallery.svelte accepts no props - fully config-driven
+```
+
+Subcomponents:
+- DemoCard.svelte - Individual demo card
+- FilterBar.svelte - Search and filter controls  
+- StatsBar.svelte - Statistics display
+
+## Testing
+
+```bash
+# Visit the gallery
+http://localhost:5173/demo
+
+# Test filtering, search, responsive layout
+```
+
+## Notes
+
+- Responsive grid layout adapts to screen size
+- Search works across name, description, tags, and proves
+- Cards show status badges with emojis
+- Series are color-coded for visual grouping
+- The gallery itself appears as a demo (meta-recursive)
+
+---
+
 # BRICK-701-DemoRegistry Documentation
 
 ## One Line

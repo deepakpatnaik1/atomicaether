@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "create-demo": "node src/lib/bricks/DemoTemplate/cli/create-demo.js"
+    "create-demo": "node src/lib/bricks/DemoTemplate/cli/create-demo.js",
+    "demo": "vite dev --open /demo"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
