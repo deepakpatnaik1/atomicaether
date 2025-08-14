@@ -1,0 +1,23 @@
+{
+  "scanPaths": [
+    "/src/routes/demo/*/+page.svelte"
+  ],
+  "metadataPattern": "<!-- demo-meta:",
+  "autoRefresh": true,
+  "sorting": {
+    "default": "series",
+    "options": ["series", "name", "status", "created"]
+  },
+  "grouping": {
+    "enabled": true,
+    "by": "series"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 60000
+  },
+  "validation": {
+    "requireMetadata": true,
+    "requiredFields": ["name", "series", "category", "description", "status"]
+  }
+}
