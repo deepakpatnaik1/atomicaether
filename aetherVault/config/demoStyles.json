@@ -1,0 +1,83 @@
+{
+  "layout": {
+    "containerPadding": "2rem",
+    "containerMaxWidth": "1200px",
+    "containerMinHeight": "100vh",
+    "containerBackground": "white",
+    "sectionGap": "1.5rem"
+  },
+  "section": {
+    "background": "#f9fafb",
+    "borderRadius": "8px",
+    "padding": "1.5rem",
+    "marginBottom": "1.5rem"
+  },
+  "typography": {
+    "h1Size": "2.5rem",
+    "h2Size": "1.25rem",
+    "bodySize": "1rem",
+    "smallSize": "0.875rem",
+    "h1MarginBottom": "0.5rem",
+    "h2MarginBottom": "1rem",
+    "descriptionMarginBottom": "2rem"
+  },
+  "colors": {
+    "primary": "#6366f1",
+    "primaryHover": "#4f46e5",
+    "danger": "#ef4444",
+    "dangerHover": "#dc2626",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "headingText": "#1f2937",
+    "bodyText": "#374151",
+    "mutedText": "#6b7280",
+    "lightText": "#9ca3af",
+    "errorText": "#ef4444",
+    "errorBg": "#fee2e2",
+    "codeBg": "#1f2937",
+    "codeText": "#f3f4f6",
+    "debugBg": "#fef3c7",
+    "white": "white",
+    "stateBg": "white",
+    "stateBorder": "#e5e7eb"
+  },
+  "button": {
+    "padding": "0.5rem 1rem",
+    "borderRadius": "6px",
+    "fontSize": "1rem",
+    "marginRight": "0.5rem",
+    "marginBottom": "0.5rem",
+    "transition": "background 0.2s",
+    "fullWidthPadding": "0.75rem"
+  },
+  "input": {
+    "checkboxSize": "1.25rem"
+  },
+  "state": {
+    "gridMinWidth": "200px",
+    "itemPadding": "0.75rem",
+    "itemBorderRadius": "6px",
+    "itemBorderWidth": "1px",
+    "indicatorSize": "12px",
+    "indicatorMarginRight": "0.5rem"
+  },
+  "output": {
+    "borderRadius": "6px",
+    "padding": "1rem",
+    "maxHeight": "300px",
+    "fontSize": "0.875rem",
+    "lineHeight": "1.5"
+  },
+  "debug": {
+    "marginTop": "1rem",
+    "padding": "1rem",
+    "borderRadius": "6px",
+    "fontSize": "0.875rem"
+  },
+  "actions": {
+    "gap": "0.5rem"
+  },
+  "label": {
+    "gap": "0.5rem"
+  }
+}
