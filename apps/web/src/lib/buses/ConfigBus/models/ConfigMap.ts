@@ -73,4 +73,9 @@ export interface ConfigOptions {
      * Enable hot reload watching (dev only)
      */
     watch?: boolean;
+    
+    /**
+     * Default value to use if config file is missing
+     */
+    default?: any;
 }

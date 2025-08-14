@@ -98,6 +98,23 @@ export class ConfigBus {
                 });
             }
             
+            // Check if a default value was provided
+            if (options.default !== undefined) {
+                // Cache the default value
+                this.cache.set(key, options.default);
+                
+                // Notify that default was used
+                if (this.eventBus) {
+                    this.eventBus.publish('config:loaded', {
+                        key,
+                        config: options.default,
+                        isDefault: true
+                    });
+                }
+                
+                return options.default;
+            }
+            
             throw error;
         }
     }

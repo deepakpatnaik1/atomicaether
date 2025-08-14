@@ -47,6 +47,33 @@ describe('ConfigBus', () => {
     });
     
     describe('Config loading', () => {
+        it('should use default value when config is missing', async () => {
+            const defaultConfig = {
+                name: 'default-config',
+                value: 999,
+                enabled: false
+            };
+            
+            (global.fetch as any).mockResolvedValueOnce({
+                ok: false,
+                statusText: 'Not Found'
+            });
+            
+            const config = await configBus.load('test', { default: defaultConfig });
+            
+            expect(config).toEqual(defaultConfig);
+            expect(configBus.has('test')).toBe(true); // Should be cached
+        });
+        
+        it('should throw error when no default provided for missing config', async () => {
+            (global.fetch as any).mockResolvedValueOnce({
+                ok: false,
+                statusText: 'Not Found'
+            });
+            
+            await expect(configBus.load('test')).rejects.toThrow('Failed to load config');
+        });
+        
         it('should load config from JSON', async () => {
             const mockConfig = {
                 name: 'test-config',
