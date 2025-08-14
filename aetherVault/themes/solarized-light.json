@@ -1,0 +1,46 @@
+{
+  "id": "solarized-light",
+  "name": "Solarized Light",
+  "description": "Light theme based on Solarized color scheme",
+  "colors": {
+    "background": "#FDF6E3",
+    "inputBar": {
+      "background": "rgba(253, 246, 227, 0.95)",
+      "borderTop": "rgba(147, 161, 161, 0.3)",
+      "borderBottom": "rgba(147, 161, 161, 0.1)",
+      "glowColor": "blue",
+      "glowOpacity": 0.3
+    },
+    "text": {
+      "primary": "#657B83",
+      "secondary": "#93A1A1"
+    },
+    "icons": {
+      "color": "#657B83",
+      "opacity": 0.8
+    }
+  },
+  "typography": {
+    "speakerLabel": {
+      "fontSize": 13,
+      "color": "#657B83",
+      "lineHeight": 22
+    },
+    "bodyText": {
+      "fontSize": 13,
+      "color": "#657B83",
+      "lineHeight": 22
+    },
+    "inputText": {
+      "fontSize": 14,
+      "color": "#657B83",
+      "lineHeight": 22
+    }
+  },
+  "sizing": {
+    "icons": {
+      "inputBar": 16,
+      "indicators": 8
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "nord",
+  "name": "Nord",
+  "description": "Arctic, north-bluish color theme",
+  "colors": {
+    "background": "#2E3440",
+    "inputBar": {
+      "background": "rgba(46, 52, 64, 0.9)",
+      "borderTop": "rgba(216, 222, 233, 0.2)",
+      "borderBottom": "rgba(216, 222, 233, 0.1)",
+      "glowColor": "cyan",
+      "glowOpacity": 0.4
+    },
+    "text": {
+      "primary": "#ECEFF4",
+      "secondary": "#D8DEE9"
+    },
+    "icons": {
+      "color": "#88C0D0",
+      "opacity": 0.9
+    }
+  },
+  "typography": {
+    "speakerLabel": {
+      "fontSize": 13,
+      "color": "#ECEFF4",
+      "lineHeight": 22
+    },
+    "bodyText": {
+      "fontSize": 13,
+      "color": "#ECEFF4",
+      "lineHeight": 22
+    },
+    "inputText": {
+      "fontSize": 14,
+      "color": "#ECEFF4",
+      "lineHeight": 22
+    }
+  },
+  "sizing": {
+    "icons": {
+      "inputBar": 16,
+      "indicators": 8
+    }
+  }
+}

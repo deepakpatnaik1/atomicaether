@@ -1,0 +1,46 @@
+{
+  "id": "rainy-night",
+  "name": "Rainy Night",
+  "description": "Dark theme with warm text and subtle glassmorphic effects",
+  "colors": {
+    "background": "#121212",
+    "inputBar": {
+      "background": "rgba(18, 18, 18, 0.85)",
+      "borderTop": "rgba(255, 255, 255, 0.3)",
+      "borderBottom": "rgba(255, 255, 255, 0.1)",
+      "glowColor": "green",
+      "glowOpacity": 0.5
+    },
+    "text": {
+      "primary": "#DFD0B8",
+      "secondary": "#B3B3B3"
+    },
+    "icons": {
+      "color": "#DFD0B8",
+      "opacity": 0.7
+    }
+  },
+  "typography": {
+    "speakerLabel": {
+      "fontSize": 13,
+      "color": "#DFD0B8",
+      "lineHeight": 22
+    },
+    "bodyText": {
+      "fontSize": 13,
+      "color": "#DFD0B8",
+      "lineHeight": 22
+    },
+    "inputText": {
+      "fontSize": 14,
+      "color": "#DFD0B8",
+      "lineHeight": 22
+    }
+  },
+  "sizing": {
+    "icons": {
+      "inputBar": 16,
+      "indicators": 8
+    }
+  }
+}
