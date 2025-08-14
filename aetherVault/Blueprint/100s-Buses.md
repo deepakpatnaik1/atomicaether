@@ -203,3 +203,71 @@ Browser DevTools: window.__stateBus (DEV mode only)
 - Type-safe via TypeScript module augmentation
 - No persistence - that's a separate brick's responsibility
 - No computed states - use Svelte's $derived
+
+---
+
+# BRICK-104-ConfigBus Documentation
+
+## One Line
+Type-safe JSON configuration loader with environment variable substitution and hot reload in development.
+
+## Integration
+```typescript
+import { configBus } from '$lib/buses';
+const config = await configBus.load('app');
+// config is fully typed!
+```
+
+## Removal (Rule 5)
+
+1. Delete apps/web/src/lib/buses/ConfigBus/ folder
+2. Remove configBus.svelte.ts and exports from apps/web/src/lib/buses/index.ts
+3. Remove symlink/static config directory
+
+Result: All configuration becomes hardcoded. No runtime config changes. Loss of hot reload and environment flexibility.
+
+## Events
+
+Publishes:
+- config:loaded - Config successfully loaded
+- config:error - Config load failed
+- config:reloaded - Config hot reloaded (dev only)
+- config:cleared - Cache cleared
+
+Subscribes to:
+- None - ConfigBus only publishes
+
+## Config
+
+None - ConfigBus itself has no config file (it loads them!)
+
+## Dependencies
+
+- EventBus (optional, for notifications)
+
+## API
+
+```typescript
+configBus.load(key, options?): Promise<T>      // Load config
+configBus.get(key): T | undefined              // Get cached
+configBus.has(key): boolean                    // Check if cached
+configBus.reload(key): Promise<T>              // Force reload
+configBus.clear(key): void                     // Clear specific
+configBus.clearAll(): void                     // Clear all
+configBus.keys(): string[]                     // List cached
+configBus.loadMany(keys): Promise<{...}>       // Load multiple
+```
+
+## Testing
+
+npm test -- ConfigBus
+Browser DevTools: window.__configBus (DEV mode only)
+
+## Notes
+
+- Runtime fetch in dev (hot reload) / Build-time bundling in prod
+- Environment variable substitution: ${VAR:-default}
+- All configs in aetherVault/config/*.json
+- Type safety via module augmentation
+- Caching for performance
+- Never put secrets in client configs!
