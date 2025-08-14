@@ -248,7 +248,7 @@ None - ConfigBus itself has no config file (it loads them!)
 ## API
 
 ```typescript
-configBus.load(key, options?): Promise<T>      // Load config
+configBus.load(key, options?): Promise<T>      // Load config (options.default for missing files)
 configBus.get(key): T | undefined              // Get cached
 configBus.has(key): boolean                    // Check if cached
 configBus.reload(key): Promise<T>              // Force reload
@@ -270,4 +270,5 @@ Browser DevTools: window.__configBus (DEV mode only)
 - All configs in aetherVault/config/*.json
 - Type safety via module augmentation
 - Caching for performance
+- Graceful fallback with options.default for missing configs
 - Never put secrets in client configs!
