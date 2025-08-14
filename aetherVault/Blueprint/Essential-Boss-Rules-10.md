@@ -162,26 +162,52 @@ Opens a beautiful gallery with every brick displayed as a card:
 - "Works on my machine"
 - Mysterious integration failures
 
-### The Workflow
+### The Boss-Approved Workflow
+
+**THE STRICT SEQUENCE - NO SHORTCUTS:**
 
 ```bash
-# 1. Implement feature
+# 1. Implement the brick (feature)
 npm run dev
+# Build the brick in isolation
 
-# 2. Create demo immediately
-touch src/routes/demo/my-feature/+page.svelte
+# 2. Create demo IMMEDIATELY
+# Create interactive demo with all public methods
+# Must be real, working demo - not mockup
 
-# 3. Test in demo
-# Fix issues in isolation
+# 3. Boss tests in demo gallery
+npm run demo
+# Boss clicks on the new demo
+# Boss plays with ALL features
+# Boss reports: "All OK" or issues
 
-# 4. Only THEN integrate
-# You know it works!
+# 4. Fix any issues in isolation
+# Still in demo, NOT integrated
 
-# 5. Commit with demo
-git add src/lib/features/MyFeature
-git add src/routes/demo/my-feature
-git commit -m "feat: MyFeature with demo"
+# 5. ONLY AFTER Boss approves demo
+# THEN AND ONLY THEN integrate into main app
+
+# 6. Boss tests in main app
+npm start
+# Boss tests integrated feature
+# Boss confirms it works with other bricks
+
+# 7. Commit with demo
+git add [brick files]
+git add [demo files]
+git commit -m "feat: [BrickName] with demo (Boss approved)"
 ```
+
+**THE IRON RULE**: 
+- **NO integration until Boss approves the demo**
+- **Demo approval ≠ Integration approval**
+- **Both must pass Boss review separately**
+
+This prevents:
+- Broken integrations
+- Cascading failures
+- "But it worked in my demo!"
+- Production surprises
 
 ### Demo-Driven Development Benefits
 

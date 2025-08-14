@@ -1,0 +1,22 @@
+{
+  "outputPath": "src/routes/demo/{name}",
+  "templateSections": {
+    "actions": true,
+    "state": true,
+    "output": true,
+    "debug": true,
+    "reset": true
+  },
+  "defaultMetadata": {
+    "series": "000s",
+    "status": "wip",
+    "category": "uncategorized",
+    "tags": ["demo"],
+    "description": "Interactive demo for {name}"
+  },
+  "styling": {
+    "containerClass": "demo-container",
+    "sectionClass": "demo-section",
+    "buttonClass": "demo-button"
+  }
+}
