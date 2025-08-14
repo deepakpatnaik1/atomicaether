@@ -272,3 +272,64 @@ Browser DevTools: window.__configBus (DEV mode only)
 - Caching for performance
 - Graceful fallback with options.default for missing configs
 - Never put secrets in client configs!
+
+---
+
+# BRICK-105-DiscoveryBus Documentation
+
+## One Line
+Build-time content discovery using Vite's import.meta.glob for themes, personas, and other content.
+
+## Integration
+```typescript
+import { discoveryBus } from '$lib/buses';
+const modules = import.meta.glob('/aetherVault/themes/*.json');
+discoveryBus.register('themes', modules);
+const theme = await discoveryBus.load('themes', 'rainy-night');
+```
+
+## Removal (Rule 5)
+
+1. Delete apps/web/src/lib/buses/DiscoveryBus/ folder
+2. Remove discoveryBus from apps/web/src/lib/buses/index.ts
+3. Each brick uses its own import.meta.glob
+
+Result: Each brick handles its own content discovery. No cascading failures.
+
+## Events
+
+Publishes:
+- None - DiscoveryBus doesn't publish events
+
+Subscribes to:
+- None - DiscoveryBus is independent
+
+## Config
+
+None - DiscoveryBus doesn't use config files
+
+## Dependencies
+
+- None - DiscoveryBus has no dependencies on other buses
+
+## API
+
+```typescript
+discoveryBus.register(type, modules): void     // Register content type
+discoveryBus.list(type): string[]              // List available IDs
+discoveryBus.load<T>(type, id): Promise<T>     // Load content
+discoveryBus.has(type, id): boolean            // Check existence
+discoveryBus.clearCache(type?): void           // Clear cache
+```
+
+## Testing
+
+npx vitest run DiscoveryBus
+
+## Notes
+
+- Content discovered at build time via Vite's import.meta.glob
+- Lazy-loaded only when requested
+- Cached after first load
+- IDs extracted from filenames (e.g., rainy-night.json → rainy-night)
+- Use for themes, personas, providers, commands, etc.

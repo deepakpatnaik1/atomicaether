@@ -1,8 +1,8 @@
 /**
  * Central export for all buses
  * 
- * Following Rule 2 (Four Buses): EventBus, ConfigBus, StateBus, ErrorBus
- * All Four Buses are now implemented!
+ * Following Rule 2 (Five Buses): EventBus, ConfigBus, StateBus, ErrorBus, DiscoveryBus
+ * All Five Buses are now implemented!
  */
 
 // Export the global bus instances
@@ -10,6 +10,7 @@ export { eventBus } from './eventBus.svelte';
 export { errorBus } from './errorBus.svelte';
 export { stateBus } from './stateBus.svelte';
 export { configBus } from './configBus.svelte';
+export { discoveryBus } from './discoveryBus';
 
 // Export EventBus types and utilities
 export { 
@@ -45,3 +46,11 @@ export {
     type ConfigValue,
     type ConfigOptions
 } from './ConfigBus';
+
+// Export DiscoveryBus types
+export {
+    DiscoveryBus,
+    type ModuleMap,
+    type ContentRegistry,
+    type DiscoveryOptions
+} from './DiscoveryBus';
