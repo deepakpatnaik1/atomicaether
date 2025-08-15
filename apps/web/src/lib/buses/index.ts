@@ -13,6 +13,7 @@ export { configBus } from './configBus.svelte';
 export { discoveryBus } from './discoveryBus';
 export { themeRegistry } from './ThemeRegistry';
 export { themeSelector } from './ThemeSelector';
+export { themeApplier } from './ThemeApplier';
 
 // Export EventBus types and utilities
 export { 
@@ -68,3 +69,9 @@ export {
     type ThemeSelection,
     type ThemeChangedEvent
 } from './ThemeSelector';
+
+// Export ThemeApplier types
+export {
+    type CSSPropertyMap,
+    type ThemeApplierConfig
+} from './ThemeApplier';

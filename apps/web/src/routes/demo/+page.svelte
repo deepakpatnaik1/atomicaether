@@ -14,6 +14,12 @@
     <p>Manages theme selection state with StateBus and EventBus integration</p>
     <a href="/demo/brick-602" class="demo-link">View Demo →</a>
   </div>
+
+  <div class="brick-card">
+    <h2>BRICK-603 ThemeApplier</h2>
+    <p>Applies theme properties as CSS custom properties on document root</p>
+    <a href="/demo/brick-603" class="demo-link">View Demo →</a>
+  </div>
 </div>
 
 <nav>
