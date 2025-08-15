@@ -9,35 +9,34 @@
   });
 </script>
 
-<h1>🧱 AtomicAether Demo Gallery</h1>
+<h1>🧪 AtomicAether Playground</h1>
 
-<p>Welcome to the brick demo gallery. Each brick is independently tested here.</p>
+<p>Free-thinking canvas for experiments without Essential Boss Rules constraints.</p>
 
 <div class="gallery">
   <div class="brick-card">
-    <h2>BRICK-601 ThemeRegistry</h2>
-    <p>Discovers and loads theme JSON files using DiscoveryBus</p>
-    <a href="/demo/brick-601" class="demo-link">View Demo →</a>
+    <h2>Canvas 1</h2>
+    <p>Clean experimental space for rapid prototyping</p>
+    <a href="/play/canvas-1" class="demo-link">Experiment →</a>
   </div>
 
   <div class="brick-card">
-    <h2>BRICK-602 ThemeSelector</h2>
-    <p>Manages theme selection state with StateBus and EventBus integration</p>
-    <a href="/demo/brick-602" class="demo-link">View Demo →</a>
+    <h2>Canvas 2</h2>
+    <p>Secondary workspace for parallel experiments</p>
+    <a href="/play/canvas-2" class="demo-link">Experiment →</a>
   </div>
 
   <div class="brick-card">
-    <h2>BRICK-603 ThemeApplier</h2>
-    <p>Applies theme properties as CSS custom properties on document root</p>
-    <a href="/demo/brick-603" class="demo-link">View Demo →</a>
+    <h2>Canvas 3</h2>
+    <p>Third experimental area for alternative approaches</p>
+    <a href="/play/canvas-3" class="demo-link">Experiment →</a>
   </div>
 
   <div class="brick-card">
-    <h2>BRICK-604 ThemePickerUI</h2>
-    <p>Compact dropdown component for theme selection in input bar</p>
-    <a href="/demo/brick-604" class="demo-link">View Demo →</a>
+    <h2>Canvas 4</h2>
+    <p>Fourth workspace for comparative testing</p>
+    <a href="/play/canvas-4" class="demo-link">Experiment →</a>
   </div>
-
 </div>
 
 
@@ -95,5 +94,6 @@
   nav a {
     text-decoration: none;
     color: #007acc;
+    margin-right: 20px;
   }
 </style>
