@@ -15,28 +15,11 @@
 
 <div class="gallery">
   <div class="brick-card">
-    <h2>Canvas 1</h2>
+    <h2>Sandbox 1</h2>
     <p>Clean experimental space for rapid prototyping</p>
     <a href="/play/canvas-1" class="demo-link">Experiment →</a>
   </div>
 
-  <div class="brick-card">
-    <h2>Canvas 2</h2>
-    <p>Secondary workspace for parallel experiments</p>
-    <a href="/play/canvas-2" class="demo-link">Experiment →</a>
-  </div>
-
-  <div class="brick-card">
-    <h2>Canvas 3</h2>
-    <p>Third experimental area for alternative approaches</p>
-    <a href="/play/canvas-3" class="demo-link">Experiment →</a>
-  </div>
-
-  <div class="brick-card">
-    <h2>Canvas 4</h2>
-    <p>Fourth workspace for comparative testing</p>
-    <a href="/play/canvas-4" class="demo-link">Experiment →</a>
-  </div>
 </div>
 
 
