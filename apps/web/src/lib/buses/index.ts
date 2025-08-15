@@ -11,6 +11,7 @@ export { errorBus } from './errorBus.svelte';
 export { stateBus } from './stateBus.svelte';
 export { configBus } from './configBus.svelte';
 export { discoveryBus } from './discoveryBus';
+export { themeRegistry } from './ThemeRegistry';
 
 // Export EventBus types and utilities
 export { 
@@ -53,4 +54,10 @@ export {
     type ModuleMap,
     type ContentRegistry,
     type DiscoveryOptions
-} from './DiscoveryBus';
+} from './DiscoveryBus/index.js';
+
+// Export ThemeRegistry types
+export {
+    type Theme,
+    type ThemeMap
+} from './ThemeRegistry';
