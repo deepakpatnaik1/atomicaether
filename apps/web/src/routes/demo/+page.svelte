@@ -1,50 +1,65 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { themeRegistry } from '$lib/buses';
+  import { themeRegistry, themeSelector, eventBus } from '$lib/buses';
   
   let themes: string[] = [];
   let selectedTheme: any = null;
+  let currentSelection: string | null = null;
   let loading = false;
   let error: string | null = null;
 
   onMount(async () => {
     try {
       loading = true;
-      console.log('ThemeRegistry Demo - Loading themes...');
+      console.log('BRICK-602 ThemeSelector Demo - Loading...');
       
-      themes = await themeRegistry.getThemes();
+      // Get available themes
+      themes = await themeSelector.getAvailableThemes();
       console.log('Available themes:', themes);
       
-      if (themes.length > 0) {
-        selectedTheme = await themeRegistry.getTheme(themes[0]);
-        console.log('Loaded theme:', selectedTheme);
-      }
+      // Get current selection
+      currentSelection = themeSelector.getCurrentTheme();
+      console.log('Current selection:', currentSelection);
       
-      const hasRainyNight = await themeRegistry.hasTheme('rainy-night');
-      console.log('Has rainy-night theme:', hasRainyNight);
+      // Subscribe to theme changes
+      const unsubscribe = eventBus.subscribe('theme:changed', (event) => {
+        console.log('Theme changed event:', event);
+        selectedTheme = event.theme;
+        currentSelection = event.name;
+      });
+      
+      // Load initial theme if any
+      if (currentSelection) {
+        selectedTheme = await themeRegistry.getTheme(currentSelection);
+      }
       
     } catch (err) {
       error = err instanceof Error ? err.message : String(err);
-      console.error('ThemeRegistry error:', err);
+      console.error('ThemeSelector error:', err);
     } finally {
       loading = false;
     }
   });
 
-  async function loadTheme(themeName: string) {
+  async function selectTheme(themeName: string) {
     try {
-      selectedTheme = await themeRegistry.getTheme(themeName);
-      console.log('Loaded theme:', selectedTheme);
+      await themeSelector.selectTheme(themeName);
+      console.log('Selected theme:', themeName);
     } catch (err) {
       error = err instanceof Error ? err.message : String(err);
     }
   }
+
+  function clearSelection() {
+    themeSelector.clearSelection();
+    console.log('Selection cleared');
+  }
 </script>
 
-<h1>BRICK-601 ThemeRegistry Demo</h1>
+<h1>BRICK-602 ThemeSelector Demo</h1>
 
 {#if loading}
-  <p>Loading themes...</p>
+  <p>Loading...</p>
 {:else if error}
   <p style="color: red;">Error: {error}</p>
 {:else}
@@ -53,12 +68,19 @@
     <ul>
       {#each themes as theme}
         <li>
-          <button on:click={() => loadTheme(theme)}>
-            {theme}
+          <button 
+            on:click={() => selectTheme(theme)}
+            disabled={currentSelection === theme}
+          >
+            {theme} {currentSelection === theme ? '(selected)' : ''}
           </button>
         </li>
       {/each}
     </ul>
+
+    <button on:click={clearSelection}>Clear Selection</button>
+    
+    <h2>Current Selection: {currentSelection ?? 'None'}</h2>
 
     {#if selectedTheme}
       <h2>Selected Theme: {selectedTheme.name}</h2>
@@ -75,6 +97,11 @@
     margin: 5px;
     padding: 10px;
     cursor: pointer;
+  }
+  
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
   }
   
   pre {

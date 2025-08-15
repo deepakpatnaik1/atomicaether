@@ -12,6 +12,7 @@ export { stateBus } from './stateBus.svelte';
 export { configBus } from './configBus.svelte';
 export { discoveryBus } from './discoveryBus';
 export { themeRegistry } from './ThemeRegistry';
+export { themeSelector } from './ThemeSelector';
 
 // Export EventBus types and utilities
 export { 
@@ -61,3 +62,9 @@ export {
     type Theme,
     type ThemeMap
 } from './ThemeRegistry';
+
+// Export ThemeSelector types
+export {
+    type ThemeSelection,
+    type ThemeChangedEvent
+} from './ThemeSelector';
