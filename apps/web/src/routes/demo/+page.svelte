@@ -1,112 +1,72 @@
-<script lang="ts">
-  import { onMount } from 'svelte';
-  import { themeRegistry, themeSelector, eventBus } from '$lib/buses';
-  
-  let themes: string[] = [];
-  let selectedTheme: any = null;
-  let currentSelection: string | null = null;
-  let loading = false;
-  let error: string | null = null;
+<h1>🧱 AtomicAether Demo Gallery</h1>
 
-  onMount(async () => {
-    try {
-      loading = true;
-      console.log('BRICK-602 ThemeSelector Demo - Loading...');
-      
-      // Get available themes
-      themes = await themeSelector.getAvailableThemes();
-      console.log('Available themes:', themes);
-      
-      // Get current selection
-      currentSelection = themeSelector.getCurrentTheme();
-      console.log('Current selection:', currentSelection);
-      
-      // Subscribe to theme changes
-      const unsubscribe = eventBus.subscribe('theme:changed', (event) => {
-        console.log('Theme changed event:', event);
-        selectedTheme = event.theme;
-        currentSelection = event.name;
-      });
-      
-      // Load initial theme if any
-      if (currentSelection) {
-        selectedTheme = await themeRegistry.getTheme(currentSelection);
-      }
-      
-    } catch (err) {
-      error = err instanceof Error ? err.message : String(err);
-      console.error('ThemeSelector error:', err);
-    } finally {
-      loading = false;
-    }
-  });
+<p>Welcome to the brick demo gallery. Each brick is independently tested here.</p>
 
-  async function selectTheme(themeName: string) {
-    try {
-      await themeSelector.selectTheme(themeName);
-      console.log('Selected theme:', themeName);
-    } catch (err) {
-      error = err instanceof Error ? err.message : String(err);
-    }
-  }
-
-  function clearSelection() {
-    themeSelector.clearSelection();
-    console.log('Selection cleared');
-  }
-</script>
-
-<h1>BRICK-602 ThemeSelector Demo</h1>
-
-{#if loading}
-  <p>Loading...</p>
-{:else if error}
-  <p style="color: red;">Error: {error}</p>
-{:else}
-  <div>
-    <h2>Available Themes ({themes.length})</h2>
-    <ul>
-      {#each themes as theme}
-        <li>
-          <button 
-            on:click={() => selectTheme(theme)}
-            disabled={currentSelection === theme}
-          >
-            {theme} {currentSelection === theme ? '(selected)' : ''}
-          </button>
-        </li>
-      {/each}
-    </ul>
-
-    <button on:click={clearSelection}>Clear Selection</button>
-    
-    <h2>Current Selection: {currentSelection ?? 'None'}</h2>
-
-    {#if selectedTheme}
-      <h2>Selected Theme: {selectedTheme.name}</h2>
-      <div style="background: {selectedTheme.appBackground}; padding: 20px; color: white;">
-        <p>Theme Background: {selectedTheme.appBackground}</p>
-        <pre>{JSON.stringify(selectedTheme, null, 2)}</pre>
-      </div>
-    {/if}
+<div class="gallery">
+  <div class="brick-card">
+    <h2>BRICK-601 ThemeRegistry</h2>
+    <p>Discovers and loads theme JSON files using DiscoveryBus</p>
+    <a href="/demo/brick-601" class="demo-link">View Demo →</a>
   </div>
-{/if}
+
+  <div class="brick-card">
+    <h2>BRICK-602 ThemeSelector</h2>
+    <p>Manages theme selection state with StateBus and EventBus integration</p>
+    <a href="/demo/brick-602" class="demo-link">View Demo →</a>
+  </div>
+</div>
+
+<nav>
+  <a href="/">← Back to Main App</a>
+</nav>
 
 <style>
-  button {
-    margin: 5px;
-    padding: 10px;
-    cursor: pointer;
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
   }
   
-  button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+  .brick-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background: #f9f9f9;
   }
   
-  pre {
-    background: rgba(255,255,255,0.1);
-    padding: 10px;
+  .brick-card h2 {
+    margin: 0 0 10px 0;
+    color: #333;
+  }
+  
+  .brick-card p {
+    color: #666;
+    margin-bottom: 15px;
+  }
+  
+  .demo-link {
+    display: inline-block;
+    background: #007acc;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
     border-radius: 4px;
+    font-weight: bold;
+  }
+  
+  .demo-link:hover {
+    background: #005a9f;
+  }
+  
+  nav {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #007acc;
   }
 </style>
