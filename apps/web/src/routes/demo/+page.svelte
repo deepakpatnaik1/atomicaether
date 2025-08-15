@@ -20,6 +20,12 @@
     <p>Applies theme properties as CSS custom properties on document root</p>
     <a href="/demo/brick-603" class="demo-link">View Demo →</a>
   </div>
+
+  <div class="brick-card">
+    <h2>BRICK-604 ThemePickerUI</h2>
+    <p>Compact dropdown component for theme selection in input bar</p>
+    <a href="/demo/brick-604" class="demo-link">View Demo →</a>
+  </div>
 </div>
 
 <nav>
