@@ -8,13 +8,13 @@ The three-tier development architecture that ensures quality progression from ex
 ## 001: Playground
 **Purpose**: R&D laboratory for unrestricted experimentation
 
-**Location**: `/demo/playground/`
+**Location**: `/play/`
 
 **Constraints**: 
 - ❌ No Essential Boss Rules apply
 - ✅ Hardcoding encouraged
 - ✅ Rapid iteration prioritized
-- ✅ Multiple canvas approach
+- ✅ Single file constraint: All tinkering restricted to sandbox +page.svelte file only
 
 **Flow**: Ideas → Experiments → Proven Techniques
 
