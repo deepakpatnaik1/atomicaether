@@ -28,8 +28,8 @@
   </div>
 
   <div class="brick-card" style="border-color: #ff6b35; background: #fff5f2;">
-    <h2>🧪 Free-Thinking Canvas</h2>
-    <p>Sandbox for experiments without Essential Boss Rules constraints</p>
+    <h2>🧪 Playground</h2>
+    <p>A free-thinking canvas for experiments without Essential Boss Rules constraints</p>
     <a href="/demo/free-thinking-canvas" class="demo-link" style="background: #ff6b35;">Experiment →</a>
   </div>
 </div>
