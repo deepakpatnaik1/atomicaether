@@ -5,27 +5,32 @@ The three-tier development architecture that ensures quality progression from ex
 
 ---
 
-## 001: Playground
+## 001: Sandboxes
 **Purpose**: R&D laboratory for unrestricted experimentation
 
-**Location**: `/play/`
+**Location**: `/sandboxes/`
 
 **Constraints**: 
 - ❌ No Essential Boss Rules apply
 - ✅ Hardcoding encouraged
 - ✅ Rapid iteration prioritized
 - ✅ Single file constraint: All tinkering restricted to sandbox +page.svelte file only
+- ✅ Visual version control: Multiple sandboxes preserve working versions side-by-side
 
 **Flow**: Ideas → Experiments → Proven Techniques
+
+**Workflow Pattern**: Like GitHub but visual - duplicate successful sandbox to create new working copy, preserving previous versions for comparison and rollback
 
 **Output**: Validated concepts ready for brick development
 
 ---
 
-## 002: Demo Gallery  
-**Purpose**: Quality assurance and brick validation
+## 002: Bricks  
+**Purpose**: Implement and test individual bricks with demos
 
-**Location**: `/demo/`
+**Locations**: 
+- Bricks: `/src/lib/` (actual brick implementation)
+- Brick Demos: `/brickdemos/` (testing interface)
 
 **Constraints**:
 - ✅ Essential Boss Rules enforced
@@ -33,9 +38,14 @@ The three-tier development architecture that ensures quality progression from ex
 - ✅ Individual brick isolation
 - ✅ Boss testing interface
 
-**Flow**: Proven Techniques → Isolated Bricks → Validated Components
+**Process**: 
+1. Implement individual bricks (following Essential Boss Rules)
+2. Create demos to test each brick
+3. Validate brick functionality
 
-**Output**: Production-ready bricks with UI proof
+**Flow**: Sandbox Concepts → Brick Implementation → Brick Demos → Validated Components
+
+**Output**: Production-ready bricks with proven demos
 
 ---
 
@@ -59,7 +69,7 @@ The three-tier development architecture that ensures quality progression from ex
 ## Development Process
 
 ```
-PLAYGROUND           DEMO GALLERY         MAIN APP
+SANDBOXES            BRICKS               MAIN APP
     ↓                      ↓                  ↓
 Experiment    →     Prove & Test    →    Integrate
 Multiple Canvas     Individual Demos     Production Code
@@ -70,8 +80,8 @@ High Speed         Medium Speed         High Quality
 
 ## Quality Gates
 
-- **Playground → Demo Gallery**: Must solve core problem elegantly
-- **Demo Gallery → Main App**: Must pass Boss testing and Rule 10 compliance  
+- **Sandboxes → Bricks**: Must solve core problem elegantly
+- **Bricks → Main App**: Must pass Boss testing and Rule 10 compliance  
 - **Main App**: Must follow all Essential Boss Rules
 
 ## Benefits

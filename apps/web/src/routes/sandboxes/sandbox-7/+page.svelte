@@ -1,0 +1,511 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { themeSelector, themeApplier } from '$lib/buses';
+  
+  let files: File[] = $state([]);
+  let fileInput: HTMLInputElement;
+  
+  onMount(() => {
+    // Apply rainy night theme
+    themeApplier.initialize();
+    themeSelector.selectTheme('rainy-night');
+  });
+
+  function handleFileSelect() {
+    fileInput.click();
+  }
+
+  function handleFileChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files) {
+      files = Array.from(target.files);
+    }
+  }
+
+  function removeFile(fileToRemove: File) {
+    files = files.filter(file => file !== fileToRemove);
+  }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      files = [];
+      fileInput.value = '';
+    }
+  }
+
+  function getFilePreviewUrl(file: File): string {
+    if (file.type.startsWith('image/')) {
+      return URL.createObjectURL(file);
+    }
+    return ''; // Generic file icon placeholder
+  }
+
+  function handleDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  function handleDrop(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer?.files) {
+      files = Array.from(event.dataTransfer.files);
+    }
+  }
+
+  // Mock API endpoints for BetterTouchTool testing
+  function simulateCaptureText(text: string) {
+    console.log('🎯 BTT Text Capture:', text);
+    const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
+    files = [...files, textFile];
+  }
+
+  function simulateCaptureImage(imageBlob: Blob) {
+    console.log('🎯 BTT Image Capture:', imageBlob);
+    const imageFile = new File([imageBlob], 'screenshot.png', { type: 'image/png' });
+    files = [...files, imageFile];
+  }
+
+  // Enhanced API for BetterTouchTool integration
+  function handleUrlCapture() {
+    if (typeof window === 'undefined') return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    const data = params.get('data');
+    
+    if (action === 'captureText' && data) {
+      const textFile = new File([decodeURIComponent(data)], 'captured-text.txt', { type: 'text/plain' });
+      files = [...files, textFile];
+      console.log('🎯 BTT Text Captured via URL:', decodeURIComponent(data));
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureImage' && data === 'clipboard') {
+      // For now, create a mock screenshot since we can't access clipboard directly from web
+      const canvas = document.createElement('canvas');
+      canvas.width = 400;
+      canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      ctx!.fillStyle = '#2D4A87';
+      ctx!.fillRect(0, 0, 400, 200);
+      ctx!.fillStyle = 'white';
+      ctx!.font = '16px Arial';
+      ctx!.fillText('📸 Screenshot captured via BTT', 80, 100);
+      ctx!.fillText('Real image would appear here', 90, 130);
+      
+      canvas.toBlob(blob => {
+        if (blob) {
+          const imageFile = new File([blob], 'screenshot.png', { type: 'image/png' });
+          files = [...files, imageFile];
+          console.log('🎯 BTT Screenshot Captured via URL');
+        }
+      });
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }
+
+  // Check for URL parameters on mount and focus
+  onMount(() => {
+    handleUrlCapture();
+    
+    // Listen for focus events (when BTT brings window to front)
+    window.addEventListener('focus', handleUrlCapture);
+    
+    return () => {
+      window.removeEventListener('focus', handleUrlCapture);
+    };
+  });
+
+  // Expose functions globally for testing
+  if (typeof window !== 'undefined') {
+    (window as any).simulateCaptureText = simulateCaptureText;
+    (window as any).simulateCaptureImage = simulateCaptureImage;
+    (window as any).bttCaptureText = (text: string) => {
+      const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
+      files = [...files, textFile];
+      console.log('🎯 BTT Direct Text Capture:', text);
+    };
+    (window as any).bttCaptureImage = (imageBlob: Blob) => {
+      const imageFile = new File([imageBlob], 'screenshot.png', { type: 'image/png' });
+      files = [...files, imageFile];
+      console.log('🎯 BTT Direct Image Capture');
+    };
+  }
+</script>
+
+<nav>
+  <a href="/sandboxes">← Back to Sandboxes</a>
+</nav>
+
+<div class="test-controls">
+  <h3>🧪 BetterTouchTool Integration Notes</h3>
+  
+  <div class="test-section">
+    <h4>⚠️ TODOs for Brick Implementation</h4>
+    <div class="btt-instructions">
+      <p><strong>• Port Detection:</strong> Make dev server port detection smarter (currently hardcoded to 5174)</p>
+      <p><strong>• Graceful Failure:</strong> If AtomicAether website is not open, CTRL+OPTION+C should do nothing</p>
+      <p><strong>• Workflow Difference:</strong> Text capture is select-then-hotkey, Screenshot capture is hotkey-then-select</p>
+      <p><strong>• Clipboard Access:</strong> Web browsers can't access clipboard images directly. BTT should save screenshot to temp file and pass file path instead of clipboard data</p>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h4>📝 Workflow Design Notes</h4>
+    <div class="btt-instructions">
+      <p><strong>Text Capture (CTRL+OPTION+C):</strong></p>
+      <p>1. User selects text anywhere on Mac<br/>
+      2. User presses CTRL+OPTION+C<br/>
+      3. Selected text appears as file preview in input bar</p>
+      
+      <p><strong>Screenshot Capture (CTRL+OPTION+S):</strong></p>
+      <p>1. User presses CTRL+OPTION+S<br/>
+      2. Crosshair appears for area selection<br/>
+      3. User drags to select rectangle<br/>
+      4. Screenshot appears as file preview in input bar<br/>
+      <em>(If user cancels with ESC, nothing happens)</em></p>
+    </div>
+  </div>
+</div>
+
+
+<div class="left-stencil"></div>
+<div class="right-stencil"></div>
+
+<svelte:window on:keydown={handleKeydown} />
+
+<input type="file" multiple bind:this={fileInput} on:change={handleFileChange} style="display: none;" accept="image/*,.pdf,.doc,.docx,.txt" />
+
+<div class="input-container">
+  <div class="input-bar" on:dragover={handleDragOver} on:drop={handleDrop}>
+    {#if files.length > 0}
+      <div class="file-preview-zone">
+        {#each files as file}
+          <div class="file-preview">
+            {#if file.type.startsWith('image/')}
+              <img src={getFilePreviewUrl(file)} alt={file.name} />
+            {:else}
+              <div class="file-icon">📄</div>
+            {/if}
+            <span class="file-name">{file.name}</span>
+            <button class="remove-file" on:click={() => removeFile(file)}>×</button>
+          </div>
+        {/each}
+      </div>
+    {/if}
+    <textarea class="text-input" placeholder="Type a message..."></textarea>
+    <div class="controls-row">
+      <button class="plus-button" on:click={handleFileSelect}>+</button>
+      <span class="model-picker">claude-3.5-sonnet</span>
+      <span class="persona-picker">User</span>
+      <span class="theme-picker">rainy-night</span>
+      <div class="green-indicator"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  :global(body) {
+    background: var(--app-background, #222831) !important;
+    color: var(--text-color, #e0e0e0) !important;
+    transition: all 0.3s ease;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav {
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #007acc;
+  }
+
+  .input-container {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 656px;
+  }
+
+  @media (min-width: 705px) {
+    .input-container {
+      width: 800px;
+    }
+  }
+
+  .input-bar {
+    min-height: 80px;
+    height: auto;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px);
+    border: 2px solid;
+    border-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)) 1;
+    border-radius: 9px;
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08);
+    padding: 16px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .file-preview-zone {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    grid-row: 1;
+  }
+
+  .file-preview {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 8px;
+    min-width: 80px;
+    max-width: 120px;
+  }
+
+  .file-preview img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .file-icon {
+    font-size: 40px;
+    opacity: 0.8;
+  }
+
+  .file-name {
+    font-size: 10px;
+    color: rgba(223, 208, 184, 0.8);
+    text-align: center;
+    margin-top: 4px;
+    word-break: break-all;
+    line-height: 1.2;
+  }
+
+  .remove-file {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .remove-file:hover {
+    background: rgba(255, 0, 0, 1);
+  }
+
+  .text-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #DFD0B8;
+    font-size: 14px;
+    font-family: system-ui;
+    resize: none;
+    min-height: 20px;
+    grid-row: 2;
+  }
+
+  .text-input::placeholder {
+    color: rgba(223, 208, 184, 0.6);
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    grid-row: 3;
+  }
+
+  .plus-button {
+    background: transparent;
+    border: none;
+    color: rgba(223, 208, 184, 0.7);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .model-picker,
+  .persona-picker,
+  .theme-picker {
+    color: rgba(223, 208, 184, 0.7);
+    font-size: 12px;
+    font-family: system-ui;
+    cursor: pointer;
+  }
+
+  .green-indicator {
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5);
+    margin-left: auto;
+  }
+
+
+  .left-stencil {
+    position: fixed;
+    bottom: 81px; /* Midpoint - same as blue line was */
+    left: 0; /* Start from screen edge */
+    width: calc((100vw - 656px) / 2); /* Half of remaining space */
+    height: 2px;
+    background: linear-gradient(to right,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.3));
+    z-index: 100;
+  }
+
+  .right-stencil {
+    position: fixed;
+    bottom: 81px; /* Midpoint - same as blue line was */
+    right: 0; /* Start from screen edge */
+    width: calc((100vw - 656px) / 2); /* Half of remaining space */
+    height: 2px;
+    background: linear-gradient(to left,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.3));
+    z-index: 100;
+  }
+
+  @media (min-width: 705px) {
+    .left-stencil, .right-stencil {
+      width: calc((100vw - 800px) / 2); /* Adjust for wider input bar */
+    }
+  }
+
+  .test-controls {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.9);
+    color: #DFD0B8;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .test-controls h3 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    color: #ffffff;
+  }
+
+  .test-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    background: rgba(74, 144, 226, 0.8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.4;
+    transition: background 0.2s ease;
+  }
+
+  .test-btn:hover {
+    background: rgba(74, 144, 226, 1);
+  }
+
+  .test-btn:last-child {
+    margin-bottom: 0;
+  }
+
+  .test-section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .test-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .test-section h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #ffffff;
+    opacity: 0.9;
+  }
+
+  .btt-instructions {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .btt-instructions p {
+    margin: 8px 0 4px 0;
+    font-size: 12px;
+    color: #ffffff;
+  }
+
+  .btt-instructions code {
+    display: block;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    color: #DFD0B8;
+    margin-bottom: 12px;
+    word-break: break-all;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  #current-url {
+    color: #4A90E2;
+    font-weight: bold;
+  }
+
+
+</style>

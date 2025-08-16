@@ -9,15 +9,33 @@
   });
 </script>
 
-<h1>🧪 AtomicAether Playground</h1>
+<h1>🧱 AtomicAether Brick Demos</h1>
 
-<p>Free-thinking canvas for experiments without Essential Boss Rules constraints.</p>
+<p>Welcome to the brick demo gallery. Each brick is independently tested here.</p>
 
 <div class="gallery">
   <div class="brick-card">
-    <h2>Sandbox 1</h2>
-    <p>Clean experimental space for rapid prototyping</p>
-    <a href="/play/canvas-1" class="demo-link">Experiment →</a>
+    <h2>BRICK-601 ThemeRegistry</h2>
+    <p>Discovers and loads theme JSON files using DiscoveryBus</p>
+    <a href="/demo/brick-601" class="demo-link">View Demo →</a>
+  </div>
+
+  <div class="brick-card">
+    <h2>BRICK-602 ThemeSelector</h2>
+    <p>Manages theme selection state with StateBus and EventBus integration</p>
+    <a href="/demo/brick-602" class="demo-link">View Demo →</a>
+  </div>
+
+  <div class="brick-card">
+    <h2>BRICK-603 ThemeApplier</h2>
+    <p>Applies theme properties as CSS custom properties on document root</p>
+    <a href="/demo/brick-603" class="demo-link">View Demo →</a>
+  </div>
+
+  <div class="brick-card">
+    <h2>BRICK-604 ThemePickerUI</h2>
+    <p>Compact dropdown component for theme selection in input bar</p>
+    <a href="/demo/brick-604" class="demo-link">View Demo →</a>
   </div>
 
 </div>
@@ -77,6 +95,5 @@
   nav a {
     text-decoration: none;
     color: #007acc;
-    margin-right: 20px;
   }
 </style>

@@ -1,0 +1,1449 @@
+================================================================================
+HARDCODED VALUES EXTRACTION REPORT
+Essential Boss Rule 8: No Hardcoding - Everything Lives in Config
+================================================================================
+
+📊 SUMMARY:
+   Files scanned: 12
+   Total unique hardcoded values found: 453
+
+📋 BREAKDOWN BY CATEGORY:
+   COLORS: 54 unique values
+   DIMENSIONS: 51 unique values
+   DURATIONS: 2 unique values
+   GRADIENTS: 6 unique values
+   SHADOWS: 4 unique values
+   BORDERS: 32 unique values
+   STRINGS: 197 unique values
+   URLS: 48 unique values
+   NUMBERS: 59 unique values
+
+🔍 DETAILED FINDINGS:
+
+📄 +page.svelte
+   colors: 10 values
+      • #eee
+      • #666
+      • white
+      • #007acc
+      • #005a9f
+      ... and 5 more
+   dimensions: 8 values
+      • 4px
+      • 15px
+      • 300px
+      • 20px
+      • 30px
+      ... and 3 more
+   durations: 1 values
+      • 0.3s
+   borders: 6 values
+      • 1px solid #eee
+      • border-radius: 4px
+      • border-radius: 8px
+      • border-top: 1px solid #eee
+      • border: 1px solid #ddd
+      ... and 1 more
+   strings: 18 values
+      • ">
+    <h2>Sandbox 11</h2>
+    <p>Working copy for next iteration</p>
+    <a href="
+      • " class="
+      • ">
+    <h2>Sandbox 10</h2>
+    <p>Cleaned up the chevrons and + symbols</p>
+    <a href="
+      • 'svelte'
+      • ">
+    <h2>Sandbox 2</h2>
+    <p>3 sides equal padding</p>
+    <a href="
+      ... and 13 more
+   urls: 21 values
+      • /style>
+      • /sandboxes/sandbox-10
+      • //
+      • /sandboxes/sandbox-2
+      • /Safari,
+      ... and 16 more
+   numbers: 5 values
+      • 666
+      • 222831
+      • 333
+      • 10
+      • 11
+
+📄 sandbox-3/+page.svelte
+   colors: 15 values
+      • rgba(255, 0, 0, 0.3)
+      • rgba(255, 255, 255, 0.08)
+      • green
+      • rgba(0, 0, 0, 0.4)
+      • #00ff00
+      ... and 10 more
+   dimensions: 16 values
+      • 4px
+      • 24px
+      • 2px
+      • 16px
+      • 9px
+      ... and 11 more
+   durations: 1 values
+      • 0.3s
+   gradients: 1 values
+      • linear-gradient(to bottom,
+      rgba(255, 0, 0, 0.3)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 5 values
+      • border-radius: 9px
+      • border-radius: 50%
+      • border: 1px solid
+      • border-image: linear-gradient(to bottom,
+      rgba(255, 0, 0, 0.3),
+      rgba(0, 255, 0, 0.3)) 1
+      • border: none
+   strings: 13 values
+      • ">
+    <textarea class="
+      • "></textarea>
+    <div class="
+      • 'rainy-night'
+      • ">User</span>
+      <div class="
+      • ">claude-3.5-sonnet</span>
+      <span class="
+      ... and 8 more
+   urls: 11 values
+      • /script>
+      • /div>
+      • /span>
+      • /style>
+      • //
+      ... and 6 more
+   numbers: 16 values
+      • 255
+      • 50
+      • 208
+      • 0.5
+      • 222831
+      ... and 11 more
+
+📄 sandbox-4/+page.svelte
+   colors: 19 values
+      • white
+      • rgba(255, 255, 255, 0.3)
+      • rgba(0, 0, 0, 0.8)
+      • red
+      • transparent
+      ... and 14 more
+   dimensions: 21 values
+      • 2px
+      • 9px
+      • 400px
+      • 100px
+      • 114px
+      ... and 16 more
+   durations: 1 values
+      • 0.3s
+   gradients: 1 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 7 values
+      • border-radius: 9px
+      • border-radius: 50%
+      • border: 2px solid
+      • border-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)) 1
+      • border-radius: 8px
+      ... and 2 more
+   strings: 16 values
+      • ">
+    <textarea class="
+      • "></div>
+
+<div class="
+      • "></textarea>
+    <div class="
+      • 'rainy-night'
+      • ">User</span>
+      <div class="
+      ... and 11 more
+   urls: 17 values
+      • /p>
+      • /em></p>
+      • /script>
+      • /strong>
+      • /div>
+      ... and 12 more
+   numbers: 20 values
+      • 0.5
+      • 222831
+      • 85
+      • 0.1
+      • 1.4
+      ... and 15 more
+
+📄 sandbox-5/+page.svelte
+   colors: 18 values
+      • #ffffff
+      • blue
+      • rgba(255, 255, 255, 0.08)
+      • green
+      • rgba(0, 0, 0, 0.4)
+      ... and 13 more
+   dimensions: 22 values
+      • 2px
+      • 9px
+      • 8px
+      • 1px
+      • 800px
+      ... and 17 more
+   durations: 1 values
+      • 0.3s
+   gradients: 3 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+      • linear-gradient(to right,
+      rgba(255, 255, 255, 0.1)
+      • linear-gradient(to left,
+      rgba(255, 255, 255, 0.1)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 8 values
+      • border-radius: 9px
+      • border-radius: 50%
+      • border: 2px solid
+      • 1px solid rgba(255, 255, 255, 0.1)
+      • border-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)) 1
+      ... and 3 more
+   strings: 19 values
+      • 's not just responsive, it'
+      • ">claude-3.5-sonnet</span>
+      <span class="
+      • ">
+  import { onMount } from 'svelte';
+  import { themeSelector, themeApplier } from '$lib/buses';
+  
+  onMount(() => {
+    // Apply rainy night theme
+    themeApplier.initialize();
+    themeSelector.selectTheme('rainy-night');
+  });
+</script>
+
+<nav>
+  <a href="
+      • 'rainy-night'
+      • ">+</button>
+      <span class="
+      ... and 14 more
+   urls: 18 values
+      • /p>
+      • /em></p>
+      • /script>
+      • /strong>
+      • /div>
+      ... and 13 more
+   numbers: 20 values
+      • 0.85
+      • 0.5
+      • 222831
+      • 85
+      • 0.1
+      ... and 15 more
+
+📄 sandbox-2/+page.svelte
+   colors: 15 values
+      • rgba(255, 255, 255, 0.08)
+      • green
+      • rgba(0, 0, 0, 0.4)
+      • #00ff00
+      • rgba(223, 208, 184, 0.7)
+      ... and 10 more
+   dimensions: 16 values
+      • 4px
+      • 24px
+      • 2px
+      • 16px
+      • 9px
+      ... and 11 more
+   durations: 1 values
+      • 0.3s
+   gradients: 1 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 5 values
+      • border-radius: 50%
+      • border-radius: 9px
+      • border: 1px solid
+      • border-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)) 1
+      • border: none
+   strings: 13 values
+      • ">
+    <textarea class="
+      • "></textarea>
+    <div class="
+      • 'rainy-night'
+      • ">User</span>
+      <div class="
+      • ">claude-3.5-sonnet</span>
+      <span class="
+      ... and 8 more
+   urls: 11 values
+      • /script>
+      • /div>
+      • /span>
+      • /style>
+      • //
+      ... and 6 more
+   numbers: 17 values
+      • 255
+      • 50
+      • 208
+      • 0.5
+      • 222831
+      ... and 12 more
+
+📄 sandbox-10/+page.svelte
+   colors: 38 values
+      • #eac
+      • orange
+      • white
+      • rgba(223, 208, 184, 1)
+      • rgba(255, 255, 255, 0.5)
+      ... and 33 more
+   dimensions: 35 values
+      • 2px
+      • 60px
+      • 32px
+      • 9px
+      • 400px
+      ... and 30 more
+   durations: 2 values
+      • 0.3s
+      • 0.2s
+   gradients: 3 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+      • linear-gradient(to left,
+      rgba(255, 255, 255, 0.2)
+      • linear-gradient(to right,
+      rgba(255, 255, 255, 0.2)
+   shadows: 3 values
+      • box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4)
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 25 values
+      • 1px solid rgba(255, 255, 255, 0.2)
+      • border: 2px solid
+      • border-top: 1.5px solid rgba(223, 208, 184, 0.5)
+      • border: 1px solid rgba(255, 255, 255, 0.05)
+      • border-radius: 4px
+      ... and 20 more
+   strings: 105 values
+      • ', 150, 100);
+      ctx!.fillText('
+      • ">
+  import { onMount } from 'svelte';
+  import { themeSelector, themeApplier } from '$lib/buses';
+  
+  let files: File[] = $state([]);
+  let fileInput: HTMLInputElement;
+  let textarea: HTMLTextAreaElement;
+  let textContent = $state('');
+  
+  // Dropdown states
+  let showModelDropdown = $state(false);
+  let showPersonaDropdown = $state(false);
+  let showThemeDropdown = $state(false);
+  
+  // Current selections
+  let selectedModel = $state('claude-3.5-sonnet');
+  let selectedPersona = $state('User');
+  let selectedTheme = $state('rainy-night');
+  
+  // Options data
+  const models = [
+    'claude-3.5-sonnet',
+    'claude-3-opus',
+    'claude-3-haiku',
+    'gpt-4-turbo',
+    'gpt-4o',
+    'gemini-1.5-pro'
+  ];
+  
+  const personas = [
+    'User',
+    'Developer',
+    'Designer',
+    'Product Manager',
+    'Data Scientist',
+    'Writer'
+  ];
+  
+  const themes = [
+    'rainy-night',
+    'midnight-blue',
+    'forest-green',
+    'sunset-orange',
+    'arctic-white',
+    'deep-purple'
+  ];
+  
+  // Auto-resize constants
+  const LINE_HEIGHT = 20; // pixels per line
+  const MIN_LINES = 1;
+  const MAX_LINES = 12;
+  const MIN_HEIGHT = LINE_HEIGHT * MIN_LINES;
+  const MAX_HEIGHT = LINE_HEIGHT * MAX_LINES;
+  
+  onMount(() => {
+    // Apply rainy night theme
+    themeApplier.initialize();
+    themeSelector.selectTheme('rainy-night');
+  });
+
+  function handleFileSelect() {
+    fileInput.click();
+  }
+
+  function handleFileChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files) {
+      files = Array.from(target.files);
+    }
+  }
+
+  function removeFile(fileToRemove: File) {
+    files = files.filter(file => file !== fileToRemove);
+  }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      files = [];
+      fileInput.value = '';
+      textContent = '';
+      if (textarea) {
+        textarea.style.height = `${MIN_HEIGHT}px`;
+      }
+    }
+  }
+  
+  function autoResize() {
+    if (!textarea) return;
+    
+    // Temporarily reset height to auto to get accurate scrollHeight
+    textarea.style.height = 'auto';
+    
+    // Calculate desired height based on content
+    const scrollHeight = textarea.scrollHeight;
+    const newHeight = Math.min(Math.max(scrollHeight, MIN_HEIGHT), MAX_HEIGHT);
+    
+    // Apply the new height with smooth transition
+    textarea.style.height = `${newHeight}px`;
+    
+    // Enable/disable scrolling based on max height
+    textarea.style.overflowY = scrollHeight > MAX_HEIGHT ? 'auto' : 'hidden';
+  }
+  
+  function handleTextInput(event: Event) {
+    const target = event.target as HTMLTextAreaElement;
+    textContent = target.value;
+    autoResize();
+  }
+  
+  // Dropdown functions
+  function toggleModelDropdown() {
+    showModelDropdown = !showModelDropdown;
+    showPersonaDropdown = false;
+    showThemeDropdown = false;
+  }
+  
+  function togglePersonaDropdown() {
+    showPersonaDropdown = !showPersonaDropdown;
+    showModelDropdown = false;
+    showThemeDropdown = false;
+  }
+  
+  function toggleThemeDropdown() {
+    showThemeDropdown = !showThemeDropdown;
+    showModelDropdown = false;
+    showPersonaDropdown = false;
+  }
+  
+  function selectModel(model: string) {
+    selectedModel = model;
+    showModelDropdown = false;
+  }
+  
+  function selectPersona(persona: string) {
+    selectedPersona = persona;
+    showPersonaDropdown = false;
+  }
+  
+  function selectTheme(theme: string) {
+    selectedTheme = theme;
+    showThemeDropdown = false;
+    // Apply theme change
+    themeSelector.selectTheme(theme);
+  }
+  
+  // Close dropdowns when clicking outside
+  function handleClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown-container')) {
+      showModelDropdown = false;
+      showPersonaDropdown = false;
+      showThemeDropdown = false;
+    }
+  }
+
+  function getFilePreviewUrl(file: File): string {
+    if (file.type.startsWith('image/')) {
+      return URL.createObjectURL(file);
+    }
+    return ''; // Generic file icon placeholder
+  }
+
+  function handleDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  function handleDrop(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer?.files) {
+      files = Array.from(event.dataTransfer.files);
+    }
+  }
+
+  // Mock API endpoints for BetterTouchTool testing
+  function simulateCaptureText(text: string) {
+    console.log('🎯 BTT Text Capture:', text);
+    const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
+    files = [...files, textFile];
+  }
+
+  function simulateCaptureImage(imageBlob: Blob) {
+    console.log('🎯 BTT Image Capture:', imageBlob);
+    const imageFile = new File([imageBlob], 'screenshot.png', { type: 'image/png' });
+    files = [...files, imageFile];
+  }
+
+  // Enhanced API for BetterTouchTool integration
+  function handleUrlCapture() {
+    if (typeof window === 'undefined') return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    const data = params.get('data');
+    
+    if (action === 'captureText' && data) {
+      const textFile = new File([decodeURIComponent(data)], 'captured-text.txt', { type: 'text/plain' });
+      files = [...files, textFile];
+      console.log('🎯 BTT Text Captured via URL:', decodeURIComponent(data));
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureFile' && data) {
+      // Handle file path from Finder selection
+      const filePath = decodeURIComponent(data);
+      const fileName = filePath.split('/').pop() || 'selected-file';
+      
+      // Create a mock file representation (in real implementation, we'd read the actual file)
+      const mockFileContent = `📁 File from Finder: ${fileName}\nPath: ${filePath}\n\n[In the real brick, this would be the actual file content]`;
+      const fileFile = new File([mockFileContent], fileName, { type: 'text/plain' });
+      files = [...files, fileFile];
+      console.log('🎯 BTT File Captured via URL:', filePath);
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureUrl' && data) {
+      // Handle URL from browser
+      const url = decodeURIComponent(data);
+      
+      // Create a URL file representation
+      const urlContent = `🔗 URL from Browser: ${url}\n\n[In the real brick, this would show website preview/metadata]`;
+      const urlFile = new File([urlContent], 'webpage-link.url', { type: 'text/plain' });
+      files = [...files, urlFile];
+      console.log('🎯 BTT URL Captured via Browser:', url);
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureScrollingImage' && data === 'clipboard') {
+      // Handle scrolling screenshot
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 1200; // Longer for scrolling screenshot
+      const ctx = canvas.getContext('2d');
+      ctx!.fillStyle = '#1A4B73';
+      ctx!.fillRect(0, 0, 800, 1200);
+      ctx!.fillStyle = 'white';
+      ctx!.font = '20px Arial';
+      ctx!.fillText('📜 Scrolling Screenshot captured via BTT', 150, 100);
+      ctx!.fillText('Full webpage/document would appear here', 170, 140);
+      ctx!.fillText('Much longer than regular screenshot', 200, 180);
+      
+      // Add some visual elements to show it's a long screenshot
+      for (let i = 0; i < 10; i++) {
+        ctx!.fillText(`Content section ${i + 1}`, 300, 250 + (i * 80));
+      }
+      
+      canvas.toBlob(blob => {
+        if (blob) {
+          const imageFile = new File([blob], 'scrolling-screenshot.png', { type: 'image/png' });
+          files = [...files, imageFile];
+          console.log('🎯 BTT Scrolling Screenshot Captured via URL');
+        }
+      });
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureImage' && data === 'clipboard') {
+      // For now, create a mock screenshot since we can't access clipboard directly from web
+      const canvas = document.createElement('canvas');
+      canvas.width = 400;
+      canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      ctx!.fillStyle = '#2D4A87';
+      ctx!.fillRect(0, 0, 400, 200);
+      ctx!.fillStyle = 'white';
+      ctx!.font = '16px Arial';
+      ctx!.fillText('📸 Screenshot captured via BTT', 80, 100);
+      ctx!.fillText('Real image would appear here', 90, 130);
+      
+      canvas.toBlob(blob => {
+        if (blob) {
+          const imageFile = new File([blob], 'screenshot.png', { type: 'image/png' });
+          files = [...files, imageFile];
+          console.log('🎯 BTT Screenshot Captured via URL');
+        }
+      });
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }
+
+  // Check for URL parameters on mount and focus
+  onMount(() => {
+    handleUrlCapture();
+    
+    // Listen for focus events (when BTT brings window to front)
+    window.addEventListener('focus', handleUrlCapture);
+    
+    // Initialize textarea height
+    if (textarea) {
+      textarea.style.height = `${MIN_HEIGHT}px`;
+    }
+    
+    return () => {
+      window.removeEventListener('focus', handleUrlCapture);
+    };
+  });
+
+  // Expose functions globally for testing
+  if (typeof window !== 'undefined') {
+    (window as any).simulateCaptureText = simulateCaptureText;
+    (window as any).simulateCaptureImage = simulateCaptureImage;
+    (window as any).bttCaptureText = (text: string) => {
+      const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
+      files = [...files, textFile];
+      console.log('🎯 BTT Direct Text Capture:', text);
+    };
+    (window as any).bttCaptureImage = (imageBlob: Blob) => {
+      const imageFile = new File([imageBlob], 'screenshot.png', { type: 'image/png' });
+      files = [...files, imageFile];
+      console.log('🎯 BTT Direct Image Capture');
+    };
+  }
+</script>
+
+<nav>
+  <a href="
+      • ');
+      ctx!.fillStyle = '
+      • ') return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('
+      • 'Monaco'
+      ... and 100 more
+   urls: 24 values
+      • /style>
+      • //
+      • /plain
+      • /png
+      • /if}
+      ... and 19 more
+   numbers: 48 values
+      • 12
+      • 140
+      • 0.5
+      • 222831
+      • 74
+      ... and 43 more
+
+📄 sandbox-11/+page.svelte
+   colors: 44 values
+      • #eac
+      • orange
+      • white
+      • rgba(223, 208, 184, 1)
+      • rgba(255, 255, 255, 0.5)
+      ... and 39 more
+   dimensions: 36 values
+      • 2px
+      • 60px
+      • 32px
+      • 9px
+      • 400px
+      ... and 31 more
+   durations: 2 values
+      • 0.3s
+      • 0.2s
+   gradients: 3 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+      • linear-gradient(to left,
+      rgba(255, 255, 255, 0.2)
+      • linear-gradient(to right,
+      rgba(255, 255, 255, 0.2)
+   shadows: 4 values
+      • box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4)
+      • 8px 12px 4px 12px
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 25 values
+      • 1px solid rgba(255, 255, 255, 0.2)
+      • border: 2px solid
+      • border-top: 1.5px solid rgba(223, 208, 184, 0.5)
+      • border: 1px solid rgba(255, 255, 255, 0.05)
+      • border-radius: 4px
+      ... and 20 more
+   strings: 121 values
+      • ', 150, 100);
+      ctx!.fillText('
+      • ');
+      ctx!.fillStyle = '
+      • ') return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('
+      • 'Monaco'
+      • "></div>
+      </button>
+      
+      <!-- Model Picker Dropdown -->
+      <div class="
+      ... and 116 more
+   urls: 24 values
+      • /style>
+      • //
+      • /plain
+      • /png
+      • /if}
+      ... and 19 more
+   numbers: 53 values
+      • 4.1
+      • 12
+      • 140
+      • 0.5
+      • 222831
+      ... and 48 more
+
+📄 sandbox-9/+page.svelte
+   colors: 33 values
+      • #eac
+      • white
+      • rgba(255, 255, 255, 0.5)
+      • #4A90E2
+      • rgba(255, 255, 255, 0.3)
+      ... and 28 more
+   dimensions: 31 values
+      • 2px
+      • 60px
+      • 9px
+      • 400px
+      • 6px
+      ... and 26 more
+   durations: 2 values
+      • 0.3s
+      • 0.2s
+   gradients: 3 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+      • linear-gradient(to left,
+      rgba(255, 255, 255, 0.2)
+      • linear-gradient(to right,
+      rgba(255, 255, 255, 0.2)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 18 values
+      • 1px solid rgba(255, 255, 255, 0.2)
+      • border-radius: 9px
+      • border-radius: 50%
+      • border: 2px solid
+      • 1px solid rgba(255, 255, 255, 0.05)
+      ... and 13 more
+   strings: 85 values
+      • ', 150, 100);
+      ctx!.fillText('
+      • ');
+      ctx!.fillStyle = '
+      • ') return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('
+      • 'Monaco'
+      • " />
+
+<div class="
+      ... and 80 more
+   urls: 24 values
+      • /style>
+      • //
+      • /plain
+      • /png
+      • /if}
+      ... and 19 more
+   numbers: 45 values
+      • 12
+      • 140
+      • 0.5
+      • 222831
+      • 74
+      ... and 40 more
+
+📄 sandbox-7/+page.svelte
+   colors: 31 values
+      • #eac
+      • white
+      • #4A90E2
+      • rgba(255, 255, 255, 0.3)
+      • rgba(0, 0, 0, 0.9)
+      ... and 26 more
+   dimensions: 28 values
+      • 2px
+      • 60px
+      • 9px
+      • 400px
+      • 6px
+      ... and 23 more
+   durations: 2 values
+      • 0.3s
+      • 0.2s
+   gradients: 3 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+      • linear-gradient(to right,
+      rgba(255, 255, 255, 0.1)
+      • linear-gradient(to left,
+      rgba(255, 255, 255, 0.1)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 17 values
+      • 1px solid rgba(255, 255, 255, 0.2)
+      • border-radius: 9px
+      • border-radius: 50%
+      • border: 2px solid
+      • 1px solid rgba(255, 255, 255, 0.05)
+      ... and 12 more
+   strings: 67 values
+      • ">
+      <p><strong>• Port Detection:</strong> Make dev server port detection smarter (currently hardcoded to 5174)</p>
+      <p><strong>• Graceful Failure:</strong> If AtomicAether website is not open, CTRL+OPTION+C should do nothing</p>
+      <p><strong>• Workflow Difference:</strong> Text capture is select-then-hotkey, Screenshot capture is hotkey-then-select</p>
+      <p><strong>• Clipboard Access:</strong> Web browsers can't access clipboard images directly. BTT should save screenshot to temp file and pass file path instead of clipboard data</p>
+    </div>
+  </div>
+
+  <div class="
+      • "></div>
+
+<svelte:window on:keydown={handleKeydown} />
+
+<input type="
+      • 'Escape'
+      • '; // Generic file icon placeholder
+  }
+
+  function handleDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  function handleDrop(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer?.files) {
+      files = Array.from(event.dataTransfer.files);
+    }
+  }
+
+  // Mock API endpoints for BetterTouchTool testing
+  function simulateCaptureText(text: string) {
+    console.log('
+      • ', window.location.pathname);
+    }
+    
+    if (action === '
+      ... and 62 more
+   urls: 27 values
+      • /em></p>
+      • /style>
+      • /strong>
+      • /h3>
+      • //
+      ... and 22 more
+   numbers: 34 values
+      • 0.5
+      • 222831
+      • 74
+      • 130
+      • 0.05
+      ... and 29 more
+
+📄 sandbox-1/+page.svelte
+   colors: 15 values
+      • rgba(255, 255, 255, 0.08)
+      • green
+      • rgba(0, 0, 0, 0.4)
+      • #00ff00
+      • rgba(223, 208, 184, 0.7)
+      ... and 10 more
+   dimensions: 15 values
+      • 4px
+      • 12px
+      • 2px
+      • 80%
+      • 9px
+      ... and 10 more
+   durations: 1 values
+      • 0.3s
+   gradients: 1 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 5 values
+      • border-radius: 50%
+      • border-radius: 9px
+      • border: 1px solid
+      • border-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)) 1
+      • border: none
+   strings: 13 values
+      • ">
+    <textarea class="
+      • "></textarea>
+    <div class="
+      • 'rainy-night'
+      • ">User</span>
+      <div class="
+      • ">claude-3.5-sonnet</span>
+      <span class="
+      ... and 8 more
+   urls: 11 values
+      • /script>
+      • /div>
+      • /span>
+      • /style>
+      • //
+      ... and 6 more
+   numbers: 18 values
+      • 255
+      • 50
+      • 208
+      • 0.5
+      • 222831
+      ... and 13 more
+
+📄 sandbox-6/+page.svelte
+   colors: 23 values
+      • #eac
+      • white
+      • rgba(255, 255, 255, 0.3)
+      • rgba(0, 0, 0, 0.3)
+      • transparent
+      ... and 18 more
+   dimensions: 24 values
+      • 2px
+      • 60px
+      • 9px
+      • 6px
+      • 10px
+      ... and 19 more
+   durations: 1 values
+      • 0.3s
+   gradients: 3 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+      • linear-gradient(to right,
+      rgba(255, 255, 255, 0.1)
+      • linear-gradient(to left,
+      rgba(255, 255, 255, 0.1)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 9 values
+      • 1px solid rgba(255, 255, 255, 0.2)
+      • border-radius: 9px
+      • border-radius: 50%
+      • border: 2px solid
+      • border-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)) 1
+      ... and 4 more
+   strings: 28 values
+      • "></div>
+
+<svelte:window on:keydown={handleKeydown} />
+
+<input type="
+      • 'Escape'
+      • ">claude-3.5-sonnet</span>
+      <span class="
+      • ">
+            {#if file.type.startsWith('image/')}
+              <img src={getFilePreviewUrl(file)} alt={file.name} />
+            {:else}
+              <div class="
+      • '; // Generic file icon placeholder
+  }
+
+  function handleDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  function handleDrop(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer?.files) {
+      files = Array.from(event.dataTransfer.files);
+    }
+  }
+</script>
+
+<nav>
+  <a href="/sandboxes">← Back to Sandboxes</a>
+</nav>
+
+
+<div class="left-stencil"></div>
+<div class="right-stencil"></div>
+
+<svelte:window on:keydown={handleKeydown} />
+
+<input type="file" multiple bind:this={fileInput} on:change={handleFileChange} style="display: none;" accept="image/*,.pdf,.doc,.docx,.txt" />
+
+<div class="input-container">
+  <div class="input-bar" on:dragover={handleDragOver} on:drop={handleDrop}>
+    {#if files.length > 0}
+      <div class="file-preview-zone">
+        {#each files as file}
+          <div class="file-preview">
+            {#if file.type.startsWith('
+      ... and 23 more
+   urls: 19 values
+      • /style>
+      • //
+      • /if}
+      • />
+      • /span>
+      ... and 14 more
+   numbers: 21 values
+      • 0.5
+      • 222831
+      • 85
+      • 0.1
+      • 0.4
+      ... and 16 more
+
+📄 sandbox-8/+page.svelte
+   colors: 32 values
+      • #eac
+      • white
+      • #4A90E2
+      • rgba(255, 255, 255, 0.3)
+      • rgba(0, 0, 0, 0.9)
+      ... and 27 more
+   dimensions: 28 values
+      • 2px
+      • 60px
+      • 9px
+      • 400px
+      • 6px
+      ... and 23 more
+   durations: 2 values
+      • 0.3s
+      • 0.2s
+   gradients: 3 values
+      • linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3)
+      • linear-gradient(to right,
+      rgba(255, 255, 255, 0.1)
+      • linear-gradient(to left,
+      rgba(255, 255, 255, 0.1)
+   shadows: 2 values
+      • box-shadow:
+      0 0 4px #00ff00,
+      0 0 8px rgba(0, 255, 0, 0.5)
+      • box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08)
+   borders: 17 values
+      • 1px solid rgba(255, 255, 255, 0.2)
+      • border-radius: 9px
+      • border-radius: 50%
+      • border: 2px solid
+      • 1px solid rgba(255, 255, 255, 0.05)
+      ... and 12 more
+   strings: 84 values
+      • ', 150, 100);
+      ctx!.fillText('
+      • ">
+  import { onMount } from 'svelte';
+  import { themeSelector, themeApplier } from '$lib/buses';
+  
+  let files: File[] = $state([]);
+  let fileInput: HTMLInputElement;
+  
+  onMount(() => {
+    // Apply rainy night theme
+    themeApplier.initialize();
+    themeSelector.selectTheme('rainy-night');
+  });
+
+  function handleFileSelect() {
+    fileInput.click();
+  }
+
+  function handleFileChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files) {
+      files = Array.from(target.files);
+    }
+  }
+
+  function removeFile(fileToRemove: File) {
+    files = files.filter(file => file !== fileToRemove);
+  }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      files = [];
+      fileInput.value = '';
+    }
+  }
+
+  function getFilePreviewUrl(file: File): string {
+    if (file.type.startsWith('image/')) {
+      return URL.createObjectURL(file);
+    }
+    return ''; // Generic file icon placeholder
+  }
+
+  function handleDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  function handleDrop(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer?.files) {
+      files = Array.from(event.dataTransfer.files);
+    }
+  }
+
+  // Mock API endpoints for BetterTouchTool testing
+  function simulateCaptureText(text: string) {
+    console.log('🎯 BTT Text Capture:', text);
+    const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
+    files = [...files, textFile];
+  }
+
+  function simulateCaptureImage(imageBlob: Blob) {
+    console.log('🎯 BTT Image Capture:', imageBlob);
+    const imageFile = new File([imageBlob], 'screenshot.png', { type: 'image/png' });
+    files = [...files, imageFile];
+  }
+
+  // Enhanced API for BetterTouchTool integration
+  function handleUrlCapture() {
+    if (typeof window === 'undefined') return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    const data = params.get('data');
+    
+    if (action === 'captureText' && data) {
+      const textFile = new File([decodeURIComponent(data)], 'captured-text.txt', { type: 'text/plain' });
+      files = [...files, textFile];
+      console.log('🎯 BTT Text Captured via URL:', decodeURIComponent(data));
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureFile' && data) {
+      // Handle file path from Finder selection
+      const filePath = decodeURIComponent(data);
+      const fileName = filePath.split('/').pop() || 'selected-file';
+      
+      // Create a mock file representation (in real implementation, we'd read the actual file)
+      const mockFileContent = `📁 File from Finder: ${fileName}\nPath: ${filePath}\n\n[In the real brick, this would be the actual file content]`;
+      const fileFile = new File([mockFileContent], fileName, { type: 'text/plain' });
+      files = [...files, fileFile];
+      console.log('🎯 BTT File Captured via URL:', filePath);
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureUrl' && data) {
+      // Handle URL from browser
+      const url = decodeURIComponent(data);
+      
+      // Create a URL file representation
+      const urlContent = `🔗 URL from Browser: ${url}\n\n[In the real brick, this would show website preview/metadata]`;
+      const urlFile = new File([urlContent], 'webpage-link.url', { type: 'text/plain' });
+      files = [...files, urlFile];
+      console.log('🎯 BTT URL Captured via Browser:', url);
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureScrollingImage' && data === 'clipboard') {
+      // Handle scrolling screenshot
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 1200; // Longer for scrolling screenshot
+      const ctx = canvas.getContext('2d');
+      ctx!.fillStyle = '#1A4B73';
+      ctx!.fillRect(0, 0, 800, 1200);
+      ctx!.fillStyle = 'white';
+      ctx!.font = '20px Arial';
+      ctx!.fillText('📜 Scrolling Screenshot captured via BTT', 150, 100);
+      ctx!.fillText('Full webpage/document would appear here', 170, 140);
+      ctx!.fillText('Much longer than regular screenshot', 200, 180);
+      
+      // Add some visual elements to show it's a long screenshot
+      for (let i = 0; i < 10; i++) {
+        ctx!.fillText(`Content section ${i + 1}`, 300, 250 + (i * 80));
+      }
+      
+      canvas.toBlob(blob => {
+        if (blob) {
+          const imageFile = new File([blob], 'scrolling-screenshot.png', { type: 'image/png' });
+          files = [...files, imageFile];
+          console.log('🎯 BTT Scrolling Screenshot Captured via URL');
+        }
+      });
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    
+    if (action === 'captureImage' && data === 'clipboard') {
+      // For now, create a mock screenshot since we can't access clipboard directly from web
+      const canvas = document.createElement('canvas');
+      canvas.width = 400;
+      canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      ctx!.fillStyle = '#2D4A87';
+      ctx!.fillRect(0, 0, 400, 200);
+      ctx!.fillStyle = 'white';
+      ctx!.font = '16px Arial';
+      ctx!.fillText('📸 Screenshot captured via BTT', 80, 100);
+      ctx!.fillText('Real image would appear here', 90, 130);
+      
+      canvas.toBlob(blob => {
+        if (blob) {
+          const imageFile = new File([blob], 'screenshot.png', { type: 'image/png' });
+          files = [...files, imageFile];
+          console.log('🎯 BTT Screenshot Captured via URL');
+        }
+      });
+      
+      // Clear URL params after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }
+
+  // Check for URL parameters on mount and focus
+  onMount(() => {
+    handleUrlCapture();
+    
+    // Listen for focus events (when BTT brings window to front)
+    window.addEventListener('focus', handleUrlCapture);
+    
+    return () => {
+      window.removeEventListener('focus', handleUrlCapture);
+    };
+  });
+
+  // Expose functions globally for testing
+  if (typeof window !== 'undefined') {
+    (window as any).simulateCaptureText = simulateCaptureText;
+    (window as any).simulateCaptureImage = simulateCaptureImage;
+    (window as any).bttCaptureText = (text: string) => {
+      const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
+      files = [...files, textFile];
+      console.log('🎯 BTT Direct Text Capture:', text);
+    };
+    (window as any).bttCaptureImage = (imageBlob: Blob) => {
+      const imageFile = new File([imageBlob], 'screenshot.png', { type: 'image/png' });
+      files = [...files, imageFile];
+      console.log('🎯 BTT Direct Image Capture');
+    };
+  }
+</script>
+
+<nav>
+  <a href="
+      • ');
+      ctx!.fillStyle = '
+      • ') return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('
+      • 'Monaco'
+      ... and 79 more
+   urls: 30 values
+      • /3
+      • /em></p>
+      • /strong>
+      • /style>
+      • /h3>
+      ... and 25 more
+   numbers: 43 values
+      • 140
+      • 0.5
+      • 222831
+      • 74
+      • 130
+      ... and 38 more
+
+⚙️  SUGGESTED CONFIG FILES:
+
+📁 aetherVault/config/inputbar-visual.json
+{
+  "colors": [
+    "rgba(255, 0, 0, 0.3)",
+    "#eac",
+    "rgba(223, 208, 184, 1)",
+    "rgba(255, 255, 255, 0.3)",
+    "rgba(0, 0, 0, 0.8)",
+    "#1A4B73",
+    "rgba(0, 0, 0, 0.3)",
+    "transparent",
+    "rgba(223, 208, 184, 0.5)",
+    "rgba(74, 144, 226, 0.8)"
+  ],
+  "gradients": [
+    "linear-gradient(to left,\n      rgba(255, 255, 255, 0.1)",
+    "linear-gradient(to bottom,\n      rgba(255, 0, 0, 0.3)",
+    "linear-gradient(to right,\n      rgba(255, 255, 255, 0.1)",
+    "linear-gradient(to bottom,\n      rgba(255, 255, 255, 0.3)",
+    "linear-gradient(to left,\n      rgba(255, 255, 255, 0.2)"
+  ],
+  "shadows": [
+    "8px 12px 4px 12px",
+    "box-shadow:\n      0 0 4px #00ff00,\n      0 0 8px rgba(0, 255, 0, 0.5)",
+    "box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4)",
+    "box-shadow:\n      0 4px 12px rgba(0, 0, 0, 0.4),\n      inset 0 -2px 8px rgba(255, 255, 255, 0.08)"
+  ]
+}
+
+📁 aetherVault/config/inputbar-layout.json
+{
+  "dimensions": [
+    "2px",
+    "400px",
+    "704px",
+    "100px",
+    "650px",
+    "1px",
+    "800px",
+    "calc(100vw - 40px)",
+    "80px",
+    "30px",
+    "81px",
+    "40px",
+    "104px",
+    "calc((100vw - 656px)",
+    "calc((100vw - 800px)"
+  ]
+}
+
+📁 aetherVault/config/inputbar-animations.json
+{
+  "durations": [
+    "0.3s",
+    "0.2s"
+  ]
+}
