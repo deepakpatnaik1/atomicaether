@@ -1,0 +1,207 @@
+{
+  "_description": "InputBar layout configuration - dimensions, spacing, and positioning that work across all themes",
+  "_version": "1.0.0",
+  "_extractedFrom": "sandbox-11",
+  
+  "container": {
+    "_comment": "Main input bar container positioning and dimensions",
+    "positioning": {
+      "_purpose": "Where the input bar appears on screen",
+      "bottom": "24px",
+      "_bottomNote": "Distance from screen bottom. Increase = more space below input bar",
+      "zIndex": "1000",
+      "_zIndexNote": "Stacking order. Higher = appears above more elements"
+    },
+    "dimensions": {
+      "_purpose": "Input bar size at different screen sizes",
+      "defaultWidth": "650px",
+      "_defaultNote": "Width on mobile/small screens. Standard width for narrow viewports",
+      "largeScreenWidth": "800px", 
+      "_largeNote": "Width on desktop screens. Larger for better desktop experience",
+      "maxWidth": "calc(100vw - 40px)",
+      "_maxNote": "Never exceeds viewport width minus padding. Prevents horizontal overflow",
+      "minHeight": "80px",
+      "_minHeightNote": "Minimum container height. Ensures consistent baseline size",
+      "breakpoint": "705px",
+      "_breakpointNote": "Screen width where layout switches from mobile to desktop sizing"
+    },
+    "spacing": {
+      "_purpose": "Internal container spacing and layout",
+      "padding": "16px",
+      "_paddingNote": "Internal space around content. Increase = more breathing room",
+      "gridGap": "12px",
+      "_gridGapNote": "Space between file zone, text input, and controls. Affects visual separation"
+    }
+  },
+  
+  "filePreviewZone": {
+    "_comment": "File attachment preview area layout",
+    "spacing": {
+      "_purpose": "File preview zone internal spacing",
+      "padding": "12px",
+      "_zonePaddingNote": "Internal padding of file zone. Increase = more space around file previews",
+      "itemGap": "8px",
+      "_itemGapNote": "Space between individual file previews. Affects file density"
+    },
+    "filePreview": {
+      "_purpose": "Individual file preview card dimensions",
+      "padding": "8px",
+      "_previewPaddingNote": "Space inside each file preview card",
+      "minWidth": "80px",
+      "_minWidthNote": "Minimum file preview width. Ensures readable file names",
+      "maxWidth": "120px", 
+      "_maxWidthNote": "Maximum file preview width. Prevents oversized previews",
+      "imageSize": "60px",
+      "_imageSizeNote": "Size of image thumbnails in file previews",
+      "imageBorderRadius": "4px",
+      "_imageRadiusNote": "Corner roundness of image thumbnails"
+    },
+    "removeButton": {
+      "_purpose": "File removal X button positioning and size",
+      "size": "20px",
+      "_buttonSizeNote": "X button dimensions. Larger = easier to click",
+      "position": {
+        "top": "-4px",
+        "right": "-4px"
+      },
+      "_positionNote": "Button offset from preview corner. Negative values = outside the preview"
+    }
+  },
+  
+  "textInput": {
+    "_comment": "Auto-resizing text input area dimensions",
+    "autoResize": {
+      "_purpose": "Text area auto-resize behavior configuration",
+      "lineHeight": "20px",
+      "_lineHeightNote": "Height of single text line. Must match CSS line-height exactly",
+      "minHeight": "20px",
+      "_minHeightNote": "Minimum input height (1 line). Must equal lineHeight",
+      "maxHeight": "240px", 
+      "_maxHeightNote": "Maximum input height (12 lines). Must equal lineHeight × maxLines",
+      "maxLines": 12,
+      "_maxLinesNote": "Maximum visible lines before scrolling. Calculate: maxHeight ÷ lineHeight"
+    },
+    "typography": {
+      "_purpose": "Text input typography sizing",
+      "fontSize": "14px",
+      "_fontSizeNote": "Main text size. Affects readability and input density",
+      "fontFamily": "system-ui",
+      "_fontFamilyNote": "Font family for text input. system-ui uses OS default"
+    }
+  },
+  
+  "controlsRow": {
+    "_comment": "Bottom controls row layout and spacing",
+    "layout": {
+      "_purpose": "Controls row spacing and alignment",
+      "gap": "12px",
+      "_controlsGapNote": "Space between controls (plus button, dropdowns, indicator)"
+    },
+    "plusButton": {
+      "_purpose": "File attachment plus button dimensions",
+      "padding": "4px 8px",
+      "_plusPaddingNote": "Clickable area around plus icon. Increase = easier to click",
+      "borderRadius": "4px",
+      "_plusRadiusNote": "Corner roundness of button hover area",
+      "icon": {
+        "size": "10px",
+        "_iconSizeNote": "Plus icon dimensions. Increase = more prominent add button"
+      }
+    },
+    "dropdownTrigger": {
+      "_purpose": "Model/persona/theme picker button layout",
+      "fontSize": "12px",
+      "_dropdownFontNote": "Text size for picker labels. Affects picker prominence",
+      "padding": "4px 8px",
+      "_dropdownPaddingNote": "Clickable area around dropdown text",
+      "borderRadius": "4px",
+      "_dropdownRadiusNote": "Corner roundness of dropdown hover area",
+      "chevron": {
+        "size": "8px",
+        "_chevronSizeNote": "Arrow icon size. Increase = more visible dropdown indicator",
+        "marginRight": "6px",
+        "_chevronMarginNote": "Space between arrow and text"
+      }
+    },
+    "statusIndicator": {
+      "_purpose": "Connection status green dot",
+      "size": "8px",
+      "_indicatorSizeNote": "Status dot diameter. Increase = more prominent status"
+    }
+  },
+  
+  "dropdown": {
+    "_comment": "Dropdown menu layout and dimensions",
+    "menu": {
+      "_purpose": "Dropdown container dimensions",
+      "width": "280px",
+      "_menuWidthNote": "Dropdown menu width. Increase = more room for long option names",
+      "marginBottom": "8px",
+      "_menuMarginNote": "Space between dropdown and trigger button"
+    },
+    "item": {
+      "_purpose": "Individual dropdown option layout",
+      "padding": "8px 12px",
+      "_itemPaddingNote": "Space inside each dropdown option. Affects clickability",
+      "fontSize": "12px",
+      "_itemFontNote": "Text size for dropdown options"
+    },
+    "sectionHeader": {
+      "_purpose": "Category headers in dropdowns",
+      "padding": "8px 12px 4px 12px",
+      "_headerPaddingNote": "Space around section headers. Less bottom padding than items",
+      "fontSize": "11px",
+      "_headerFontNote": "Section header text size. Smaller than items for hierarchy",
+      "marginBottom": "4px",
+      "_headerMarginNote": "Space below section header border"
+    },
+    "modelRow": {
+      "_purpose": "Special styling for model options with name + ID",
+      "modelName": {
+        "fontSize": "12px",
+        "_modelNameNote": "Model display name size"
+      },
+      "modelId": {
+        "fontSize": "10px",
+        "_modelIdNote": "Model API ID size. Smaller for less prominence",
+        "marginLeft": "16px",
+        "_modelIdMarginNote": "Space between model name and ID"
+      }
+    }
+  },
+  
+  "stencils": {
+    "_comment": "Horizontal lines extending from input bar",
+    "positioning": {
+      "_purpose": "Where stencil lines appear relative to input bar",
+      "bottom": "81px",
+      "_stencilBottomNote": "Distance from screen bottom. Must align with input bar center",
+      "height": "2px",
+      "_stencilHeightNote": "Line thickness. Increase = more prominent framing lines",
+      "zIndex": "1000",
+      "_stencilZNote": "Same as input bar to appear at same layer"
+    },
+    "dimensions": {
+      "_purpose": "Responsive stencil line widths",
+      "defaultWidth": "calc((100vw - 650px) / 2)",
+      "_defaultWidthNote": "Mobile stencil width. Must match container defaultWidth",
+      "largeWidth": "calc((100vw - 800px) / 2)",
+      "_largeWidthNote": "Desktop stencil width. Must match container largeScreenWidth", 
+      "minWidth": "20px",
+      "_minWidthNote": "Minimum visible line length. Ensures always visible"
+    }
+  },
+  
+  "animation": {
+    "_comment": "Layout-related animation timings",
+    "_purpose": "Animation durations that affect layout and spacing",
+    "inputResize": "0.2s",
+    "_resizeNote": "Text input height change speed. Slower = smoother resize",
+    "hoverTransition": "0.2s", 
+    "_hoverNote": "Button hover effect speed",
+    "globalTransition": "0.3s",
+    "_globalNote": "Overall theme transition speed",
+    "dropdownAnimation": "0.2s",
+    "_dropdownNote": "Dropdown appear/disappear speed"
+  }
+}

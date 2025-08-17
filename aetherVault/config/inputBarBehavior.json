@@ -1,0 +1,178 @@
+{
+  "_description": "InputBar behavior configuration - auto-resize logic, interactions, and animations that work across all themes",
+  "_version": "1.0.0",
+  "_extractedFrom": "sandbox-11",
+  
+  "autoResize": {
+    "_comment": "Text input auto-resize behavior settings", 
+    "_purpose": "Controls how the text input grows and shrinks with content",
+    
+    "lineHeight": 20,
+    "_lineHeightNote": "Height of single text line in pixels. MUST match CSS line-height exactly. Change 20 to 24 = taller lines",
+    
+    "minLines": 1,
+    "_minLinesNote": "Minimum visible lines. Change 1 to 2 = taller minimum input area",
+    
+    "maxLines": 12,
+    "_maxLinesNote": "Maximum visible lines before scrolling. Change 12 to 15 = allow more text before scroll",
+    
+    "minHeight": 20,
+    "_minHeightNote": "Calculated minimum height (lineHeight × minLines). MUST equal lineHeight × minLines",
+    
+    "maxHeight": 240,
+    "_maxHeightNote": "Calculated maximum height (lineHeight × maxLines). MUST equal lineHeight × maxLines",
+    
+    "animationDuration": "0.2s",
+    "_animationNote": "Speed of height transitions. Change 0.2s to 0.1s = faster resize, 0.3s = slower resize",
+    
+    "_criticalRelationship": "minHeight = lineHeight × minLines, maxHeight = lineHeight × maxLines. These MUST stay in sync or auto-resize breaks."
+  },
+  
+  "keyboardShortcuts": {
+    "_comment": "Keyboard interaction behavior",
+    "_purpose": "Defines keyboard shortcuts and their effects",
+    
+    "escapeKey": {
+      "_purpose": "What happens when user presses Escape",
+      "clearFiles": true,
+      "_clearFilesNote": "Whether Escape clears attached files. false = keep files when escaping",
+      "clearText": true, 
+      "_clearTextNote": "Whether Escape clears text input. false = keep text when escaping",
+      "resetHeight": true,
+      "_resetHeightNote": "Whether Escape resets input to minimum height. false = keep current height"
+    },
+    
+    "_usage": "Add new keyboard shortcuts here as features expand"
+  },
+  
+  "fileHandling": {
+    "_comment": "File attachment behavior settings",
+    "_purpose": "Controls how files are handled when attached to input",
+    
+    "dragAndDrop": {
+      "_purpose": "Drag and drop file behavior",
+      "enabled": true,
+      "_dragDropNote": "Whether drag and drop is enabled. false = disable drag and drop",
+      "preventDefaultBehavior": true,
+      "_preventDefaultNote": "Prevents browser from opening dropped files. Should stay true"
+    },
+    
+    "filePreview": {
+      "_purpose": "How file previews are generated and displayed",
+      "imagePreviewEnabled": true,
+      "_imagePreviewNote": "Whether to show image thumbnails. false = show generic file icon for all files",
+      "maxImageSize": "60px",
+      "_maxImageNote": "Maximum size of image thumbnails. Change 60px to 80px = larger thumbnails",
+      "fallbackIcon": "📄",
+      "_fallbackIconNote": "Emoji shown for non-image files. Change to 📎 or 📋 for different icon"
+    },
+    
+    "removeButton": {
+      "_purpose": "File removal X button behavior",
+      "showOnHover": false,
+      "_hoverNote": "Whether remove button only appears on hover. true = cleaner UI, false = always visible",
+      "confirmRemoval": false,
+      "_confirmNote": "Whether to show confirmation before removing files. true = safer, false = faster"
+    },
+    
+    "_usage": "These settings affect all file attachment behavior regardless of theme"
+  },
+  
+  "dropdownBehavior": {
+    "_comment": "Dropdown menu interaction behavior",
+    "_purpose": "Controls how dropdowns open, close, and respond to user interaction",
+    
+    "clickOutsideToClose": {
+      "_purpose": "Whether clicking outside dropdown closes it",
+      "enabled": true,
+      "_clickOutsideNote": "Whether dropdowns close when clicking elsewhere. false = require explicit close button"
+    },
+    
+    "exclusiveDropdowns": {
+      "_purpose": "Whether only one dropdown can be open at a time",
+      "enabled": true,
+      "_exclusiveNote": "Whether opening one dropdown closes others. false = allow multiple dropdowns open"
+    },
+    
+    "animation": {
+      "_purpose": "Dropdown open/close animation settings",
+      "duration": "0.2s",
+      "_durationNote": "Animation speed. Change 0.2s to 0.1s = faster, 0.3s = slower",
+      "easing": "ease",
+      "_easingNote": "Animation curve. Options: ease, ease-in, ease-out, ease-in-out, linear",
+      "slideDirection": "up",
+      "_slideNote": "Direction dropdowns appear from. Options: up, down, fade"
+    },
+    
+    "_usage": "These settings control dropdown behavior across all dropdown types"
+  },
+  
+  "stencilBehavior": {
+    "_comment": "Visual stencil lines behavior",
+    "_purpose": "Controls the horizontal lines that extend from the input bar",
+    
+    "responsive": {
+      "_purpose": "How stencils adapt to different screen sizes",
+      "enabled": true,
+      "_responsiveNote": "Whether stencils resize with screen width. false = fixed width stencils",
+      "minVisibleWidth": "20px",
+      "_minVisibleNote": "Minimum stencil width to ensure always visible. Change 20px to 30px = longer minimum"
+    },
+    
+    "performance": {
+      "_purpose": "Performance optimizations for stencil rendering",
+      "willChange": "opacity",
+      "_willChangeNote": "CSS will-change property for hardware acceleration",
+      "backfaceVisibility": "hidden",
+      "_backfaceNote": "CSS backface-visibility for better performance"
+    },
+    
+    "_usage": "Stencil visual styling (colors, gradients) are in theme files. This controls behavior only."
+  },
+  
+  "accessibility": {
+    "_comment": "Accessibility behavior settings",
+    "_purpose": "Controls keyboard navigation and screen reader support",
+    
+    "keyboardNavigation": {
+      "_purpose": "Keyboard navigation through dropdown options",
+      "enabled": true,
+      "_keyboardNavNote": "Whether arrow keys navigate dropdown options. false = mouse-only dropdowns",
+      "wrapAround": true,
+      "_wrapNote": "Whether arrow keys wrap from last to first option. false = stop at ends"
+    },
+    
+    "screenReader": {
+      "_purpose": "Screen reader announcements and labels",
+      "announceSelections": true,
+      "_announceNote": "Whether to announce dropdown selections to screen readers",
+      "describePurpose": true,
+      "_describeNote": "Whether to include purpose descriptions in ARIA labels"
+    },
+    
+    "_usage": "These ensure the input bar is accessible to users with disabilities"
+  },
+  
+  "validation": {
+    "_comment": "Input validation and error handling",
+    "_purpose": "Rules for validating user input and handling errors",
+    
+    "textInput": {
+      "_purpose": "Text input validation rules",
+      "maxLength": 10000,
+      "_maxLengthNote": "Maximum characters allowed. Change 10000 to 5000 = shorter limit",
+      "allowEmptySubmission": false,
+      "_emptyNote": "Whether to allow submitting empty input. true = allow empty messages"
+    },
+    
+    "fileAttachments": {
+      "_purpose": "File attachment validation rules", 
+      "maxFiles": 10,
+      "_maxFilesNote": "Maximum number of files that can be attached. Change 10 to 5 = fewer files allowed",
+      "maxFileSize": "10MB",
+      "_maxSizeNote": "Maximum individual file size. Change 10MB to 5MB = smaller file limit"
+    },
+    
+    "_usage": "These prevent invalid input and provide user feedback for errors"
+  }
+}
