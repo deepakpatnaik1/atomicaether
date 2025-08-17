@@ -304,7 +304,11 @@ export interface BTTConfig {
       fontFamily: string;
       contentSections: number;
       sectionSpacing: number;
+      contentStartY: number;
     };
+  };
+  fallbackValues: {
+    textAreaHeight: string;
   };
   debugMessages: {
     textCapture: string;

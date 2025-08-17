@@ -11,7 +11,7 @@ export class InputBarService {
 
   // Auto-resize calculation
   calculateTextAreaHeight(textarea: HTMLTextAreaElement): string {
-    if (!this.behavior) return '20px';
+    if (!this.behavior) return this.bttConfig?.fallbackValues.textAreaHeight || '20px';
     
     const { lineHeight, minHeight, maxHeight } = this.behavior.autoResize;
     
@@ -79,7 +79,7 @@ export class InputBarService {
       
       // Add multiple content sections
       for (let i = 0; i < canvasConfig.contentSections; i++) {
-        ctx.fillText(`Content section ${i + 1}`, 300, 250 + (i * canvasConfig.sectionSpacing));
+        ctx.fillText(`Content section ${i + 1}`, 300, canvasConfig.contentStartY + (i * canvasConfig.sectionSpacing));
       }
     } else {
       ctx.fillText(this.bttConfig.mockFileContent.screenshotText, 80, 100);

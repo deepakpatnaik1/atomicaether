@@ -38,10 +38,19 @@
       "contentSections": 10,
       "_sectionsNote": "Number of demo content sections. Change 10 to 15 = more demo content",
       "sectionSpacing": 80,
-      "_spacingNote": "Pixels between content sections. Change 80 to 100 = more space between sections"
+      "_spacingNote": "Pixels between content sections. Change 80 to 100 = more space between sections",
+      "contentStartY": 250,
+      "_contentStartNote": "Y-coordinate where content sections begin. Change 250 to 300 = push content lower"
     },
     
     "_usage": "These settings only affect demo mode when BTT is not available. Real BTT captures use actual system screenshots."
+  },
+  
+  "fallbackValues": {
+    "_comment": "Default values used when behavior config is not available",
+    "_purpose": "Ensures service functions gracefully when configuration loading fails",
+    "textAreaHeight": "20px",
+    "_textAreaNote": "Default textarea height when behavior config unavailable. Change 20px to 24px = taller fallback"
   },
   
   "debugMessages": {
