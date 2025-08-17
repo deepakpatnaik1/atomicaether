@@ -58,7 +58,9 @@
       "color": "#DFD0B8",
       "_textColorNote": "Warm off-white text color. Change #DFD0B8 to #FFFFFF = pure white, #E0C9A6 = warmer tone",
       "placeholderColor": "rgba(223, 208, 184, 0.6)",
-      "_placeholderNote": "Placeholder text transparency. Change 0.6 to 0.8 = more visible placeholder"
+      "_placeholderNote": "Placeholder text transparency. Change 0.6 to 0.8 = more visible placeholder",
+      "selectedColor": "rgba(223, 208, 184, 1)",
+      "_selectedNote": "Full opacity for selected dropdown items"
     }
   },
   
@@ -115,6 +117,17 @@
       "borderBottom": "1px solid rgba(255, 255, 255, 0.1)",
       "_headerNote": "Section headers are brighter than items. Change 0.9 to 1.0 = pure white headers"
     }
+  },
+  
+  "interactiveStates": {
+    "_comment": "Interactive element styling for hover, selected states",
+    "_purpose": "Consistent styling for buttons, dropdowns, and interactive elements",
+    "hoverBackground": "rgba(255, 255, 255, 0.1)",
+    "_hoverNote": "Standard hover background for all interactive elements",
+    "selectedBackground": "rgba(255, 255, 255, 0.15)",
+    "_selectedNote": "Background for selected dropdown items - slightly brighter than hover",
+    "removeButtonHover": "rgba(255, 0, 0, 1)",
+    "_removeNote": "File remove button hover state - solid red for clear action feedback"
   },
   
   "stencils": {

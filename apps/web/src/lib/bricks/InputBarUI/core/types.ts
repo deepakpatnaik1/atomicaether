@@ -211,6 +211,7 @@ export interface RainyNightTheme {
     typography: {
       color: string;
       placeholderColor: string;
+      selectedColor: string;
     };
   };
   controlsRow: {
@@ -250,6 +251,11 @@ export interface RainyNightTheme {
       color: string;
       borderBottom: string;
     };
+  };
+  interactiveStates: {
+    hoverBackground: string;
+    selectedBackground: string;
+    removeButtonHover: string;
   };
   stencils: {
     gradient: {

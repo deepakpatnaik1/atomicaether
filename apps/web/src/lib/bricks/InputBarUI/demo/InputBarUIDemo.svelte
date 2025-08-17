@@ -1,12 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { InputBarUI } from '../index.js';
-  import { themeSelector, themeApplier } from '$lib/buses';
+  import { themeSelector, themeApplier, configBus } from '$lib/buses';
+  import type { RainyNightTheme } from '../core/types.js';
+  
+  let theme: RainyNightTheme | null = $state(null);
 
-  onMount(() => {
+  onMount(async () => {
     // Apply theme system for consistent styling
     themeApplier.initialize();
     themeSelector.selectTheme('rainy-night');
+    
+    // Load theme for color externalization
+    theme = await configBus.load('themes/rainy-night');
   });
 </script>
 
@@ -17,15 +23,21 @@
 
 <!-- Global body styling to match theme -->
 <svelte:head>
-  <style>
-    body {
-      background: #222831 !important;
-      color: #e0e0e0 !important;
-      transition: all 0.3s ease;
-      margin: 0;
-      padding: 0;
-    }
-  </style>
+  {#if theme}
+    <style>
+      :root {
+        --link-color: {theme.navigation.link.color};
+        --tagline-color: {theme.navigation.tagline.color};
+      }
+      body {
+        background: {theme.globalBody.background} !important;
+        color: {theme.globalBody.color} !important;
+        transition: {theme.globalBody.transition};
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  {/if}
 </svelte:head>
 
 <InputBarUI />
@@ -38,11 +50,11 @@
   
   nav a {
     text-decoration: none;
-    color: #007acc;
+    color: var(--link-color, #007acc);
   }
 
   .tagline {
-    color: rgba(223, 208, 184, 0.7);
+    color: var(--tagline-color, rgba(223, 208, 184, 0.7));
     font-size: 14px;
     margin-top: 8px;
     font-style: italic;

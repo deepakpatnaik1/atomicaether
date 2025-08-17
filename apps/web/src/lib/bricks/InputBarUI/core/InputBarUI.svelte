@@ -281,6 +281,23 @@
   }
 </script>
 
+<!-- Set CSS custom properties for theme colors -->
+<svelte:head>
+  {#if theme}
+    <style>
+      :root {
+        --placeholder-color: {theme.textInput.typography.placeholderColor};
+        --selected-text-color: {theme.textInput.typography.selectedColor};
+        --hover-background: {theme.interactiveStates.hoverBackground};
+        --selected-background: {theme.interactiveStates.selectedBackground};
+        --remove-button-hover: {theme.interactiveStates.removeButtonHover};
+        --icon-background: {theme.controlsRow.plusButton.icon.color};
+        --chevron-color: {theme.controlsRow.dropdownTrigger.chevron.color};
+      }
+    </style>
+  {/if}
+</svelte:head>
+
 <svelte:window on:keydown={handleKeydown} on:click={handleClickOutside} />
 
 <input 
@@ -762,7 +779,7 @@
   }
 
   .remove-file:hover {
-    background: rgba(255, 0, 0, 1) !important;
+    background: var(--remove-button-hover, rgba(255, 0, 0, 1)) !important;
   }
 
   .text-input {
@@ -776,7 +793,7 @@
   }
 
   .text-input::placeholder {
-    color: rgba(223, 208, 184, 0.6);
+    color: var(--placeholder-color, rgba(223, 208, 184, 0.6));
   }
 
   .controls-row {
@@ -795,7 +812,7 @@
   }
 
   .plus-button:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: var(--hover-background, rgba(255, 255, 255, 0.1)) !important;
   }
 
   .plus-icon {
@@ -806,7 +823,7 @@
   .plus-icon::after {
     content: '';
     position: absolute;
-    background: rgba(223, 208, 184, 0.7);
+    background: var(--icon-background, rgba(223, 208, 184, 0.7));
   }
 
   .plus-icon::before {
@@ -840,7 +857,7 @@
   }
 
   .dropdown-trigger:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: var(--hover-background, rgba(255, 255, 255, 0.1)) !important;
   }
 
   .chevron {
@@ -853,8 +870,8 @@
 
   .chevron.up {
     border: none;
-    border-left: 1.5px solid rgba(223, 208, 184, 0.5);
-    border-top: 1.5px solid rgba(223, 208, 184, 0.5);
+    border-left: 1.5px solid var(--chevron-color, rgba(223, 208, 184, 0.5));
+    border-top: 1.5px solid var(--chevron-color, rgba(223, 208, 184, 0.5));
     transform: rotate(45deg);
     align-self: flex-end;
     background: transparent;
@@ -891,12 +908,12 @@
   }
 
   .dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: var(--hover-background, rgba(255, 255, 255, 0.1)) !important;
   }
 
   .dropdown-item.selected {
-    background: rgba(255, 255, 255, 0.15) !important;
-    color: rgba(223, 208, 184, 1) !important;
+    background: var(--selected-background, rgba(255, 255, 255, 0.15)) !important;
+    color: var(--selected-text-color, rgba(223, 208, 184, 1)) !important;
   }
 
   .dropdown-item:first-child {
