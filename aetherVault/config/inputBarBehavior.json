@@ -174,5 +174,44 @@
     },
     
     "_usage": "These prevent invalid input and provide user feedback for errors"
+  },
+  
+  "constants": {
+    "_comment": "Hardcoded string constants and identifiers",
+    "_purpose": "Centralized location for CSS class names, event keys, and action identifiers",
+    
+    "cssClasses": {
+      "_purpose": "CSS class names used throughout the component",
+      "dropdownContainer": "dropdown-container",
+      "_dropdownContainerNote": "Class for dropdown wrapper elements. Change 'dropdown-container' to 'picker-wrapper' for different styling"
+    },
+    
+    "keyboardEvents": {
+      "_purpose": "Keyboard event key identifiers",
+      "escapeKey": "Escape",
+      "_escapeKeyNote": "Key identifier for escape functionality. Standard DOM KeyboardEvent.key value"
+    },
+    
+    "bttActions": {
+      "_purpose": "BetterTouchTool action identifiers for URL parameter handling",
+      "captureImage": "captureImage",
+      "_captureImageNote": "BTT action for capturing regular screenshots",
+      "captureScrollingImage": "captureScrollingImage", 
+      "_captureScrollingNote": "BTT action for capturing long scrolling screenshots",
+      "clipboard": "clipboard",
+      "_clipboardNote": "BTT data source identifier for clipboard content"
+    },
+    
+    "typeChecking": {
+      "_purpose": "Type checking string constants",
+      "undefinedType": "undefined",
+      "_undefinedNote": "String constant for typeof undefined checks"
+    },
+    
+    "modelDefaults": {
+      "_purpose": "Default model identifier for initial state",
+      "defaultModelId": "claude-sonnet-4-20250514",
+      "_defaultModelNote": "Initial model selection. Change to different model ID as defaults change"
+    }
   }
 }
