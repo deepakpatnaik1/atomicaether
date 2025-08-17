@@ -161,6 +161,25 @@ export interface InputBarBehavior {
       slideDirection: string;
     };
   };
+  constants: {
+    cssClasses: {
+      dropdownContainer: string;
+    };
+    keyboardEvents: {
+      escapeKey: string;
+    };
+    bttActions: {
+      captureImage: string;
+      captureScrollingImage: string;
+      clipboard: string;
+    };
+    typeChecking: {
+      undefinedType: string;
+    };
+    modelDefaults: {
+      defaultModelId: string;
+    };
+  };
 }
 
 export interface DropdownData {

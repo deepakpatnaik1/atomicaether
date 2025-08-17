@@ -16,7 +16,7 @@
   let showThemeDropdown = $state(false);
   
   // Current selections - initialize with defaults matching Sandbox 11
-  let selectedModel = $state('claude-sonnet-4-20250514');
+  let selectedModel = $state('');
   let selectedPersona = $state('user');
   let selectedTheme = $state('rainy-night');
   
@@ -48,6 +48,8 @@
       selectedModel = dropdownData.defaults.selectedModel;
       selectedPersona = dropdownData.defaults.selectedPersona;
       selectedTheme = dropdownData.defaults.selectedTheme;
+    } else if (behavior?.constants.modelDefaults.defaultModelId) {
+      selectedModel = behavior.constants.modelDefaults.defaultModelId;
     }
     
     // Initialize textarea height
@@ -82,7 +84,7 @@
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && service) {
+    if (event.key === (behavior?.constants.keyboardEvents.escapeKey || 'Escape') && service) {
       if (service.shouldClearOnEscape('files')) {
         files = [];
         fileInput.value = '';
@@ -196,7 +198,7 @@
     if (!behavior?.dropdownBehavior.clickOutsideToClose.enabled) return;
     
     const target = event.target as HTMLElement;
-    if (!target.closest('.dropdown-container')) {
+    if (!target.closest(`.${behavior?.constants.cssClasses.dropdownContainer || 'dropdown-container'}`)) {
       showModelDropdown = false;
       showPersonaDropdown = false;
       showThemeDropdown = false;
@@ -241,7 +243,7 @@
       window.history.replaceState({}, '', window.location.pathname);
     }
     
-    if (action === 'captureImage' && data === 'clipboard') {
+    if (action === (behavior?.constants.bttActions.captureImage || 'captureImage') && data === (behavior?.constants.bttActions.clipboard || 'clipboard')) {
       service.createMockScreenshot(false).then(imageFile => {
         files = [...files, imageFile];
         service.logBTTAction('scrollingScreenshotCaptured');
@@ -251,7 +253,7 @@
       window.history.replaceState({}, '', window.location.pathname);
     }
     
-    if (action === 'captureScrollingImage' && data === 'clipboard') {
+    if (action === (behavior?.constants.bttActions.captureScrollingImage || 'captureScrollingImage') && data === (behavior?.constants.bttActions.clipboard || 'clipboard')) {
       service.createMockScreenshot(true).then(imageFile => {
         files = [...files, imageFile];
         service.logBTTAction('scrollingScreenshotCaptured');
@@ -263,7 +265,7 @@
   }
 
   // Expose functions globally for testing
-  if (typeof window !== 'undefined') {
+  if (typeof window !== (behavior?.constants.typeChecking.undefinedType || 'undefined')) {
     (window as any).bttCaptureText = (text: string) => {
       if (service) {
         const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
@@ -474,7 +476,7 @@
       </button>
       
       <!-- Model Picker Dropdown -->
-      <div class="dropdown-container">
+      <div class="{behavior?.constants.cssClasses.dropdownContainer || 'dropdown-container'}">
         <button 
           class="dropdown-trigger" 
           on:click={toggleModelDropdown}
@@ -562,7 +564,7 @@
       </div>
       
       <!-- Persona Picker Dropdown -->
-      <div class="dropdown-container">
+      <div class="{behavior?.constants.cssClasses.dropdownContainer || 'dropdown-container'}">
         <button 
           class="dropdown-trigger" 
           on:click={togglePersonaDropdown}
@@ -635,7 +637,7 @@
       </div>
       
       <!-- Theme Picker Dropdown -->
-      <div class="dropdown-container">
+      <div class="{behavior?.constants.cssClasses.dropdownContainer || 'dropdown-container'}">
         <button 
           class="dropdown-trigger" 
           on:click={toggleThemeDropdown}
