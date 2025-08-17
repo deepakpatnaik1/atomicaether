@@ -84,11 +84,8 @@
     const target = event.target as HTMLTextAreaElement;
     text = target.value;
     
-    console.log('Text input:', text, 'Service:', !!service);
-    
     if (service) {
       service.autoResize();
-      console.log('After resize - height:', service.getCurrentHeight());
       dispatch('textChange', { text });
       dispatch('heightChange', { 
         height: service.getCurrentHeight(), 
@@ -133,18 +130,14 @@
   }
 
   onMount(async () => {
-    console.log('TextHandler mounting, textarea:', !!textarea);
-    
     // Load configuration
     config = await configBus.load<TextHandlerConfig>('textHandler');
-    console.log('Config loaded:', !!config);
     
     // Load theme from static directory
     try {
       const response = await fetch('/themes/rainy-night.json');
       const fullTheme = await response.json();
       theme = fullTheme?.textHandler;
-      console.log('Theme loaded:', !!theme);
     } catch (error) {
       console.warn('Theme loading failed:', error);
       theme = null;
@@ -153,11 +146,9 @@
     if (config) {
       // Initialize service
       service = new TextHandlerService(config);
-      console.log('Service created, textarea available:', !!textarea);
       
       if (textarea) {
         service.setTextarea(textarea);
-        console.log('Service textarea set');
       }
       
       // Apply theme styles
