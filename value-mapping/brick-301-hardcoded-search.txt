@@ -1,0 +1,512 @@
+BRICK-301 Hardcoded Values Search Report
+==================================================
+
+File: apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte
+----------------------------------------
+Line   3: $lib/buses           | import { configBus } from '$lib/buses';
+Line   4: ./InputBarService.js | import { InputBarService } from './InputBarService.js';
+Line   5: ./types.js           | import type { InputBarConfig, InputBarBehavior, DropdownData, RainyNightTheme, BTTConfig } from './t...
+Line  39: themes/rainy-night   | theme = await configBus.load('themes/rainy-night');
+Line 160: .dropdown-container  | if (!target.closest('.dropdown-container')) {
+Line 230: captured-text.txt    | const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
+Line 230: text/plain           | const textFile = new File([text], 'captured-text.txt', { type: 'text/plain' });
+Line 237: screenshot.png       | const imageFile = new File([imageBlob], 'screenshot.png', { type: 'image/png' });
+Line 237: image/png            | const imageFile = new File([imageBlob], 'screenshot.png', { type: 'image/png' });
+Line 252: display: none;       | style="display: none;"
+Line 253: image/*,.pdf,.doc,.docx,.txt | accept="image/*,.pdf,.doc,.docx,.txt"
+Line 258: left-stencil         | class="left-stencil"
+Line 260: 81px                 | bottom: {layout?.stencils.positioning.bottom || '81px'};
+Line 261: 2px                  | height: {layout?.stencils.positioning.height || '2px'};
+Line 263: calc((100vw - 650px) / 2) | width: {layout?.stencils.dimensions.defaultWidth || 'calc((100vw - 650px) / 2)'};
+Line 264: 20px                 | min-width: {layout?.stencils.dimensions.minWidth || '20px'};
+Line 265: rgba(255, 255, 255, 0.2) | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 265: 255                  | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 265: 255                  | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 265: 255                  | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 265: 0.2                  | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 265: 255                  | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 265: 255                  | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 265: 255                  | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 265: 0.5                  | background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), r...
+Line 270: right-stencil        | class="right-stencil"
+Line 272: 81px                 | bottom: {layout?.stencils.positioning.bottom || '81px'};
+Line 273: 2px                  | height: {layout?.stencils.positioning.height || '2px'};
+Line 275: calc((100vw - 650px) / 2) | width: {layout?.stencils.dimensions.defaultWidth || 'calc((100vw - 650px) / 2)'};
+Line 276: 20px                 | min-width: {layout?.stencils.dimensions.minWidth || '20px'};
+Line 277: rgba(255, 255, 255, 0.2) | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 277: 255                  | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 277: 255                  | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 277: 255                  | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 277: 0.2                  | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 277: 255                  | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 277: 255                  | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 277: 255                  | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 277: 0.5                  | background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), r...
+Line 283: input-container      | class="input-container"
+Line 285: 24px                 | bottom: {layout?.container.positioning.bottom || '24px'};
+Line 286: 650px                | width: {layout?.container.dimensions.defaultWidth || '650px'};
+Line 287: calc(100vw - 40px)   | max-width: {layout?.container.dimensions.maxWidth || 'calc(100vw - 40px)'};
+Line 292: input-bar            | class="input-bar"
+Line 296: 80px                 | min-height: {layout?.container.dimensions.minHeight || '80px'};
+Line 297: rgba(0, 0, 0, 0.85)  | background: {theme?.inputBar.background.color || 'rgba(0, 0, 0, 0.85)'};
+Line 297: 0.85                 | background: {theme?.inputBar.background.color || 'rgba(0, 0, 0, 0.85)'};
+Line 297: rgba(0, 0, 0, 0.85)  | background: {theme?.inputBar.background.color || 'rgba(0, 0, 0, 0.85)'};
+Line 298: blur(20px)           | backdrop-filter: {theme?.inputBar.background.backdropFilter || 'blur(20px)'};
+Line 299: 2px                  | border: {theme?.inputBar.border.width || '2px'} {theme?.inputBar.border.style || 'solid'};
+Line 300: 255                  | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: 255                  | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: 255                  | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: 0.3                  | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: 255                  | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: 255                  | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: 255                  | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: 0.1                  | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: rgba(255, 255, 255, 0.3) | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 300: rgba(255, 255, 255, 0.1) | border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255,...
+Line 301: 9px                  | border-radius: {theme?.inputBar.border.radius || '9px'};
+Line 302: rgba(0, 0, 0, 0.4)   | box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shad...
+Line 302: 0.4                  | box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shad...
+Line 302: 255                  | box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shad...
+Line 302: 255                  | box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shad...
+Line 302: 255                  | box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shad...
+Line 302: 0.08                 | box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shad...
+Line 302: 0 4px 12px rgba(0, 0, 0, 0.4) | box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shad...
+Line 302: inset 0 -2px 8px rgba(255, 255, 255, 0.08) | box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shad...
+Line 303: 16px                 | padding: {layout?.container.spacing.padding || '16px'};
+Line 304: 12px                 | gap: {layout?.container.spacing.gridGap || '12px'};
+Line 305: all 0.3s ease        | transition: {layout?.animation.globalTransition || 'all 0.3s ease'};
+Line 311: file-preview-zone    | class="file-preview-zone"
+Line 313: rgba(255, 255, 255, 0.1) | background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
+Line 313: 255                  | background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
+Line 313: 255                  | background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
+Line 313: 255                  | background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
+Line 313: 0.1                  | background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
+Line 313: rgba(255, 255, 255, 0.1) | background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
+Line 314: 6px                  | border-radius: {theme?.filePreviewZone.border.radius || '6px'};
+Line 315: 12px                 | padding: {layout?.filePreviewZone.spacing.padding || '12px'};
+Line 316: rgba(255, 255, 255, 0.2) | border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
+Line 316: 255                  | border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
+Line 316: 255                  | border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
+Line 316: 255                  | border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
+Line 316: 0.2                  | border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
+Line 316: rgba(255, 255, 255, 0.2) | border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
+Line 317: 8px                  | gap: {layout?.filePreviewZone.spacing.itemGap || '8px'};
+Line 322: file-preview         | class="file-preview"
+Line 324: rgba(0, 0, 0, 0.3)   | background: {theme?.filePreviewZone.filePreview.background || 'rgba(0, 0, 0, 0.3)'};
+Line 324: 0.3                  | background: {theme?.filePreviewZone.filePreview.background || 'rgba(0, 0, 0, 0.3)'};
+Line 324: rgba(0, 0, 0, 0.3)   | background: {theme?.filePreviewZone.filePreview.background || 'rgba(0, 0, 0, 0.3)'};
+Line 325: 6px                  | border-radius: {theme?.filePreviewZone.filePreview.borderRadius || '6px'};
+Line 326: 8px                  | padding: {layout?.filePreviewZone.filePreview.padding || '8px'};
+Line 327: 80px                 | min-width: {layout?.filePreviewZone.filePreview.minWidth || '80px'};
+Line 328: 120px                | max-width: {layout?.filePreviewZone.filePreview.maxWidth || '120px'};
+Line 331: image/               | {#if file.type.startsWith('image/')}
+Line 336: 60px                 | width: {layout?.filePreviewZone.filePreview.imageSize || '60px'};
+Line 337: 60px                 | height: {layout?.filePreviewZone.filePreview.imageSize || '60px'};
+Line 338: 4px                  | border-radius: {layout?.filePreviewZone.filePreview.imageBorderRadius || '4px'};
+Line 343: file-icon            | class="file-icon"
+Line 344: 40px                 | style="font-size: 40px; opacity: 0.8;"
+Line 344: 0.8                  | style="font-size: 40px; opacity: 0.8;"
+Line 344: font-size: 40px; opacity: 0.8; | style="font-size: 40px; opacity: 0.8;"
+Line 350: file-name            | class="file-name"
+Line 352: 10px                 | font-size: 10px;
+Line 353: #DFD0B8              | color: {theme?.textInput.typography.color || '#DFD0B8'};
+Line 353: #DFD0B8              | color: {theme?.textInput.typography.color || '#DFD0B8'};
+Line 354: 0.8                  | opacity: 0.8;
+Line 355: 4px                  | margin-top: 4px;
+Line 361: remove-file          | class="remove-file"
+Line 364: 20px                 | width: {layout?.filePreviewZone.removeButton.size || '20px'};
+Line 365: 20px                 | height: {layout?.filePreviewZone.removeButton.size || '20px'};
+Line 366: -4px                 | top: {layout?.filePreviewZone.removeButton.position.top || '-4px'};
+Line 367: -4px                 | right: {layout?.filePreviewZone.removeButton.position.right || '-4px'};
+Line 368: rgba(255, 0, 0, 0.8) | background: {theme?.filePreviewZone.removeButton.background || 'rgba(255, 0, 0, 0.8)'};
+Line 368: 255                  | background: {theme?.filePreviewZone.removeButton.background || 'rgba(255, 0, 0, 0.8)'};
+Line 368: 0.8                  | background: {theme?.filePreviewZone.removeButton.background || 'rgba(255, 0, 0, 0.8)'};
+Line 368: rgba(255, 0, 0, 0.8) | background: {theme?.filePreviewZone.removeButton.background || 'rgba(255, 0, 0, 0.8)'};
+Line 380: text-input           | class="text-input"
+Line 381: Type a message...    | placeholder="Type a message..."
+Line 385: #DFD0B8              | color: {theme?.textInput.typography.color || '#DFD0B8'};
+Line 385: #DFD0B8              | color: {theme?.textInput.typography.color || '#DFD0B8'};
+Line 386: 14px                 | font-size: {layout?.textInput.typography.fontSize || '14px'};
+Line 387: system-ui            | font-family: {layout?.textInput.typography.fontFamily || 'system-ui'};
+Line 388: 20px                 | line-height: {layout?.textInput.autoResize.lineHeight || '20px'};
+Line 389: 20px                 | min-height: {layout?.textInput.autoResize.minHeight || '20px'};
+Line 390: 240px                | max-height: {layout?.textInput.autoResize.maxHeight || '240px'};
+Line 391: height 0.2s ease     | transition: {layout?.animation.inputResize || 'height 0.2s ease'};
+Line 397: controls-row         | class="controls-row"
+Line 398: gap: {layout?.controlsRow.layout.gap ||  | style="gap: {layout?.controlsRow.layout.gap || '12px'};"
+Line 402: plus-button          | class="plus-button"
+Line 405: 4px 8px              | padding: {layout?.controlsRow.plusButton.padding || '4px 8px'};
+Line 406: 4px                  | border-radius: {layout?.controlsRow.plusButton.borderRadius || '4px'};
+Line 407: background-color 0.2s ease | transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+Line 411: plus-icon            | class="plus-icon"
+Line 413: 10px                 | width: {layout?.controlsRow.plusButton.icon.size || '10px'};
+Line 414: 10px                 | height: {layout?.controlsRow.plusButton.icon.size || '10px'};
+Line 420: dropdown-container   | <div class="dropdown-container">
+Line 422: dropdown-trigger     | class="dropdown-trigger"
+Line 425: 12px                 | font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
+Line 426: 4px 8px              | padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
+Line 427: 4px                  | border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius || '4px'};
+Line 428: rgba(223, 208, 184, 0.7) | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 428: 223                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 428: 208                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 428: 184                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 428: 0.7                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 428: rgba(223, 208, 184, 0.7) | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 429: background-color 0.2s ease | transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+Line 436: 8px                  | width: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
+Line 437: 8px                  | height: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
+Line 438: 6px                  | margin-right: {layout?.controlsRow.dropdownTrigger.chevron.marginRight || '6px'};
+Line 439: 1.5px                | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 439: 223                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 439: 208                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 439: 184                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 439: 0.5                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 439: rgba(223, 208, 184, 0.5) | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 440: 1.5px                | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 440: 223                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 440: 208                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 440: 184                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 440: 0.5                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 440: rgba(223, 208, 184, 0.5) | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 447: dropdown-menu        | class="dropdown-menu"
+Line 449: 280px                | width: {layout?.dropdown.menu.width || '280px'};
+Line 450: 8px                  | margin-bottom: {layout?.dropdown.menu.marginBottom || '8px'};
+Line 451: rgba(0, 0, 0, 0.9)   | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 451: 0.9                  | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 451: rgba(0, 0, 0, 0.9)   | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 452: blur(20px)           | backdrop-filter: {theme?.dropdown.menu.backdropFilter || 'blur(20px)'};
+Line 453: rgba(255, 255, 255, 0.2) | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 453: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 453: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 453: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 453: 0.2                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 453: 1px solid rgba(255, 255, 255, 0.2) | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 454: 8px                  | border-radius: {theme?.dropdown.menu.borderRadius || '8px'};
+Line 455: rgba(0, 0, 0, 0.4)   | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 455: 0.4                  | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 455: 0 8px 32px rgba(0, 0, 0, 0.4) | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 456: 0.2s                 | animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
+Line 461: section-header       | class="section-header"
+Line 463: rgba(255, 255, 255, 0.9) | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 463: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 463: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 463: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 463: 0.9                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 463: rgba(255, 255, 255, 0.9) | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 464: 11px                 | font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
+Line 465: 8px 12px 4px 12px    | padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
+Line 466: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 466: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 466: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 466: 0.1                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 466: 1px solid rgba(255, 255, 255, 0.1) | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 467: 4px                  | margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
+Line 474: dropdown-item model-row | class="dropdown-item model-row"
+Line 478: 8px 12px             | padding: {layout?.dropdown.item.padding || '8px 12px'};
+Line 479: 12px                 | font-size: {layout?.dropdown.item.fontSize || '12px'};
+Line 480: rgba(223, 208, 184, 0.8) | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 480: 223                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 480: 208                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 480: 184                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 480: 0.8                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 480: rgba(223, 208, 184, 0.8) | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 481: background-color 0.2s ease | transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+Line 485: model-name           | class="model-name"
+Line 486: 12px                 | style="font-size: {layout?.dropdown.modelRow.modelName.fontSize || '12px'};"
+Line 491: model-id             | class="model-id"
+Line 493: 10px                 | font-size: {layout?.dropdown.modelRow.modelId.fontSize || '10px'};
+Line 494: 16px                 | margin-left: {layout?.dropdown.modelRow.modelId.marginLeft || '16px'};
+Line 495: 0.6                  | opacity: 0.6;
+Line 508: dropdown-container   | <div class="dropdown-container">
+Line 510: dropdown-trigger     | class="dropdown-trigger"
+Line 513: 12px                 | font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
+Line 514: 4px 8px              | padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
+Line 515: 4px                  | border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius || '4px'};
+Line 516: rgba(223, 208, 184, 0.7) | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 516: 223                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 516: 208                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 516: 184                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 516: 0.7                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 516: rgba(223, 208, 184, 0.7) | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 517: background-color 0.2s ease | transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+Line 524: 8px                  | width: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
+Line 525: 8px                  | height: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
+Line 526: 6px                  | margin-right: {layout?.controlsRow.dropdownTrigger.chevron.marginRight || '6px'};
+Line 527: 1.5px                | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 527: 223                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 527: 208                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 527: 184                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 527: 0.5                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 527: rgba(223, 208, 184, 0.5) | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 528: 1.5px                | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 528: 223                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 528: 208                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 528: 184                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 528: 0.5                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 528: rgba(223, 208, 184, 0.5) | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 535: dropdown-menu        | class="dropdown-menu"
+Line 537: 280px                | width: {layout?.dropdown.menu.width || '280px'};
+Line 538: 8px                  | margin-bottom: {layout?.dropdown.menu.marginBottom || '8px'};
+Line 539: rgba(0, 0, 0, 0.9)   | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 539: 0.9                  | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 539: rgba(0, 0, 0, 0.9)   | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 540: blur(20px)           | backdrop-filter: {theme?.dropdown.menu.backdropFilter || 'blur(20px)'};
+Line 541: rgba(255, 255, 255, 0.2) | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 541: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 541: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 541: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 541: 0.2                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 541: 1px solid rgba(255, 255, 255, 0.2) | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 542: 8px                  | border-radius: {theme?.dropdown.menu.borderRadius || '8px'};
+Line 543: rgba(0, 0, 0, 0.4)   | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 543: 0.4                  | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 543: 0 8px 32px rgba(0, 0, 0, 0.4) | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 544: 0.2s                 | animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
+Line 549: section-header       | class="section-header"
+Line 551: rgba(255, 255, 255, 0.9) | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 551: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 551: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 551: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 551: 0.9                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 551: rgba(255, 255, 255, 0.9) | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 552: 11px                 | font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
+Line 553: 8px 12px 4px 12px    | padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
+Line 554: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 554: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 554: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 554: 0.1                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 554: 1px solid rgba(255, 255, 255, 0.1) | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 555: 4px                  | margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
+Line 562: dropdown-item        | class="dropdown-item"
+Line 566: 8px 12px             | padding: {layout?.dropdown.item.padding || '8px 12px'};
+Line 567: 12px                 | font-size: {layout?.dropdown.item.fontSize || '12px'};
+Line 568: rgba(223, 208, 184, 0.8) | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 568: 223                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 568: 208                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 568: 184                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 568: 0.8                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 568: rgba(223, 208, 184, 0.8) | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 569: background-color 0.2s ease | transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+Line 581: dropdown-container   | <div class="dropdown-container">
+Line 583: dropdown-trigger     | class="dropdown-trigger"
+Line 586: 12px                 | font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
+Line 587: 4px 8px              | padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
+Line 588: 4px                  | border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius || '4px'};
+Line 589: rgba(223, 208, 184, 0.7) | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 589: 223                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 589: 208                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 589: 184                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 589: 0.7                  | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 589: rgba(223, 208, 184, 0.7) | color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
+Line 590: background-color 0.2s ease | transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+Line 597: 8px                  | width: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
+Line 598: 8px                  | height: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
+Line 599: 6px                  | margin-right: {layout?.controlsRow.dropdownTrigger.chevron.marginRight || '6px'};
+Line 600: 1.5px                | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 600: 223                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 600: 208                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 600: 184                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 600: 0.5                  | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 600: rgba(223, 208, 184, 0.5) | border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, ...
+Line 601: 1.5px                | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 601: 223                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 601: 208                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 601: 184                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 601: 0.5                  | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 601: rgba(223, 208, 184, 0.5) | border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184,...
+Line 608: dropdown-menu        | class="dropdown-menu"
+Line 610: 280px                | width: {layout?.dropdown.menu.width || '280px'};
+Line 611: 8px                  | margin-bottom: {layout?.dropdown.menu.marginBottom || '8px'};
+Line 612: rgba(0, 0, 0, 0.9)   | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 612: 0.9                  | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 612: rgba(0, 0, 0, 0.9)   | background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
+Line 613: blur(20px)           | backdrop-filter: {theme?.dropdown.menu.backdropFilter || 'blur(20px)'};
+Line 614: rgba(255, 255, 255, 0.2) | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 614: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 614: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 614: 255                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 614: 0.2                  | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 614: 1px solid rgba(255, 255, 255, 0.2) | border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
+Line 615: 8px                  | border-radius: {theme?.dropdown.menu.borderRadius || '8px'};
+Line 616: rgba(0, 0, 0, 0.4)   | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 616: 0.4                  | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 616: 0 8px 32px rgba(0, 0, 0, 0.4) | box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
+Line 617: 0.2s                 | animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
+Line 622: section-header       | class="section-header"
+Line 624: rgba(255, 255, 255, 0.9) | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 624: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 624: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 624: 255                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 624: 0.9                  | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 624: rgba(255, 255, 255, 0.9) | color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+Line 625: 11px                 | font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
+Line 626: 8px 12px 4px 12px    | padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
+Line 627: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 627: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 627: 255                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 627: 0.1                  | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 627: 1px solid rgba(255, 255, 255, 0.1) | border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+Line 628: 4px                  | margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
+Line 635: dropdown-item        | class="dropdown-item"
+Line 639: 8px 12px             | padding: {layout?.dropdown.item.padding || '8px 12px'};
+Line 640: 12px                 | font-size: {layout?.dropdown.item.fontSize || '12px'};
+Line 641: rgba(223, 208, 184, 0.8) | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 641: 223                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 641: 208                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 641: 184                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 641: 0.8                  | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 641: rgba(223, 208, 184, 0.8) | color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+Line 642: background-color 0.2s ease | transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+Line 655: green-indicator      | class="green-indicator"
+Line 657: 8px                  | width: {layout?.controlsRow.statusIndicator.size || '8px'};
+Line 658: 8px                  | height: {layout?.controlsRow.statusIndicator.size || '8px'};
+Line 659: #00ff00              | background: {theme?.controlsRow.statusIndicator.color || '#00ff00'};
+Line 659: #00ff00              | background: {theme?.controlsRow.statusIndicator.color || '#00ff00'};
+Line 660: #00ff00              | box-shadow: {theme?.controlsRow.statusIndicator.shadow || '0 0 4px #00ff00, 0 0 8px rgba(0, 255, 0, ...
+Line 660: 255                  | box-shadow: {theme?.controlsRow.statusIndicator.shadow || '0 0 4px #00ff00, 0 0 8px rgba(0, 255, 0, ...
+Line 660: 0.5                  | box-shadow: {theme?.controlsRow.statusIndicator.shadow || '0 0 4px #00ff00, 0 0 8px rgba(0, 255, 0, ...
+Line 660: 0 0 4px #00ff00, 0 0 8px rgba(0, 255, 0, 0.5) | box-shadow: {theme?.controlsRow.statusIndicator.shadow || '0 0 4px #00ff00, 0 0 8px rgba(0, 255, 0, ...
+Line 670: 50%                  | left: 50%;
+Line 674: 705px                | @media (min-width: 705px) {
+Line 676: 800px                | width: 800px !important;
+Line 709: 1.2                  | line-height: 1.2;
+Line 714: 50%                  | border-radius: 50%;
+Line 718: 12px                 | font-size: 12px;
+Line 726: rgba(255, 0, 0, 1)   | background: rgba(255, 0, 0, 1) !important;
+Line 726: 255                  | background: rgba(255, 0, 0, 1) !important;
+Line 740: rgba(223, 208, 184, 0.6) | color: rgba(223, 208, 184, 0.6);
+Line 740: 223                  | color: rgba(223, 208, 184, 0.6);
+Line 740: 208                  | color: rgba(223, 208, 184, 0.6);
+Line 740: 184                  | color: rgba(223, 208, 184, 0.6);
+Line 740: 0.6                  | color: rgba(223, 208, 184, 0.6);
+Line 746: 3                    | grid-row: 3;
+Line 760: rgba(255, 255, 255, 0.1) | background: rgba(255, 255, 255, 0.1) !important;
+Line 760: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 760: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 760: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 760: 0.1                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 771: rgba(223, 208, 184, 0.7) | background: rgba(223, 208, 184, 0.7);
+Line 771: 223                  | background: rgba(223, 208, 184, 0.7);
+Line 771: 208                  | background: rgba(223, 208, 184, 0.7);
+Line 771: 184                  | background: rgba(223, 208, 184, 0.7);
+Line 771: 0.7                  | background: rgba(223, 208, 184, 0.7);
+Line 775: 50%                  | top: 50%;
+Line 777: 100%                 | width: 100%;
+Line 778: 1.5px                | height: 1.5px;
+Line 784: 50%                  | left: 50%;
+Line 785: 1.5px                | width: 1.5px;
+Line 786: 100%                 | height: 100%;
+Line 801: 4px                  | gap: 4px;
+Line 805: rgba(255, 255, 255, 0.1) | background: rgba(255, 255, 255, 0.1) !important;
+Line 805: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 805: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 805: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 805: 0.1                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 811: 6px                  | margin-right: 6px;
+Line 818: 1.5px                | border-left: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 818: 223                  | border-left: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 818: 208                  | border-left: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 818: 184                  | border-left: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 818: 0.5                  | border-left: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 819: 1.5px                | border-top: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 819: 223                  | border-top: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 819: 208                  | border-top: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 819: 184                  | border-top: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 819: 0.5                  | border-top: 1.5px solid rgba(223, 208, 184, 0.5);
+Line 827: 100%                 | bottom: 100%;
+Line 829: 200px                | max-height: 200px;
+Line 847: 100%                 | width: 100%;
+Line 856: rgba(255, 255, 255, 0.1) | background: rgba(255, 255, 255, 0.1) !important;
+Line 856: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 856: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 856: 255                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 856: 0.1                  | background: rgba(255, 255, 255, 0.1) !important;
+Line 860: rgba(255, 255, 255, 0.15) | background: rgba(255, 255, 255, 0.15) !important;
+Line 860: 255                  | background: rgba(255, 255, 255, 0.15) !important;
+Line 860: 255                  | background: rgba(255, 255, 255, 0.15) !important;
+Line 860: 255                  | background: rgba(255, 255, 255, 0.15) !important;
+Line 860: 0.15                 | background: rgba(255, 255, 255, 0.15) !important;
+Line 861: rgba(223, 208, 184, 1) | color: rgba(223, 208, 184, 1) !important;
+Line 861: 223                  | color: rgba(223, 208, 184, 1) !important;
+Line 861: 208                  | color: rgba(223, 208, 184, 1) !important;
+Line 861: 184                  | color: rgba(223, 208, 184, 1) !important;
+Line 865: 8px                  | border-radius: 8px 8px 0 0;
+Line 873: 600                  | font-weight: 600;
+Line 885: SF Mono              | font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+Line 889: 50%                  | border-radius: 50%;
+
+File: apps/web/src/lib/bricks/InputBarUI/demo/InputBarUIDemo.svelte
+----------------------------------------
+Line   3: ../index.js          | import { InputBarUI } from '../index.js';
+Line   4: $lib/buses           | import { themeSelector, themeApplier } from '$lib/buses';
+Line   9: rainy-night          | themeSelector.selectTheme('rainy-night');
+Line  14: /brickdemos          | <a href="/brickdemos">← Back to Brick Demos</a>
+Line  15: 301                  | <div class="tagline">BRICK-301 InputBarUI - Perfect Sandbox 11 recreation with config externalizatio...
+Line  15: 11                   | <div class="tagline">BRICK-301 InputBarUI - Perfect Sandbox 11 recreation with config externalizatio...
+Line  22: #222831              | background: #222831 !important;
+Line  23: #e0e0e0              | color: #e0e0e0 !important;
+Line  35: 20px                 | margin-bottom: 20px;
+Line  36: 20px                 | padding: 20px;
+Line  41: #007acc              | color: #007acc;
+Line  45: rgba(223, 208, 184, 0.7) | color: rgba(223, 208, 184, 0.7);
+Line  45: 223                  | color: rgba(223, 208, 184, 0.7);
+Line  45: 208                  | color: rgba(223, 208, 184, 0.7);
+Line  45: 184                  | color: rgba(223, 208, 184, 0.7);
+Line  45: 0.7                  | color: rgba(223, 208, 184, 0.7);
+Line  46: 14px                 | font-size: 14px;
+Line  47: 8px                  | margin-top: 8px;
+
+File: apps/web/src/routes/brickdemos/inputbar-ui/+page.svelte
+----------------------------------------
+Line   2: $lib/bricks/InputBarUI/demo/InputBarUIDemo.svelte | import InputBarUIDemo from '$lib/bricks/InputBarUI/demo/InputBarUIDemo.svelte';
+
+File: apps/web/src/routes/brickdemos/+page.svelte
+----------------------------------------
+Line   3: $lib/buses           | import { themeSelector, themeApplier } from '$lib/buses';
+Line   8: rainy-night          | themeSelector.selectTheme('rainy-night');
+Line  17: brick-card           | <div class="brick-card">
+Line  18: 601                  | <h2>BRICK-601 ThemeRegistry</h2>
+Line  20: 601                  | <a href="/demo/brick-601" class="demo-link">View Demo →</a>
+Line  20: /demo/brick-601      | <a href="/demo/brick-601" class="demo-link">View Demo →</a>
+Line  20: demo-link            | <a href="/demo/brick-601" class="demo-link">View Demo →</a>
+Line  23: brick-card           | <div class="brick-card">
+Line  24: 602                  | <h2>BRICK-602 ThemeSelector</h2>
+Line  26: 602                  | <a href="/demo/brick-602" class="demo-link">View Demo →</a>
+Line  26: /demo/brick-602      | <a href="/demo/brick-602" class="demo-link">View Demo →</a>
+Line  26: demo-link            | <a href="/demo/brick-602" class="demo-link">View Demo →</a>
+Line  29: brick-card           | <div class="brick-card">
+Line  30: 603                  | <h2>BRICK-603 ThemeApplier</h2>
+Line  32: 603                  | <a href="/demo/brick-603" class="demo-link">View Demo →</a>
+Line  32: /demo/brick-603      | <a href="/demo/brick-603" class="demo-link">View Demo →</a>
+Line  32: demo-link            | <a href="/demo/brick-603" class="demo-link">View Demo →</a>
+Line  35: brick-card           | <div class="brick-card">
+Line  36: 604                  | <h2>BRICK-604 ThemePickerUI</h2>
+Line  38: 604                  | <a href="/demo/brick-604" class="demo-link">View Demo →</a>
+Line  38: /demo/brick-604      | <a href="/demo/brick-604" class="demo-link">View Demo →</a>
+Line  38: demo-link            | <a href="/demo/brick-604" class="demo-link">View Demo →</a>
+Line  41: brick-card           | <div class="brick-card">
+Line  42: 301                  | <h2>BRICK-301 InputBarUI</h2>
+Line  44: /brickdemos/inputbar-ui | <a href="/brickdemos/inputbar-ui" class="demo-link">View Demo →</a>
+Line  44: demo-link            | <a href="/brickdemos/inputbar-ui" class="demo-link">View Demo →</a>
+Line  52: #222831              | background: var(--app-background, #222831) !important;
+Line  53: #e0e0e0              | color: var(--text-color, #e0e0e0) !important;
+Line  60: 20px                 | gap: 20px;
+Line  61: 20px                 | margin: 20px 0;
+Line  65: #ddd                 | border: 1px solid #ddd;
+Line  66: 8px                  | border-radius: 8px;
+Line  67: 20px                 | padding: 20px;
+Line  68: #f9f9f9              | background: #f9f9f9;
+Line  73: #333                 | color: #333;
+Line  73: 333                  | color: #333;
+Line  77: #666                 | color: #666;
+Line  77: 666                  | color: #666;
+Line  78: 15px                 | margin-bottom: 15px;
+Line  83: #007acc              | background: #007acc;
+Line  85: 10px                 | padding: 10px 15px;
+Line  87: 4px                  | border-radius: 4px;
+Line  92: #005a9f              | background: #005a9f;
+Line  96: 30px                 | margin-top: 30px;
+Line  97: 20px                 | padding-top: 20px;
+Line  98: 1px                  | border-top: 1px solid #eee;
+Line 103: #007acc              | color: #007acc;
+

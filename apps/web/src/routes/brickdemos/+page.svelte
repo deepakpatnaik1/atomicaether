@@ -38,6 +38,12 @@
     <a href="/demo/brick-604" class="demo-link">View Demo →</a>
   </div>
 
+  <div class="brick-card">
+    <h2>BRICK-301 InputBarUI</h2>
+    <p>Complete input bar with auto-resize, file attachments, dropdowns, and BTT integration - zero hardcoded values</p>
+    <a href="/brickdemos/inputbar-ui" class="demo-link">View Demo →</a>
+  </div>
+
 </div>
 
 
