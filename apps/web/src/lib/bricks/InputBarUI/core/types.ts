@@ -285,6 +285,22 @@ export interface FallbackMappings {
   themes: Record<string, string>;
 }
 
+export interface DemoPageConfig {
+  navigation: {
+    backLink: string;
+    backText: string;
+  };
+  content: {
+    brickNumber: string;
+    brickName: string;
+    title: string;
+    description: string;
+  };
+  styling: {
+    taglineClass: string;
+  };
+}
+
 export interface BTTConfig {
   mockCanvas: {
     screenshot: {

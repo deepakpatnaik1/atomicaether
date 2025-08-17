@@ -1,0 +1,37 @@
+{
+  "_description": "Demo page configuration - navigation links, content, and identifiers",
+  "_version": "1.0.0",
+  "_extractedFrom": "BRICK-301 demo page hardcoded values",
+  
+  "navigation": {
+    "_comment": "Navigation and routing configuration",
+    "_purpose": "Controls demo page navigation behavior and links",
+    
+    "backLink": "/brickdemos",
+    "_backLinkNote": "Path to brick demos index page. Change /brickdemos to /demos = different route",
+    "backText": "← Back to Brick Demos",
+    "_backTextNote": "Navigation link display text. Change to '← Back to Demos' for shorter text"
+  },
+  
+  "content": {
+    "_comment": "Demo page content and identifiers",
+    "_purpose": "Defines the brick identity and descriptive content",
+    
+    "brickNumber": "301",
+    "_brickNumberNote": "BRICK identifier number. Change 301 to 302 for next brick iteration",
+    "brickName": "InputBarUI",
+    "_brickNameNote": "Component name for the brick",
+    "title": "BRICK-301 InputBarUI",
+    "_titleNote": "Full title combining brick number and name",
+    "description": "Perfect Sandbox 11 recreation with config externalization",
+    "_descriptionNote": "Subtitle describing the brick's purpose and achievement"
+  },
+  
+  "styling": {
+    "_comment": "CSS class names and styling identifiers",
+    "_purpose": "Externalized CSS class names to avoid hardcoded styling references",
+    
+    "taglineClass": "tagline",
+    "_taglineClassNote": "CSS class for subtitle styling. Change 'tagline' to 'subtitle' = different styling approach"
+  }
+}
