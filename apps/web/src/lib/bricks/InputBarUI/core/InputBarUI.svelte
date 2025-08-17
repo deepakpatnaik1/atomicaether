@@ -15,10 +15,10 @@
   let showPersonaDropdown = $state(false);
   let showThemeDropdown = $state(false);
   
-  // Current selections
-  let selectedModel = $state('');
-  let selectedPersona = $state('');
-  let selectedTheme = $state('');
+  // Current selections - initialize with defaults matching Sandbox 11
+  let selectedModel = $state('claude-sonnet-4-20250514');
+  let selectedPersona = $state('user');
+  let selectedTheme = $state('rainy-night');
   
   // Config state
   let layout: InputBarConfig | null = $state(null);
@@ -150,6 +150,52 @@
   function selectTheme(themeId: string) {
     selectedTheme = themeId;
     showThemeDropdown = false;
+  }
+  
+  // Helper functions to get human-readable names
+  function getSelectedModelName() {
+    // Hardcoded fallbacks for initial render before config loads
+    if (!dropdownData) {
+      if (selectedModel === 'claude-sonnet-4-20250514') return 'Claude 4 Sonnet';
+      if (selectedModel === 'claude-opus-4-20250514') return 'Claude 4 Opus';
+      if (selectedModel === 'gpt-4.1-mini-2025-04-14') return 'GPT 4.1 Mini';
+      return selectedModel;
+    }
+    for (const [company, modelList] of Object.entries(dropdownData.models)) {
+      const found = modelList.find(m => m.id === selectedModel);
+      if (found) return found.name;
+    }
+    return selectedModel;
+  }
+  
+  function getSelectedPersonaName() {
+    // Hardcoded fallbacks for initial render before config loads
+    if (!dropdownData) {
+      if (selectedPersona === 'user') return 'User';
+      if (selectedPersona === 'assistant') return 'Assistant';
+      if (selectedPersona === 'developer') return 'Developer';
+      return selectedPersona;
+    }
+    for (const [category, personaList] of Object.entries(dropdownData.personas)) {
+      const found = personaList.find(p => p.id === selectedPersona);
+      if (found) return found.name;
+    }
+    return selectedPersona;
+  }
+  
+  function getSelectedThemeName() {
+    // Hardcoded fallbacks for initial render before config loads
+    if (!dropdownData) {
+      if (selectedTheme === 'rainy-night') return 'Rainy Night';
+      if (selectedTheme === 'midnight-blue') return 'Midnight Blue';
+      if (selectedTheme === 'arctic-white') return 'Arctic White';
+      return selectedTheme;
+    }
+    for (const [category, themeList] of Object.entries(dropdownData.themes)) {
+      const found = themeList.find(t => t.id === selectedTheme);
+      if (found) return found.name;
+    }
+    return selectedTheme;
   }
   
   // Close dropdowns when clicking outside
@@ -440,7 +486,7 @@
               border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
             "
           ></div>
-          <span>{selectedModel}</span>
+          <span>{getSelectedModelName()}</span>
         </button>
         {#if showModelDropdown && dropdownData}
           <div 
@@ -528,7 +574,7 @@
               border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
             "
           ></div>
-          <span>{selectedPersona}</span>
+          <span>{getSelectedPersonaName()}</span>
         </button>
         {#if showPersonaDropdown && dropdownData}
           <div 
@@ -601,7 +647,7 @@
               border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
             "
           ></div>
-          <span>{selectedTheme}</span>
+          <span>{getSelectedThemeName()}</span>
         </button>
         {#if showThemeDropdown && dropdownData}
           <div 
@@ -744,7 +790,6 @@
     display: flex;
     align-items: center;
     grid-row: 3;
-    margin-left: auto;
   }
 
   .plus-button {
