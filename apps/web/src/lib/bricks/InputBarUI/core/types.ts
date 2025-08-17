@@ -76,6 +76,7 @@ export interface InputBarConfig {
     menu: {
       width: string;
       marginBottom: string;
+      zIndex: string;
     };
     item: {
       padding: string;

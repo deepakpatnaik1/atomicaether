@@ -137,7 +137,9 @@
       "width": "280px",
       "_menuWidthNote": "Dropdown menu width. Increase = more room for long option names",
       "marginBottom": "8px",
-      "_menuMarginNote": "Space between dropdown and trigger button"
+      "_menuMarginNote": "Space between dropdown and trigger button",
+      "zIndex": "1000",
+      "_zIndexNote": "Dropdown layer stacking order. Must be >= container zIndex to appear above input bar"
     },
     "item": {
       "_purpose": "Individual dropdown option layout",

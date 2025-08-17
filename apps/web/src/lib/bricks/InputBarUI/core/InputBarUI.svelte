@@ -293,6 +293,7 @@
         --remove-button-hover: {theme.interactiveStates.removeButtonHover};
         --icon-background: {theme.controlsRow.plusButton.icon.color};
         --chevron-color: {theme.controlsRow.dropdownTrigger.chevron.color};
+        --dropdown-z-index: {layout?.dropdown.menu.zIndex || '1000'};
       }
     </style>
   {/if}
@@ -883,7 +884,7 @@
     left: 0;
     max-height: 200px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: var(--dropdown-z-index, 1000);
   }
 
   @keyframes slideUp {
