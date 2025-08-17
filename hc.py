@@ -114,12 +114,29 @@ class HardcodeFinder:
         
         return False
     
-    def scan_files(self, file_paths: List[str]) -> Dict[str, List[Tuple[int, str, str, str]]]:
+    def is_demo_file(self, file_path: str) -> bool:
+        """Check if file is a demo file (should be excluded from hardcode checking)."""
+        # Check if file is in a demo directory
+        if '/demo/' in file_path or '\\demo\\' in file_path:
+            return True
+        
+        # Check if filename contains 'demo' 
+        filename = os.path.basename(file_path).lower()
+        if 'demo' in filename:
+            return True
+            
+        return False
+    
+    def scan_files(self, file_paths: List[str], exclude_demos: bool = True) -> Dict[str, List[Tuple[int, str, str, str]]]:
         """Scan multiple files and return organized results."""
         results = {}
         
         for file_path in file_paths:
             if os.path.isfile(file_path):
+                # Skip demo files if exclusion is enabled
+                if exclude_demos and self.is_demo_file(file_path):
+                    continue
+                    
                 file_results = self.analyze_file(file_path)
                 if file_results:
                     results[file_path] = file_results
@@ -146,15 +163,36 @@ class HardcodeFinder:
             print()
 
 def main():
-    if len(sys.argv) < 2:
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Find hardcoded values in code files')
+    parser.add_argument('files', nargs='*', help='Files or directories to scan')
+    parser.add_argument('--target-dir', help='Target directory to scan')
+    parser.add_argument('--include-demos', action='store_true', 
+                       help='Include demo files in scan (default: exclude)')
+    
+    args = parser.parse_args()
+    
+    if not args.files and not args.target_dir:
         print("Usage: python hc.py <file1> [file2] [file3] ...")
-        print("   or: python hc.py <directory>")
+        print("   or: python hc.py --target-dir <directory>")
+        print("   or: python hc.py --target-dir <directory> --include-demos")
         sys.exit(1)
     
     finder = HardcodeFinder()
     file_paths = []
     
-    for arg in sys.argv[1:]:
+    # Handle --target-dir
+    if args.target_dir:
+        if os.path.isdir(args.target_dir):
+            for ext in ['*.ts', '*.js', '*.svelte', '*.css', '*.json']:
+                file_paths.extend(Path(args.target_dir).rglob(ext))
+        else:
+            print(f"Error: Directory '{args.target_dir}' not found")
+            sys.exit(1)
+    
+    # Handle positional arguments
+    for arg in args.files:
         if os.path.isdir(arg):
             # Recursively find relevant files in directory
             for ext in ['*.ts', '*.js', '*.svelte', '*.css', '*.json']:
@@ -163,7 +201,15 @@ def main():
             file_paths.append(arg)
     
     file_paths = [str(p) for p in file_paths]
-    results = finder.scan_files(file_paths)
+    exclude_demos = not args.include_demos
+    
+    if exclude_demos:
+        demo_files = [f for f in file_paths if finder.is_demo_file(f)]
+        if demo_files:
+            print(f"ℹ️  Excluding {len(demo_files)} demo files (use --include-demos to scan them)")
+            print()
+    
+    results = finder.scan_files(file_paths, exclude_demos=exclude_demos)
     finder.print_results(results)
 
 if __name__ == "__main__":

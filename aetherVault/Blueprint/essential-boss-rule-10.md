@@ -35,6 +35,37 @@ export function ThemeRegistryDemo() {
 - **Handle errors gracefully** - Demonstrate failure modes
 - **Be interactive** - Boss can click, type, test in real-time
 - **Match production usage** - Same APIs, same patterns
+- **Simulate real app context** - Show the brick as it would work in the main app
+
+## Demo Hardcoding Exception
+
+**Demo files are exempt from hardcoding rules** when simulating app context:
+
+```typescript
+// ✅ ALLOWED: Demo hardcodes app context to showcase the brick
+export function TextHandlerDemo() {
+  return (
+    <div className="input-container">  {/* Hardcoded app layout */}
+      <div className="input-bar">      {/* Hardcoded app styling */}
+        <TextHandler                   {/* The actual brick being tested */}
+          placeholder="Type here..."
+          onTextChange={handleChange}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ❌ NOT ALLOWED: Hardcoding within the brick itself
+function TextHandler() {
+  const height = 240; // ← Should come from config
+  const color = "#ff0000"; // ← Should come from theme
+}
+```
+
+**Rationale**: The demo must recreate the exact environment where the brick will operate. This requires hardcoding the surrounding app infrastructure (layouts, navigation, styling) that the brick doesn't control, so users can see how the brick behaves in realistic conditions.
+
+**Scope**: This exception applies only to demo files (`*/demo/*.svelte`) and demo-specific styling. The core brick components must remain config-driven.
 
 ## Demo Gallery as Quality Gate
 

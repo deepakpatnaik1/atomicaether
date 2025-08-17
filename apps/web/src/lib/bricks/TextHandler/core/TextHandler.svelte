@@ -84,8 +84,11 @@
     const target = event.target as HTMLTextAreaElement;
     text = target.value;
     
+    console.log('Text input:', text, 'Service:', !!service);
+    
     if (service) {
       service.autoResize();
+      console.log('After resize - height:', service.getCurrentHeight());
       dispatch('textChange', { text });
       dispatch('heightChange', { 
         height: service.getCurrentHeight(), 
@@ -130,17 +133,32 @@
   }
 
   onMount(async () => {
+    console.log('TextHandler mounting, textarea:', !!textarea);
+    
     // Load configuration
     config = await configBus.load<TextHandlerConfig>('textHandler');
+    console.log('Config loaded:', !!config);
     
-    // Load theme
-    const fullTheme = await configBus.load('themes/rainy-night');
-    theme = fullTheme?.textHandler;
+    // Load theme from static directory
+    try {
+      const response = await fetch('/themes/rainy-night.json');
+      const fullTheme = await response.json();
+      theme = fullTheme?.textHandler;
+      console.log('Theme loaded:', !!theme);
+    } catch (error) {
+      console.warn('Theme loading failed:', error);
+      theme = null;
+    }
 
     if (config) {
       // Initialize service
       service = new TextHandlerService(config);
-      service.setTextarea(textarea);
+      console.log('Service created, textarea available:', !!textarea);
+      
+      if (textarea) {
+        service.setTextarea(textarea);
+        console.log('Service textarea set');
+      }
       
       // Apply theme styles
       if (theme) {
@@ -194,8 +212,8 @@ Provides auto-resize textarea with keyboard shortcuts
   style:height={config ? `${config.autoResize.minHeight}px` : '20px'}
   style:min-height={config ? `${config.autoResize.minHeight}px` : '20px'}
   style:max-height={config ? `${config.autoResize.maxHeight}px` : '240px'}
-  oninput={handleTextInput}
-  onkeydown={handleKeydown}
+  on:input={handleTextInput}
+  on:keydown={handleKeydown}
 ></textarea>
 
 <style>

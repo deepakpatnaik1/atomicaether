@@ -78,31 +78,10 @@
 
 <nav>
   <a href="/brickdemos">← Back to Brick Demos</a>
-  <div class="tagline">BRICK-302 TextHandler - Smart auto-resize textarea with config-driven behavior</div>
+  <div class="tagline">BRICK-302 TextHandler - Smart auto-resize textarea like Sandbox 11 input bar</div>
 </nav>
 
 <div class="demo-container">
-  <div class="main-demo">
-    <h2>TextHandler Demo</h2>
-    <p>Type text to see auto-resize in action. Press Escape to clear and reset.</p>
-    
-    <div class="text-container">
-      <TextHandler
-        bind:this={textHandler}
-        placeholder="Type your message here..."
-        on:textChange={handleTextChange}
-        on:heightChange={handleHeightChange}
-        on:escape={handleEscape}
-      />
-    </div>
-
-    <div class="controls">
-      <button onclick={addSampleText}>Add Sample Text</button>
-      <button onclick={clearAll}>Clear Text</button>
-      <button onclick={resetHeight}>Reset Height</button>
-    </div>
-  </div>
-
   <div class="stats-panel">
     <h3>Real-time Stats</h3>
     <div class="stat">
@@ -131,14 +110,23 @@
   <div class="features-panel">
     <h3>Features Extracted from Sandbox 11</h3>
     <ul>
+      <li>✅ <strong>Fixed position:</strong> Bottom of screen like real input bar</li>
       <li>✅ <strong>Auto-resize:</strong> Grows from 1 to 12 lines (20px each)</li>
       <li>✅ <strong>Smooth transitions:</strong> 0.2s ease animation</li>
       <li>✅ <strong>Escape key:</strong> Clears text and resets height</li>
+      <li>✅ <strong>Glass blur:</strong> Same backdrop-filter as Sandbox 11</li>
+      <li>✅ <strong>Border styling:</strong> Gradient borders matching theme</li>
       <li>✅ <strong>Overflow management:</strong> Scrolls when exceeding max height</li>
-      <li>✅ <strong>Config-driven:</strong> All behavior from textHandler.json</li>
-      <li>✅ <strong>Theme integration:</strong> Colors from rainy-night.json</li>
-      <li>✅ <strong>Event system:</strong> Text and height change notifications</li>
     </ul>
+  </div>
+
+  <div class="controls-demo">
+    <h3>Test Controls</h3>
+    <button onclick={addSampleText}>Add Sample Text</button>
+    <button onclick={clearAll}>Clear Text</button>
+    <button onclick={resetHeight}>Reset Height</button>
+    <p>Type in the input bar below ↓</p>
+    <p><strong>Press Escape</strong> to clear and reset</p>
   </div>
 
   <div class="config-info">
@@ -149,6 +137,21 @@
     <p><strong>Max Height:</strong> 240px (12 lines)</p>
     <p><strong>Line Height:</strong> 20px</p>
     <p><strong>Animation:</strong> height 0.2s ease</p>
+  </div>
+</div>
+
+<!-- Input bar container - replicated from Sandbox 11 -->
+<div class="input-container">
+  <div class="input-bar">
+    <div class="text-container">
+      <TextHandler
+        bind:this={textHandler}
+        placeholder="Type your message here..."
+        on:textChange={handleTextChange}
+        on:heightChange={handleHeightChange}
+        on:escape={handleEscape}
+      />
+    </div>
   </div>
 </div>
 
@@ -173,25 +176,44 @@
   .demo-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 20px 120px 20px; /* Add bottom padding for fixed input */
     display: grid;
-    grid-template-columns: 1fr 300px;
-    grid-template-rows: auto auto;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
   }
 
-  .main-demo {
-    grid-column: 1;
-    grid-row: 1 / -1;
+  /* Input bar container - replicated from Sandbox 11 */
+  .input-container {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 650px;
+    max-width: calc(100vw - 40px);
+    z-index: 100;
+  }
+
+  .input-bar {
+    min-height: 80px;
+    height: auto;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px);
+    border: 2px solid;
+    border-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)) 1;
+    border-radius: 9px;
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 -2px 8px rgba(255, 255, 255, 0.08);
+    padding: 16px;
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: all 0.3s ease;
   }
 
   .text-container {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px 0;
-    min-height: 200px;
+    grid-row: 1;
     display: flex;
     align-items: flex-start;
   }
@@ -199,37 +221,20 @@
   .text-container :global(textarea) {
     width: 100%;
     min-width: 0;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    resize: none !important;
   }
 
-  .controls {
-    display: flex;
-    gap: 12px;
-    margin: 20px 0;
-  }
-
-  .controls button {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-
-  .controls button:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  .stats-panel, .features-panel, .config-info {
+  .stats-panel, .features-panel, .controls-demo, .config-info {
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 16px;
-    margin-bottom: 20px;
   }
 
-  .stats-panel h3, .features-panel h3, .config-info h3 {
+  .stats-panel h3, .features-panel h3, .controls-demo h3, .config-info h3 {
     margin: 0 0 12px 0;
     color: #fff;
     font-size: 16px;
@@ -260,6 +265,28 @@
     color: #e0e0e0;
   }
 
+  .controls-demo button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  .controls-demo button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .controls-demo p {
+    margin: 12px 0 4px 0;
+    font-size: 14px;
+    color: #e0e0e0;
+  }
+
   .config-info p {
     margin: 4px 0;
     font-size: 14px;
@@ -274,13 +301,8 @@
   }
 
   @media (max-width: 768px) {
-    .demo-container {
-      grid-template-columns: 1fr;
-    }
-    
-    .main-demo {
-      grid-column: 1;
-      grid-row: auto;
+    .input-container {
+      width: calc(100vw - 40px);
     }
   }
 </style>
