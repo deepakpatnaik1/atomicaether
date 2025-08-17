@@ -309,6 +309,80 @@ Can you:
 
 If not, you're still hardcoding.
 
+### Build-Time Code Generation Exception
+
+**The Only Acceptable "Hardcoding"**: Build-time generation from configuration.
+
+```typescript
+// ❌ MANUAL HARDCODING: Hand-typed values
+const theme = {
+    background: '#222831',  // Typed by human, not from config
+    color: '#e0e0e0'       // Source of truth lives in code
+};
+
+// ✅ BUILD-TIME GENERATION: Values from config
+// build-script.js reads theme.json and generates:
+const theme = {
+    background: '#222831',  // Generated from config/theme.json
+    color: '#e0e0e0'       // Source of truth remains in config
+};
+```
+
+**When Build-Time Generation is Acceptable:**
+
+1. **Performance Critical**: Values needed before JavaScript loads (FOUC prevention)
+2. **Source from Config**: Build script reads from configuration files
+3. **Automated Process**: No manual value entry in generated code
+4. **Repeatable**: Running build again produces identical output from same config
+5. **Config Changes Propagate**: Changing config automatically updates generated code
+
+**Examples of Acceptable Build-Time Generation:**
+
+```bash
+# Theme CSS injection for FOUC prevention
+npm run inject-theme  # Reads theme.json → writes CSS to app.html
+
+# Environment-specific API constants
+npm run build-constants  # Reads .env → generates api-config.ts
+
+# Feature flag compilation
+npm run compile-features  # Reads features.json → generates feature-flags.ts
+```
+
+**The Key Principle**: Configuration files remain the **single source of truth**. Generated code is just an **optimized delivery mechanism**.
+
+```json
+// config/theme.json - SOURCE OF TRUTH
+{
+    "globalBody": {
+        "background": "#222831",
+        "color": "#e0e0e0"
+    }
+}
+```
+
+```html
+<!-- Generated app.html - OPTIMIZED DELIVERY -->
+<style>
+    body {
+        background: #222831 !important;  /* FROM CONFIG */
+        color: #e0e0e0 !important;       /* FROM CONFIG */
+    }
+</style>
+```
+
+**Tests for Acceptable Generation:**
+- [ ] Can I change the config and rebuild to get different output?
+- [ ] Is the generation script reading from a configuration file?
+- [ ] Would a new developer understand the source of truth?
+- [ ] Is this solving a real technical constraint (performance, timing, etc.)?
+
+If you answer "no" to any of these, it's still hardcoding.
+
 ### Remember
 
-Code is logic. Config is values. Never mix them. Your code should be a machine that processes configuration, not a place where values live. Every hardcoded value is a future bug report waiting to happen.
+Code is logic. Config is values. Never mix them. Your code should be a machine that processes configuration, not a place where values live. 
+
+**Build-time generation is acceptable when it maintains config as the source of truth while solving real technical constraints.**
+
+Every manually-typed value is a future bug report waiting to happen.
