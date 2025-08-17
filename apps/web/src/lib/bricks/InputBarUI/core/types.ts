@@ -272,6 +272,12 @@ export interface RainyNightTheme {
   };
 }
 
+export interface FallbackMappings {
+  models: Record<string, string>;
+  personas: Record<string, string>;
+  themes: Record<string, string>;
+}
+
 export interface BTTConfig {
   mockCanvas: {
     screenshot: {

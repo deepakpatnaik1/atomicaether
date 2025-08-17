@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { configBus } from '$lib/buses';
   import { InputBarService } from './InputBarService.js';
-  import type { InputBarConfig, InputBarBehavior, DropdownData, RainyNightTheme, BTTConfig } from './types.js';
+  import type { InputBarConfig, InputBarBehavior, DropdownData, RainyNightTheme, BTTConfig, FallbackMappings } from './types.js';
   
   // State
   let files: File[] = $state([]);
@@ -26,6 +26,7 @@
   let dropdownData: DropdownData | null = $state(null);
   let theme: RainyNightTheme | null = $state(null);
   let bttConfig: BTTConfig | null = $state(null);
+  let fallbackMappings: FallbackMappings | null = $state(null);
   
   // Service
   let service: InputBarService;
@@ -37,6 +38,7 @@
     dropdownData = await configBus.load('dropdownData');
     bttConfig = await configBus.load('betterTouchTool');
     theme = await configBus.load('themes/rainy-night');
+    fallbackMappings = await configBus.load('fallbackMappings');
     
     // Initialize service
     service = new InputBarService(behavior, bttConfig);
@@ -154,12 +156,9 @@
   
   // Helper functions to get human-readable names
   function getSelectedModelName() {
-    // Hardcoded fallbacks for initial render before config loads
+    // Use config-driven fallbacks for initial render before dropdownData loads
     if (!dropdownData) {
-      if (selectedModel === 'claude-sonnet-4-20250514') return 'Claude 4 Sonnet';
-      if (selectedModel === 'claude-opus-4-20250514') return 'Claude 4 Opus';
-      if (selectedModel === 'gpt-4.1-mini-2025-04-14') return 'GPT 4.1 Mini';
-      return selectedModel;
+      return fallbackMappings?.models[selectedModel] || selectedModel;
     }
     for (const [company, modelList] of Object.entries(dropdownData.models)) {
       const found = modelList.find(m => m.id === selectedModel);
@@ -169,12 +168,9 @@
   }
   
   function getSelectedPersonaName() {
-    // Hardcoded fallbacks for initial render before config loads
+    // Use config-driven fallbacks for initial render before dropdownData loads
     if (!dropdownData) {
-      if (selectedPersona === 'user') return 'User';
-      if (selectedPersona === 'assistant') return 'Assistant';
-      if (selectedPersona === 'developer') return 'Developer';
-      return selectedPersona;
+      return fallbackMappings?.personas[selectedPersona] || selectedPersona;
     }
     for (const [category, personaList] of Object.entries(dropdownData.personas)) {
       const found = personaList.find(p => p.id === selectedPersona);
@@ -184,12 +180,9 @@
   }
   
   function getSelectedThemeName() {
-    // Hardcoded fallbacks for initial render before config loads
+    // Use config-driven fallbacks for initial render before dropdownData loads
     if (!dropdownData) {
-      if (selectedTheme === 'rainy-night') return 'Rainy Night';
-      if (selectedTheme === 'midnight-blue') return 'Midnight Blue';
-      if (selectedTheme === 'arctic-white') return 'Arctic White';
-      return selectedTheme;
+      return fallbackMappings?.themes[selectedTheme] || selectedTheme;
     }
     for (const [category, themeList] of Object.entries(dropdownData.themes)) {
       const found = themeList.find(t => t.id === selectedTheme);
