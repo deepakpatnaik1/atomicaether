@@ -64,6 +64,37 @@
     }
   },
   
+  "textHandler": {
+    "_comment": "BRICK-302 TextHandler styling - auto-resize textarea component",
+    "_purpose": "Styling for standalone text handling component with smart auto-resize",
+    "textarea": {
+      "color": "#DFD0B8",
+      "_colorNote": "Text color matching theme. Change #DFD0B8 to #FFFFFF = pure white text",
+      "fontSize": "14px",
+      "_fontSizeNote": "Text size. Change 14px to 16px = larger text, 12px = smaller text",
+      "fontFamily": "system-ui",
+      "_fontFamilyNote": "Font stack. Change system-ui to monospace = code-style font",
+      "lineHeight": "20px",
+      "_lineHeightNote": "Line spacing. MUST match config lineHeight. Change 20px to 24px = more space between lines",
+      "placeholderColor": "rgba(223, 208, 184, 0.6)",
+      "_placeholderNote": "Placeholder text transparency. Change 0.6 to 0.8 = more visible placeholder",
+      "transition": "height 0.2s ease",
+      "_transitionNote": "Smooth height animation. Change 0.2s to 0.1s = faster, 0.3s = slower",
+      "background": "transparent",
+      "_backgroundNote": "Textarea background. Change transparent to rgba(0,0,0,0.1) = subtle background",
+      "border": "none",
+      "_borderNote": "Border styling. Change none to 1px solid rgba(255,255,255,0.1) = subtle border",
+      "outline": "none",
+      "_outlineNote": "Focus outline. Keep none for clean appearance",
+      "resize": "none",
+      "_resizeNote": "Manual resize handle. Keep none - auto-resize handles sizing",
+      "overflowY": "hidden",
+      "_overflowNote": "Vertical scrolling. Auto-managed by component logic",
+      "boxSizing": "border-box",
+      "_boxSizingNote": "CSS box model. Keep border-box for predictable sizing"
+    }
+  },
+  
   "controlsRow": {
     "_comment": "Bottom controls row styling",
     "plusButton": {

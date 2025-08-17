@@ -33,10 +33,11 @@ try {
 \t\t\t}
 \t\t</style>`;
   
-  // Check if theme CSS is already injected
+  // Check if theme CSS is already injected and remove it for re-injection
   if (appHtml.includes('Build-time theme injection')) {
-    console.log('⚠️  Theme already injected in app.html');
-    process.exit(0);
+    console.log('🔄 Updating existing theme injection in app.html');
+    // Remove existing theme injection
+    appHtml = appHtml.replace(/\t\t<!-- Build-time theme injection - prevents FOUC -->[\s\S]*?<\/style>\n/g, '');
   }
   
   // Inject before %sveltekit.head%

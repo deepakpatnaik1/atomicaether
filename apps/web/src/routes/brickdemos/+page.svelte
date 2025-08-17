@@ -44,6 +44,12 @@
     <a href="/brickdemos/inputbar-ui" class="demo-link">View Demo →</a>
   </div>
 
+  <div class="brick-card">
+    <h2>BRICK-302 TextHandler</h2>
+    <p>Smart auto-resize textarea component extracted from Sandbox 11 - pure text handling logic</p>
+    <a href="/brickdemos/texthandler" class="demo-link">View Demo →</a>
+  </div>
+
 </div>
 
 
