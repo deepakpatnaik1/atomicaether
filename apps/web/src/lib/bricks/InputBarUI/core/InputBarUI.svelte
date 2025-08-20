@@ -55,14 +55,19 @@
       textarea.style.height = `${behavior.autoResize.minHeight}px`;
     }
     
+    // Auto-focus textarea when app loads
+    focusInputBar();
+    
     // Handle URL capture
     handleUrlCapture();
     
     // Listen for focus events (when BTT brings window to front)
-    window.addEventListener('focus', handleUrlCapture);
+    window.addEventListener('focus', handleWindowFocus);
+    window.addEventListener('visibilitychange', handleVisibilityChange);
     
     return () => {
-      window.removeEventListener('focus', handleUrlCapture);
+      window.removeEventListener('focus', handleWindowFocus);
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   });
 
@@ -79,6 +84,30 @@
 
   function removeFile(fileToRemove: File) {
     files = files.filter(file => file !== fileToRemove);
+  }
+
+  function focusInputBar() {
+    // Small delay to ensure DOM is ready
+    setTimeout(() => {
+      if (textarea) {
+        textarea.focus();
+      }
+    }, 100);
+  }
+
+  function handleWindowFocus() {
+    // Handle URL capture (existing functionality)
+    handleUrlCapture();
+    
+    // Auto-focus textarea when window regains focus
+    focusInputBar();
+  }
+
+  function handleVisibilityChange() {
+    // Auto-focus textarea when tab becomes visible
+    if (!document.hidden) {
+      focusInputBar();
+    }
   }
 
   function handleKeydown(event: KeyboardEvent) {
@@ -142,16 +171,22 @@
   function selectModel(model: string) {
     selectedModel = model;
     showModelDropdown = false;
+    // Restore focus to input after dropdown interaction
+    focusInputBar();
   }
   
   function selectPersona(persona: string) {
     selectedPersona = persona;
     showPersonaDropdown = false;
+    // Restore focus to input after dropdown interaction
+    focusInputBar();
   }
   
   function selectTheme(themeId: string) {
     selectedTheme = themeId;
     showThemeDropdown = false;
+    // Restore focus to input after dropdown interaction
+    focusInputBar();
   }
   
   // Helper functions to get human-readable names
@@ -206,9 +241,15 @@
     
     const target = event.target as HTMLElement;
     if (!target.closest('.dropdown-container')) {
+      const hadDropdownOpen = showModelDropdown || showPersonaDropdown || showThemeDropdown;
       showModelDropdown = false;
       showPersonaDropdown = false;
       showThemeDropdown = false;
+      
+      // Restore focus to input if a dropdown was open
+      if (hadDropdownOpen) {
+        focusInputBar();
+      }
     }
   }
 
