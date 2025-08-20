@@ -113,16 +113,30 @@
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && service) {
-      if (service.shouldClearOnEscape('files')) {
-        files = [];
-        fileInput.value = '';
+    if (event.key === 'Escape') {
+      // First priority: Close any open dropdown menus
+      const hadDropdownOpen = showModelDropdown || showPersonaDropdown || showThemeDropdown;
+      if (hadDropdownOpen) {
+        showModelDropdown = false;
+        showPersonaDropdown = false;
+        showThemeDropdown = false;
+        // Restore focus to input after closing dropdown
+        focusInputBar();
+        return;
       }
-      if (service.shouldClearOnEscape('text')) {
-        textContent = '';
-      }
-      if (service.shouldClearOnEscape('height') && textarea && behavior) {
-        textarea.style.height = `${behavior.autoResize.minHeight}px`;
+      
+      // Second priority: Clear content if configured and no dropdowns were open
+      if (service) {
+        if (service.shouldClearOnEscape('files')) {
+          files = [];
+          fileInput.value = '';
+        }
+        if (service.shouldClearOnEscape('text')) {
+          textContent = '';
+        }
+        if (service.shouldClearOnEscape('height') && textarea && behavior) {
+          textarea.style.height = `${behavior.autoResize.minHeight}px`;
+        }
       }
     }
   }
