@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { configBus } from '$lib/buses';
+  import { configBus } from '../../../buses';
   import { InputBarService } from './InputBarService.js';
   import type { InputBarConfig, InputBarBehavior, DropdownData, RainyNightTheme, BTTConfig, FallbackMappings } from './types.js';
   
@@ -160,9 +160,12 @@
     if (!dropdownData) {
       return fallbackMappings?.models[selectedModel] || selectedModel;
     }
+    // Filter out metadata fields (starting with _) and only process actual data
     for (const [company, modelList] of Object.entries(dropdownData.models)) {
-      const found = modelList.find(m => m.id === selectedModel);
-      if (found) return found.name;
+      if (!company.startsWith('_') && Array.isArray(modelList)) {
+        const found = modelList.find(m => m.id === selectedModel);
+        if (found) return found.name;
+      }
     }
     return selectedModel;
   }
@@ -172,9 +175,12 @@
     if (!dropdownData) {
       return fallbackMappings?.personas[selectedPersona] || selectedPersona;
     }
+    // Filter out metadata fields (starting with _) and only process actual data
     for (const [category, personaList] of Object.entries(dropdownData.personas)) {
-      const found = personaList.find(p => p.id === selectedPersona);
-      if (found) return found.name;
+      if (!category.startsWith('_') && Array.isArray(personaList)) {
+        const found = personaList.find(p => p.id === selectedPersona);
+        if (found) return found.name;
+      }
     }
     return selectedPersona;
   }
@@ -184,9 +190,12 @@
     if (!dropdownData) {
       return fallbackMappings?.themes[selectedTheme] || selectedTheme;
     }
+    // Filter out metadata fields (starting with _) and only process actual data
     for (const [category, themeList] of Object.entries(dropdownData.themes)) {
-      const found = themeList.find(t => t.id === selectedTheme);
-      if (found) return found.name;
+      if (!category.startsWith('_') && Array.isArray(themeList)) {
+        const found = themeList.find(t => t.id === selectedTheme);
+        if (found) return found.name;
+      }
     }
     return selectedTheme;
   }
@@ -489,13 +498,6 @@
           <div 
             class="chevron" 
             class:up={showModelDropdown}
-            style="
-              width: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
-              height: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
-              margin-right: {layout?.controlsRow.dropdownTrigger.chevron.marginRight || '6px'};
-              border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
-              border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
-            "
           ></div>
           <span>{getSelectedModelName()}</span>
         </button>
@@ -513,50 +515,56 @@
               animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
             "
           >
-            {#each Object.entries(dropdownData.models) as [category, models]}
-              <div 
-                class="section-header"
-                style="
-                  color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
-                  font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
-                  padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
-                  border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
-                  margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
-                "
-              >
-                {category}
-              </div>
-              {#each models as model}
-                <button 
-                  class="dropdown-item model-row" 
-                  class:selected={model.id === selectedModel}
-                  on:click={() => selectModel(model.id)}
-                  style="
-                    padding: {layout?.dropdown.item.padding || '8px 12px'};
-                    font-size: {layout?.dropdown.item.fontSize || '12px'};
-                    color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
-                    transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
-                  "
-                >
-                  <span 
-                    class="model-name"
-                    style="font-size: {layout?.dropdown.modelRow.modelName.fontSize || '12px'};"
-                  >
-                    {model.name}
-                  </span>
-                  <span 
-                    class="model-id"
+            {#if dropdownData}
+              {#each Object.entries(dropdownData.models).filter(([key]) => !key.startsWith('_')) as [category, models]}
+                <div class="dropdown-section">
+                  <div 
+                    class="section-header"
                     style="
-                      font-size: {layout?.dropdown.modelRow.modelId.fontSize || '10px'};
-                      margin-left: {layout?.dropdown.modelRow.modelId.marginLeft || '16px'};
-                      opacity: 0.6;
+                      color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+                      font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
+                      padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
+                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
                     "
                   >
-                    {model.id}
-                  </span>
-                </button>
+                    {category}
+                  </div>
+                  <div class="section-content">
+                    {#each models as model}
+                      <button 
+                        class="dropdown-item model-row" 
+                        class:selected={model.id === selectedModel}
+                        on:click={() => selectModel(model.id)}
+                        style="
+                          padding: {layout?.dropdown.item.padding || '8px 12px'};
+                          font-size: {layout?.dropdown.item.fontSize || '12px'};
+                          color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+                          transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+                        "
+                      >
+                        <span 
+                          class="model-name"
+                          style="font-size: {layout?.dropdown.modelRow.modelName.fontSize || '12px'};"
+                        >
+                          {model.name}
+                        </span>
+                        <span 
+                          class="model-id"
+                          style="
+                            font-size: {layout?.dropdown.modelRow.modelId.fontSize || '10px'};
+                            margin-left: {layout?.dropdown.modelRow.modelId.marginLeft || '16px'};
+                            opacity: 0.6;
+                          "
+                        >
+                          {model.id}
+                        </span>
+                      </button>
+                    {/each}
+                  </div>
+                </div>
               {/each}
-            {/each}
+            {/if}
           </div>
         {/if}
       </div>
@@ -577,19 +585,12 @@
           <div 
             class="chevron" 
             class:up={showPersonaDropdown}
-            style="
-              width: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
-              height: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
-              margin-right: {layout?.controlsRow.dropdownTrigger.chevron.marginRight || '6px'};
-              border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
-              border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
-            "
           ></div>
           <span>{getSelectedPersonaName()}</span>
         </button>
         {#if showPersonaDropdown && dropdownData}
           <div 
-            class="dropdown-menu"
+            class="dropdown-menu persona-menu"
             style="
               width: {layout?.dropdown.menu.width || '280px'};
               margin-bottom: {layout?.dropdown.menu.marginBottom || '8px'};
@@ -601,35 +602,42 @@
               animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
             "
           >
-            {#each Object.entries(dropdownData.personas) as [category, personas]}
-              <div 
-                class="section-header"
-                style="
-                  color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
-                  font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
-                  padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
-                  border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
-                  margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
-                "
-              >
-                {category}
-              </div>
-              {#each personas as persona}
-                <button 
-                  class="dropdown-item" 
-                  class:selected={persona.id === selectedPersona}
-                  on:click={() => selectPersona(persona.id)}
-                  style="
-                    padding: {layout?.dropdown.item.padding || '8px 12px'};
-                    font-size: {layout?.dropdown.item.fontSize || '12px'};
-                    color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
-                    transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
-                  "
-                >
-                  {persona.name}
-                </button>
+            {#if dropdownData}
+              {#each Object.entries(dropdownData.personas).filter(([key]) => !key.startsWith('_')) as [category, personas]}
+                <div class="dropdown-section">
+                  <div 
+                    class="section-header"
+                    style="
+                      color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+                      font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
+                      padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
+                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
+                    "
+                  >
+                    {category}
+                  </div>
+                  <div class="section-content">
+                    {#each personas as persona}
+                      <button 
+                        class="dropdown-item model-row" 
+                        class:selected={persona.id === selectedPersona}
+                        on:click={() => selectPersona(persona.id)}
+                        style="
+                          padding: {layout?.dropdown.item.padding || '8px 12px'};
+                          font-size: {layout?.dropdown.item.fontSize || '12px'};
+                          color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+                          transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+                        "
+                      >
+                        <span class="model-name">{persona.name}</span>
+                        <span class="model-id">{persona.id}</span>
+                      </button>
+                    {/each}
+                  </div>
+                </div>
               {/each}
-            {/each}
+            {/if}
           </div>
         {/if}
       </div>
@@ -650,13 +658,6 @@
           <div 
             class="chevron" 
             class:up={showThemeDropdown}
-            style="
-              width: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
-              height: {layout?.controlsRow.dropdownTrigger.chevron.size || '8px'};
-              margin-right: {layout?.controlsRow.dropdownTrigger.chevron.marginRight || '6px'};
-              border-right: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
-              border-bottom: 1.5px solid {theme?.controlsRow.dropdownTrigger.chevron.color || 'rgba(223, 208, 184, 0.5)'};
-            "
           ></div>
           <span>{getSelectedThemeName()}</span>
         </button>
@@ -674,35 +675,42 @@
               animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
             "
           >
-            {#each Object.entries(dropdownData.themes) as [category, themes]}
-              <div 
-                class="section-header"
-                style="
-                  color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
-                  font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
-                  padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
-                  border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
-                  margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
-                "
-              >
-                {category}
-              </div>
-              {#each themes as themeItem}
-                <button 
-                  class="dropdown-item" 
-                  class:selected={themeItem.id === selectedTheme}
-                  on:click={() => selectTheme(themeItem.id)}
-                  style="
-                    padding: {layout?.dropdown.item.padding || '8px 12px'};
-                    font-size: {layout?.dropdown.item.fontSize || '12px'};
-                    color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
-                    transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
-                  "
-                >
-                  {themeItem.name}
-                </button>
+            {#if dropdownData}
+              {#each Object.entries(dropdownData.themes).filter(([key]) => !key.startsWith('_')) as [category, themes]}
+                <div class="dropdown-section">
+                  <div 
+                    class="section-header"
+                    style="
+                      color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
+                      font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
+                      padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
+                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
+                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
+                    "
+                  >
+                    {category}
+                  </div>
+                  <div class="section-content">
+                    {#each themes as themeItem}
+                      <button 
+                        class="dropdown-item model-row" 
+                        class:selected={themeItem.id === selectedTheme}
+                        on:click={() => selectTheme(themeItem.id)}
+                        style="
+                          padding: {layout?.dropdown.item.padding || '8px 12px'};
+                          font-size: {layout?.dropdown.item.fontSize || '12px'};
+                          color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
+                          transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+                        "
+                      >
+                        <span class="model-name">{themeItem.name}</span>
+                        <span class="model-id">{themeItem.id}</span>
+                      </button>
+                    {/each}
+                  </div>
+                </div>
               {/each}
-            {/each}
+            {/if}
           </div>
         {/if}
       </div>
@@ -794,7 +802,7 @@
   }
 
   .text-input::placeholder {
-    color: var(--placeholder-color, rgba(223, 208, 184, 0.6));
+    color: rgba(223, 208, 184, 0.6);
   }
 
   .controls-row {
@@ -810,6 +818,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 4px 8px;
+    border-radius: 4px;
   }
 
   .plus-button:hover {
@@ -818,13 +828,15 @@
 
   .plus-icon {
     position: relative;
+    width: 10px;
+    height: 10px;
   }
 
   .plus-icon::before,
   .plus-icon::after {
     content: '';
     position: absolute;
-    background: var(--icon-background, rgba(223, 208, 184, 0.7));
+    background: rgba(223, 208, 184, 0.7);
   }
 
   .plus-icon::before {
@@ -850,11 +862,16 @@
   .dropdown-trigger {
     background: transparent;
     border: none;
+    color: rgba(223, 208, 184, 0.7);
+    font-size: 12px;
     font-family: system-ui;
     cursor: pointer;
     display: flex;
     align-items: flex-start;
     gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
   }
 
   .dropdown-trigger:hover {
@@ -862,29 +879,39 @@
   }
 
   .chevron {
-    border: none;
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid transparent;
+    border-right-color: rgba(223, 208, 184, 0.5);
+    border-bottom-color: rgba(223, 208, 184, 0.5);
     transform: rotate(45deg);
     margin-right: 6px;
     align-self: flex-start;
     background: transparent;
+    box-sizing: border-box;
   }
 
   .chevron.up {
-    border: none;
-    border-left: 1.5px solid var(--chevron-color, rgba(223, 208, 184, 0.5));
-    border-top: 1.5px solid var(--chevron-color, rgba(223, 208, 184, 0.5));
+    border: 1.5px solid transparent;
+    border-left-color: rgba(223, 208, 184, 0.5);
+    border-top-color: rgba(223, 208, 184, 0.5);
     transform: rotate(45deg);
     align-self: flex-end;
     background: transparent;
+    box-sizing: border-box;
   }
 
   .dropdown-menu {
     position: absolute;
     bottom: 100%;
     left: 0;
-    max-height: 200px;
+    max-height: 300px;
     overflow-y: auto;
     z-index: var(--dropdown-z-index, 1000);
+  }
+
+  .persona-menu {
+    max-height: 400px;
   }
 
   @keyframes slideUp {
@@ -925,20 +952,47 @@
     border-radius: 0 0 8px 8px;
   }
 
+  .dropdown-section {
+    margin-bottom: 8px;
+  }
+
+  .dropdown-section:last-child {
+    margin-bottom: 0;
+  }
+
   .section-header {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
 
+  .section-content {
+    /* Container for model items within each section */
+  }
+
   .model-row {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px !important;
+  }
+
+  .model-name {
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
   }
 
   .model-id {
+    font-size: 10px;
+    opacity: 0.6;
     font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    text-align: right;
+    margin-left: 16px;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .green-indicator {
