@@ -1,0 +1,38 @@
+{
+  "_description": "Fallback display name mappings for models, personas, and themes when config hasn't loaded yet",
+  "_version": "1.0.0",
+  "_extractedFrom": "BRICK-301 hardcoded fallbacks",
+  
+  "models": {
+    "_comment": "AI model ID to human-readable name mappings",
+    "_purpose": "Provides display names during initial render before dropdownData loads",
+    
+    "claude-sonnet-4-20250514": "Claude 4 Sonnet",
+    "claude-opus-4-20250514": "Claude 4 Opus",
+    "gpt-4.1-mini-2025-04-14": "GPT 4.1 Mini",
+    
+    "_usage": "Add new model mappings here as they become available"
+  },
+  
+  "personas": {
+    "_comment": "Persona ID to display name mappings",
+    "_purpose": "Provides display names during initial render before dropdownData loads",
+    
+    "user": "User",
+    "assistant": "Assistant",
+    "developer": "Developer",
+    
+    "_usage": "Add new persona mappings here as they are defined"
+  },
+  
+  "themes": {
+    "_comment": "Theme ID to display name mappings", 
+    "_purpose": "Provides display names during initial render before dropdownData loads",
+    
+    "rainy-night": "Rainy Night",
+    "midnight-blue": "Midnight Blue",
+    "arctic-white": "Arctic White",
+    
+    "_usage": "Add new theme mappings here as themes are created"
+  }
+}

@@ -80,6 +80,18 @@
     <a href="/sandboxes/sandbox-11" class="demo-link">Experiment →</a>
   </div>
 
+  <div class="brick-card">
+    <h2>Sandbox 12</h2>
+    <p>🚀 COMPLETE PROJECT CLONE - All 10 bricks (5 Buses + 3 Theme + 2 Input) integrated together</p>
+    <a href="/sandboxes/sandbox-12" class="demo-link">Test Complete Integration →</a>
+  </div>
+
+  <div class="brick-card">
+    <h2>Sandbox 13</h2>
+    <p>🔄 DUPLICATE CLONE - Copy of Sandbox 12 for progressive Boss Rules application</p>
+    <a href="/sandboxes/sandbox-13" class="demo-link">Reimagine Sandbox →</a>
+  </div>
+
 </div>
 
 

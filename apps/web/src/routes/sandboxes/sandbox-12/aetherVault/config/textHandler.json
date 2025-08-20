@@ -1,0 +1,67 @@
+{
+  "_description": "TextHandler behavior configuration - auto-resize logic, keyboard shortcuts, and textarea settings",
+  "_version": "1.0.0",
+  "_extractedFrom": "sandbox-11",
+  
+  "autoResize": {
+    "_comment": "Text area auto-resize behavior settings",
+    "_purpose": "Controls how the textarea grows and shrinks with content",
+    
+    "lineHeight": 20,
+    "_lineHeightNote": "Height of single text line in pixels. MUST match CSS line-height exactly. Change 20 to 24 = taller lines",
+    
+    "minLines": 1,
+    "_minLinesNote": "Minimum visible lines. Change 1 to 2 = taller minimum textarea",
+    
+    "maxLines": 12,
+    "_maxLinesNote": "Maximum visible lines before scrolling. Change 12 to 15 = allow more text before scroll",
+    
+    "minHeight": 20,
+    "_minHeightNote": "Calculated minimum height (lineHeight × minLines). MUST equal lineHeight × minLines",
+    
+    "maxHeight": 240,
+    "_maxHeightNote": "Calculated maximum height (lineHeight × maxLines). MUST equal lineHeight × maxLines",
+    
+    "animationDuration": "0.2s",
+    "_animationNote": "Speed of height transitions. Change 0.2s to 0.1s = faster resize, 0.3s = slower resize",
+    
+    "_criticalRelationship": "minHeight = lineHeight × minLines, maxHeight = lineHeight × maxLines. These MUST stay in sync or auto-resize breaks."
+  },
+  
+  "keyboardShortcuts": {
+    "_comment": "Keyboard interaction behavior for text handling",
+    "_purpose": "Defines keyboard shortcuts and their effects on text content",
+    
+    "escapeKey": {
+      "_purpose": "What happens when user presses Escape key",
+      "clearText": true,
+      "_clearTextNote": "Whether Escape clears text content. false = keep text when escaping",
+      "resetHeight": true,
+      "_resetHeightNote": "Whether Escape resets textarea to minimum height. false = keep current height"
+    },
+    
+    "_usage": "Add new keyboard shortcuts here as features expand"
+  },
+  
+  "textarea": {
+    "_comment": "Textarea element configuration",
+    "_purpose": "Basic textarea setup and placeholder text",
+    
+    "placeholder": "Type a message...",
+    "_placeholderNote": "Text shown when textarea is empty. Change to customize user guidance",
+    
+    "initialRows": 1,
+    "_initialRowsNote": "Starting number of visible rows. Should match minLines for consistency"
+  },
+  
+  "performance": {
+    "_comment": "Performance optimizations for text handling",
+    "_purpose": "Settings to ensure smooth auto-resize and text input responsiveness",
+    
+    "debounceDelay": 0,
+    "_debounceNote": "Milliseconds to debounce resize calculations. 0 = immediate, 50 = smoother on slow devices",
+    
+    "scrollBehavior": "smooth",
+    "_scrollNote": "How scrolling behaves when content exceeds maxHeight. Options: smooth, auto, instant"
+  }
+}

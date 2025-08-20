@@ -1,0 +1,18 @@
+SANDBOX 11 HARDCODED VALUES EXTRACTION SUMMARY
+==================================================
+
+📁 Source: apps/web/src/routes/sandboxes/sandbox-11/+page.svelte
+📊 Total instances: 1146
+🎯 Unique values: 291
+📋 Categories: 8
+
+BREAKDOWN BY CATEGORY:
+-------------------------
+css_dimensions: 142 instances (29 unique)
+css_colors_hex: 12 instances (7 unique)
+css_colors_rgba: 44 instances (23 unique)
+css_numbers: 271 instances (43 unique)
+string_literals: 78 instances (60 unique)
+css_properties: 294 instances (69 unique)
+javascript_constants: 5 instances (5 unique)
+object_properties: 300 instances (55 unique)
