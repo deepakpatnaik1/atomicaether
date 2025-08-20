@@ -1,5 +1,62 @@
 # Field Report
 
+## Lesson #3: Drag & Drop Opens New Tabs Despite Event Prevention
+
+### 🚨 Symptoms (How to recognize this problem)
+- Drag and drop works functionally (files appear in preview area)
+- Console logs show correct behavior: "🎯 Drop event detected", "📁 Files dropped: X"  
+- Files save to localStorage successfully
+- **BUT** browser still opens dropped files in new tabs showing random screenshots/content
+- User sees both the intended behavior AND unwanted new tab opening
+- Multiple `event.preventDefault()` calls in drag handlers don't stop the new tab behavior
+
+### 🔍 Root Cause
+Browser's native drag-and-drop behavior runs in parallel with custom event handlers. Even when custom handlers call `event.preventDefault()`, the browser's default "open file in new tab" behavior can still execute because:
+
+1. **Event propagation timing** - Global window events may fire before/after local element handlers
+2. **Multiple event targets** - Drop events can fire on child elements (textarea) not just the intended drop zone
+3. **Insufficient event stopping** - `preventDefault()` and `stopPropagation()` alone don't stop immediate propagation to other handlers
+
+### ✅ Solution
+**Three-layer event prevention approach:**
+
+1. **Global browser default prevention:**
+   ```html
+   <svelte:window 
+     on:dragover|preventDefault
+     on:drop|preventDefault
+   />
+   ```
+
+2. **Complete local event stopping:**
+   ```javascript
+   async function handleDrop(event: DragEvent) {
+     event.preventDefault();
+     event.stopPropagation();
+     event.stopImmediatePropagation(); // KEY: stops all other handlers
+     // ... handle files
+     return false; // Extra insurance
+   }
+   ```
+
+3. **All drag event handlers on drop zone:**
+   ```html
+   <div 
+     on:dragenter={handleDragEnter}
+     on:dragover={handleDragOver}  
+     on:dragleave={handleDragLeave}
+     on:drop={handleDrop}
+   >
+   ```
+
+### 🎯 Prevention
+- **Use `stopImmediatePropagation()`** in custom drop handlers to prevent other handlers from executing
+- **Always combine global and local prevention** - global blocks default browser behavior, local handles specific functionality
+- **Handle all drag events** (`dragenter`, `dragover`, `dragleave`, `drop`) not just `drop`
+- **Test both scenarios**: files dropped on intended target AND files dropped elsewhere on page
+- **Return false** from event handlers as additional prevention insurance
+- **Use `|preventDefault` modifier** in Svelte for simple global prevention
+
 ## Lesson #2: UI Component Appears Broken But Is Just Invisible Text
 
 ### 🚨 Symptoms (How to recognize this problem)
