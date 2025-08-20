@@ -79,6 +79,8 @@
     const target = event.target as HTMLInputElement;
     if (target.files) {
       files = Array.from(target.files);
+      // Restore focus to textarea to preserve typing context
+      focusInputBar();
     }
   }
 
@@ -395,6 +397,88 @@
     z-index: {layout?.container.positioning.zIndex || '1000'};
   "
 >
+  <!-- File Preview Zone - Outside Input Bar -->
+  {#if files.length > 0}
+    <div 
+      class="file-preview-zone external"
+      style="
+        background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
+        border-radius: {theme?.filePreviewZone.border.radius || '6px'};
+        padding: {layout?.filePreviewZone.spacing.padding || '12px'};
+        border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
+        gap: {layout?.filePreviewZone.spacing.itemGap || '8px'};
+        margin-bottom: 12px;
+        backdrop-filter: {theme?.inputBar.background.backdropFilter || 'blur(20px)'};
+      "
+    >
+      {#each files as file}
+        <div 
+          class="file-preview"
+          style="
+            background: {theme?.filePreviewZone.filePreview.background || 'rgba(0, 0, 0, 0.3)'};
+            border-radius: {theme?.filePreviewZone.filePreview.borderRadius || '6px'};
+            padding: {layout?.filePreviewZone.filePreview.padding || '8px'};
+            min-width: {layout?.filePreviewZone.filePreview.minWidth || '80px'};
+            max-width: {layout?.filePreviewZone.filePreview.maxWidth || '120px'};
+          "
+        >
+          {#if file.type.startsWith('image/')}
+            <img 
+              src={service?.getFilePreviewUrl(file)} 
+              alt={file.name}
+              style="
+                width: 100%;
+                height: auto;
+                border-radius: 4px;
+                max-height: 80px;
+                object-fit: cover;
+              "
+            />
+          {:else}
+            <div 
+              class="file-icon"
+              style="
+                width: 100%;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+                color: #fff;
+                font-size: 24px;
+              "
+            >📄</div>
+          {/if}
+          <span 
+            class="file-name"
+            style="
+              display: block;
+              margin-top: 4px;
+              font-size: 10px;
+              color: rgba(255, 255, 255, 0.8);
+              text-align: center;
+              word-break: break-all;
+              line-height: 1.2;
+            "
+          >{file.name}</span>
+          <button 
+            class="remove-file" 
+            onclick={() => removeFile(file)}
+            style="
+              position: absolute;
+              width: {layout?.filePreviewZone.removeButton.size || '20px'};
+              height: {layout?.filePreviewZone.removeButton.size || '20px'};
+              top: {layout?.filePreviewZone.removeButton.position.top || '-4px'};
+              right: {layout?.filePreviewZone.removeButton.position.right || '-4px'};
+              background: {theme?.filePreviewZone.removeButton.background || 'rgba(255, 0, 0, 0.8)'};
+            "
+          >×</button>
+        </div>
+      {/each}
+    </div>
+  {/if}
+
   <div 
     class="input-bar" 
     ondragover={handleDragOver} 
@@ -414,73 +498,6 @@
       transition: {layout?.animation.globalTransition || 'all 0.3s ease'};
     "
   >
-    <!-- File Preview Zone -->
-    {#if files.length > 0}
-      <div 
-        class="file-preview-zone"
-        style="
-          background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
-          border-radius: {theme?.filePreviewZone.border.radius || '6px'};
-          padding: {layout?.filePreviewZone.spacing.padding || '12px'};
-          border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
-          gap: {layout?.filePreviewZone.spacing.itemGap || '8px'};
-        "
-      >
-        {#each files as file}
-          <div 
-            class="file-preview"
-            style="
-              background: {theme?.filePreviewZone.filePreview.background || 'rgba(0, 0, 0, 0.3)'};
-              border-radius: {theme?.filePreviewZone.filePreview.borderRadius || '6px'};
-              padding: {layout?.filePreviewZone.filePreview.padding || '8px'};
-              min-width: {layout?.filePreviewZone.filePreview.minWidth || '80px'};
-              max-width: {layout?.filePreviewZone.filePreview.maxWidth || '120px'};
-            "
-          >
-            {#if file.type.startsWith('image/')}
-              <img 
-                src={getFilePreviewUrl(file)} 
-                alt={file.name}
-                style="
-                  width: {layout?.filePreviewZone.filePreview.imageSize || '60px'};
-                  height: {layout?.filePreviewZone.filePreview.imageSize || '60px'};
-                  border-radius: {layout?.filePreviewZone.filePreview.imageBorderRadius || '4px'};
-                "
-              />
-            {:else}
-              <div 
-                class="file-icon"
-                style="font-size: 40px; opacity: 0.8;"
-              >
-                {behavior?.fileHandling.filePreview.fallbackIcon || '📄'}
-              </div>
-            {/if}
-            <span 
-              class="file-name"
-              style="
-                font-size: 10px;
-                color: {theme?.textInput.typography.color || '#DFD0B8'};
-                opacity: 0.8;
-                margin-top: 4px;
-              "
-            >
-              {file.name}
-            </span>
-            <button 
-              class="remove-file" 
-              onclick={() => removeFile(file)}
-              style="
-                width: {layout?.filePreviewZone.removeButton.size || '20px'};
-                height: {layout?.filePreviewZone.removeButton.size || '20px'};
-                top: {layout?.filePreviewZone.removeButton.position.top || '-4px'};
-                right: {layout?.filePreviewZone.removeButton.position.right || '-4px'};
-                background: {theme?.filePreviewZone.removeButton.background || 'rgba(255, 0, 0, 0.8)'};
-              "
-            >×</button>
-          </div>
-        {/each}
-      </div>
-    {/if}
     
     <!-- Text Input -->
     <textarea 
