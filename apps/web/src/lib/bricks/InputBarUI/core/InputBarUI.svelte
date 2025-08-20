@@ -349,13 +349,13 @@
   {/if}
 </svelte:head>
 
-<svelte:window on:keydown={handleKeydown} on:click={handleClickOutside} />
+<svelte:window onkeydown={handleKeydown} onclick={handleClickOutside} />
 
 <input 
   type="file" 
   multiple 
   bind:this={fileInput} 
-  on:change={handleFileChange} 
+  onchange={handleFileChange} 
   style="display: none;" 
   accept="image/*,.pdf,.doc,.docx,.txt" 
 />
@@ -397,8 +397,10 @@
 >
   <div 
     class="input-bar" 
-    on:dragover={handleDragOver} 
-    on:drop={handleDrop}
+    ondragover={handleDragOver} 
+    ondrop={handleDrop}
+    role="region"
+    aria-label="File drop zone"
     style="
       min-height: {layout?.container.dimensions.minHeight || '80px'};
       background: {theme?.inputBar.background.color || 'rgba(0, 0, 0, 0.85)'};
@@ -466,7 +468,7 @@
             </span>
             <button 
               class="remove-file" 
-              on:click={() => removeFile(file)}
+              onclick={() => removeFile(file)}
               style="
                 width: {layout?.filePreviewZone.removeButton.size || '20px'};
                 height: {layout?.filePreviewZone.removeButton.size || '20px'};
@@ -486,7 +488,7 @@
       bind:value={textContent}
       class="text-input" 
       placeholder="Type a message..."
-      on:input={handleTextInput}
+      oninput={handleTextInput}
       rows="1"
       style="
         color: {theme?.textInput.typography.color || '#DFD0B8'};
@@ -507,7 +509,8 @@
       <!-- Plus Button -->
       <button 
         class="plus-button" 
-        on:click={handleFileSelect}
+        onclick={handleFileSelect}
+        aria-label="Attach files"
         style="
           padding: {layout?.controlsRow.plusButton.padding || '4px 8px'};
           border-radius: {layout?.controlsRow.plusButton.borderRadius || '4px'};
@@ -527,7 +530,7 @@
       <div class="dropdown-container">
         <button 
           class="dropdown-trigger" 
-          on:click={toggleModelDropdown}
+          onclick={toggleModelDropdown}
           style="
             font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
             padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
@@ -576,7 +579,7 @@
                       <button 
                         class="dropdown-item model-row" 
                         class:selected={model.id === selectedModel}
-                        on:click={() => selectModel(model.id)}
+                        onclick={() => selectModel(model.id)}
                         style="
                           padding: {layout?.dropdown.item.padding || '8px 12px'};
                           font-size: {layout?.dropdown.item.fontSize || '12px'};
@@ -614,7 +617,7 @@
       <div class="dropdown-container">
         <button 
           class="dropdown-trigger" 
-          on:click={togglePersonaDropdown}
+          onclick={togglePersonaDropdown}
           style="
             font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
             padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
@@ -663,7 +666,7 @@
                       <button 
                         class="dropdown-item model-row" 
                         class:selected={persona.id === selectedPersona}
-                        on:click={() => selectPersona(persona.id)}
+                        onclick={() => selectPersona(persona.id)}
                         style="
                           padding: {layout?.dropdown.item.padding || '8px 12px'};
                           font-size: {layout?.dropdown.item.fontSize || '12px'};
@@ -687,7 +690,7 @@
       <div class="dropdown-container">
         <button 
           class="dropdown-trigger" 
-          on:click={toggleThemeDropdown}
+          onclick={toggleThemeDropdown}
           style="
             font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
             padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
@@ -736,7 +739,7 @@
                       <button 
                         class="dropdown-item model-row" 
                         class:selected={themeItem.id === selectedTheme}
-                        on:click={() => selectTheme(themeItem.id)}
+                        onclick={() => selectTheme(themeItem.id)}
                         style="
                           padding: {layout?.dropdown.item.padding || '8px 12px'};
                           font-size: {layout?.dropdown.item.fontSize || '12px'};

@@ -101,7 +101,7 @@
 >
   <button 
     class="picker-trigger"
-    on:click={toggleDropdown}
+    onclick={toggleDropdown}
     {disabled}
     aria-haspopup="listbox"
     aria-expanded={isOpen}
@@ -130,7 +130,7 @@
           <button 
             class="theme-option"
             class:selected={currentTheme === theme}
-            on:click={() => selectTheme(theme)}
+            onclick={() => selectTheme(theme)}
             role="option"
             aria-selected={currentTheme === theme}
           >
@@ -145,7 +145,7 @@
           <div class="separator"></div>
           <button 
             class="theme-option clear-option"
-            on:click={clearSelection}
+            onclick={clearSelection}
             role="option"
             aria-selected="false"
           >
