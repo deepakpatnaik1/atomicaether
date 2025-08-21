@@ -1,0 +1,39 @@
+MESSAGESCROLLBACK HARDCODED VALUES EXTRACTION SUMMARY
+==================================================
+
+📁 Source: apps/web/src/lib/components/MessageScrollback/MessageScrollback.svelte
+📊 Total hardcoded values: 84
+🎨 Theme candidates: 24
+🔧 Structural values: 60
+📋 Categories: 6
+
+BREAKDOWN BY CATEGORY:
+-------------------------
+css_dimensions:
+  Total: 2
+  Theme: 1
+  Structural: 1
+css_numbers:
+  Total: 22
+  Theme: 2
+  Structural: 20
+css_properties:
+  Total: 33
+  Theme: 11
+  Structural: 22
+border_styles:
+  Total: 5
+  Theme: 5
+  Structural: 0
+font_properties:
+  Total: 3
+  Theme: 3
+  Structural: 0
+spacing:
+  Total: 18
+  Theme: 2
+  Structural: 16
+role_labels:
+  Total: 1
+  Theme: 0
+  Structural: 1
