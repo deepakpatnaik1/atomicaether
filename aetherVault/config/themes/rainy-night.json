@@ -189,5 +189,105 @@
     "color": "#e0e0e0",
     "transition": "all 0.3s ease",
     "_bodyNote": "Dark page background. Change #222831 to #1a1a1a = darker, #2a3440 = lighter"
+  },
+  
+  "scrollback": {
+    "_comment": "MessageScrollback component styling",
+    "layout": {
+      "_purpose": "Spacing and dimensions for scrollback layout",
+      "container": {
+        "height": "calc(100vh - 114px)",
+        "_heightNote": "Total height minus input bar and gap",
+        "defaultWidth": "650px",
+        "_defaultWidthNote": "Width on mobile/small screens",
+        "largeWidth": "800px",
+        "_largeWidthNote": "Width on desktop screens",
+        "maxWidth": "calc(100vw - 40px)",
+        "_maxWidthNote": "Maximum width with edge padding",
+        "breakpoint": "705px",
+        "_breakpointNote": "Viewport width where layout switches to desktop"
+      },
+      "messages": {
+        "paddingTop": "20px",
+        "paddingBottom": "20px",
+        "paddingRight": "16px",
+        "_paddingNote": "Message area internal spacing"
+      },
+      "message": {
+        "marginBottom": "32px",
+        "_messageSpacingNote": "Vertical gap between messages",
+        "paddingRight": "3px",
+        "_messagePaddingNote": "Right padding for border alignment"
+      },
+      "messageHeader": {
+        "marginBottom": "10px",
+        "_headerSpacingNote": "Space between role label and message content"
+      },
+      "messageContent": {
+        "marginLeft": "19px",
+        "_contentIndentNote": "Left indent for message text"
+      },
+      "roleLabel": {
+        "padding": "2px 8px",
+        "_labelPaddingNote": "Internal padding of role label badges"
+      },
+      "paragraph": {
+        "marginBottom": "12px",
+        "_paragraphSpacingNote": "Space between paragraphs in messages"
+      },
+      "bullet": {
+        "paddingLeft": "8px",
+        "_bulletIndentNote": "Left indent for bullet items",
+        "marginRight": "8px",
+        "_bulletSpacingNote": "Space between bullet and text"
+      }
+    },
+    "typography": {
+      "_purpose": "Text styling for scrollback",
+      "fontFamily": "'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif",
+      "_fontFamilyNote": "Using Lexend for enhanced readability, matches input bar",
+      "fontSize": "13px",
+      "_fontSizeNote": "Base font size, matches input bar for consistency",
+      "lineHeight": "1.5",
+      "_lineHeightNote": "Line spacing multiplier for readability"
+    },
+    "message": {
+      "_purpose": "Message content styling",
+      "textColor": "#DFD0B8",
+      "_textColorNote": "Warm off-white for message body text. Matches input bar text color",
+      "boldWeight": "600",
+      "_boldWeightNote": "Font weight for bold text emphasis"
+    },
+    "roleLabel": {
+      "_purpose": "Role label badge styling for user and assistant",
+      "fontSize": "11px",
+      "_fontSizeNote": "Smaller size for role labels to distinguish from content",
+      "fontWeight": "600",
+      "_fontWeightNote": "Semi-bold for role label emphasis",
+      "textTransform": "uppercase",
+      "_textTransformNote": "Uppercase for role labels",
+      "letterSpacing": "0.5px",
+      "_letterSpacingNote": "Slight letter spacing for uppercase text",
+      "borderRadius": "4px",
+      "_borderRadiusNote": "Corner rounding for role label badges",
+      "user": {
+        "_purpose": "Boss/User role label styling",
+        "textColor": "#ef4444",
+        "_userTextNote": "Red color for user identification",
+        "background": "rgba(239, 68, 68, 0.2)",
+        "_userBgNote": "Semi-transparent red background",
+        "borderColor": "rgba(239, 68, 68, 0.3)",
+        "_userBorderNote": "Slightly more opaque red border for definition"
+      },
+      "assistant": {
+        "_purpose": "Samara/Assistant role label styling",
+        "textColor": "#f97316",
+        "_assistantTextNote": "Orange color for assistant identification",
+        "background": "rgba(249, 115, 22, 0.2)",
+        "_assistantBgNote": "Semi-transparent orange background",
+        "borderColor": "rgba(249, 115, 22, 0.3)",
+        "_assistantBorderNote": "Slightly more opaque orange border for definition"
+      }
+    }
   }
 }

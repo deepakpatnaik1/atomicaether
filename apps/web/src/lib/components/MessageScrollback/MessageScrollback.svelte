@@ -1,9 +1,84 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { configBus } from '../../buses';
+  
   interface Message {
     id: string;
     role: 'user' | 'assistant';
     content: string;
   }
+  
+  interface RainyNightTheme {
+    scrollback?: {
+      layout?: {
+        container?: {
+          height?: string;
+          defaultWidth?: string;
+          largeWidth?: string;
+          maxWidth?: string;
+          breakpoint?: string;
+        };
+        messages?: {
+          paddingTop?: string;
+          paddingBottom?: string;
+          paddingRight?: string;
+        };
+        message?: {
+          marginBottom?: string;
+          paddingRight?: string;
+        };
+        messageHeader?: {
+          marginBottom?: string;
+        };
+        messageContent?: {
+          marginLeft?: string;
+        };
+        roleLabel?: {
+          padding?: string;
+        };
+        paragraph?: {
+          marginBottom?: string;
+        };
+        bullet?: {
+          paddingLeft?: string;
+          marginRight?: string;
+        };
+      };
+      typography?: {
+        fontFamily?: string;
+        fontSize?: string;
+        lineHeight?: string;
+      };
+      message?: {
+        textColor?: string;
+        boldWeight?: string;
+      };
+      roleLabel?: {
+        fontSize?: string;
+        fontWeight?: string;
+        textTransform?: string;
+        letterSpacing?: string;
+        borderRadius?: string;
+        user?: {
+          textColor?: string;
+          background?: string;
+          borderColor?: string;
+        };
+        assistant?: {
+          textColor?: string;
+          background?: string;
+          borderColor?: string;
+        };
+      };
+    };
+  }
+  
+  let theme: RainyNightTheme | null = $state(null);
+  
+  onMount(async () => {
+    // Load theme config
+    theme = await configBus.load('themes/rainy-night');
+  });
 
   function formatContent(content: string): string {
     // Split into lines for better control
@@ -11,14 +86,19 @@
     const processedLines = [];
     
     for (let line of lines) {
-      // Process markdown in the line
-      line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      line = line.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      // Process markdown in the line with theme colors
+      const textColor = theme?.scrollback?.message?.textColor || '#DFD0B8';
+      const boldWeight = theme?.scrollback?.message?.boldWeight || '600';
+      line = line.replace(/\*\*(.*?)\*\*/g, `<strong style="color: ${textColor}; font-weight: ${boldWeight};">$1</strong>`);
+      line = line.replace(/\*(.*?)\*/g, `<em style="color: ${textColor};">$1</em>`);
       
       // Check if it's a bullet point
       if (line.startsWith('• ')) {
         const bulletContent = line.substring(2);
-        processedLines.push(`<div class="bullet-item"><span class="bullet">•</span><span class="bullet-content">${bulletContent}</span></div>`);
+        const bulletColor = theme?.scrollback?.roleLabel?.assistant?.textColor || '#f97316';
+        const bulletMarginRight = theme?.scrollback?.layout?.bullet?.marginRight || '8px';
+        const bulletPaddingLeft = theme?.scrollback?.layout?.bullet?.paddingLeft || '8px';
+        processedLines.push(`<div class="bullet-item" style="padding-left: ${bulletPaddingLeft};"><span class="bullet" style="color: ${bulletColor}; margin-right: ${bulletMarginRight};">•</span><span class="bullet-content">${bulletContent}</span></div>`);
       } else if (line.trim() === '') {
         // Empty line becomes a paragraph break
         processedLines.push('</p><p class="message-paragraph">');
@@ -31,8 +111,9 @@
     // Join with line breaks only for non-div elements
     let formatted = processedLines.join('\n');
     
-    // Wrap everything in a paragraph
-    formatted = '<p class="message-paragraph">' + formatted + '</p>';
+    // Wrap everything in a paragraph with themed margin
+    const paragraphMargin = theme?.scrollback?.layout?.paragraph?.marginBottom || '12px';
+    formatted = `<p class="message-paragraph" style="margin: 0 0 ${paragraphMargin} 0;">` + formatted + '</p>';
     
     // Clean up empty paragraphs
     formatted = formatted.replace(/<p class="message-paragraph"><\/p>/g, '');
@@ -115,14 +196,67 @@ Robert Langdon is the central protagonist who guides readers through the intrica
   let scrollContainer: HTMLDivElement;
 </script>
 
-<div class="scrollback-container" bind:this={scrollContainer}>
-  <div class="messages">
+<div 
+  class="scrollback-container" 
+  bind:this={scrollContainer}
+  style="
+    height: {theme?.scrollback?.layout?.container?.height || 'calc(100vh - 114px)'};
+    font-family: {theme?.scrollback?.typography?.fontFamily || "'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"};
+    font-size: {theme?.scrollback?.typography?.fontSize || '13px'};
+    line-height: {theme?.scrollback?.typography?.lineHeight || '1.5'};
+  "
+>
+  <div 
+    class="messages"
+    style="
+      --default-width: {theme?.scrollback?.layout?.container?.defaultWidth || '650px'};
+      --large-width: {theme?.scrollback?.layout?.container?.largeWidth || '800px'};
+      --breakpoint: {theme?.scrollback?.layout?.container?.breakpoint || '705px'};
+      max-width: {theme?.scrollback?.layout?.container?.maxWidth || 'calc(100vw - 40px)'};
+      padding: {theme?.scrollback?.layout?.messages?.paddingTop || '20px'} 0 {theme?.scrollback?.layout?.messages?.paddingBottom || '20px'} 0;
+      padding-right: {theme?.scrollback?.layout?.messages?.paddingRight || '16px'};
+    "
+  >
     {#each messages as message}
-      <div class="message {message.role}">
-        <div class="message-header">
-          <span class="role-label">{message.role === 'user' ? 'Boss' : 'Samara'}</span>
+      <div 
+        class="message {message.role}"
+        style="
+          margin-bottom: {theme?.scrollback?.layout?.message?.marginBottom || '32px'};
+          padding-right: {theme?.scrollback?.layout?.message?.paddingRight || '3px'};
+        "
+      >
+        <div 
+          class="message-header"
+          style="margin-bottom: {theme?.scrollback?.layout?.messageHeader?.marginBottom || '10px'};"
+        >
+          <span 
+            class="role-label"
+            style="
+              color: {message.role === 'user' 
+                ? theme?.scrollback?.roleLabel?.user?.textColor || '#ef4444'
+                : theme?.scrollback?.roleLabel?.assistant?.textColor || '#f97316'};
+              background: {message.role === 'user'
+                ? theme?.scrollback?.roleLabel?.user?.background || 'rgba(239, 68, 68, 0.2)'
+                : theme?.scrollback?.roleLabel?.assistant?.background || 'rgba(249, 115, 22, 0.2)'};
+              border-color: {message.role === 'user'
+                ? theme?.scrollback?.roleLabel?.user?.borderColor || 'rgba(239, 68, 68, 0.3)'
+                : theme?.scrollback?.roleLabel?.assistant?.borderColor || 'rgba(249, 115, 22, 0.3)'};
+              font-size: {theme?.scrollback?.roleLabel?.fontSize || '11px'};
+              font-weight: {theme?.scrollback?.roleLabel?.fontWeight || '600'};
+              text-transform: {theme?.scrollback?.roleLabel?.textTransform || 'uppercase'};
+              letter-spacing: {theme?.scrollback?.roleLabel?.letterSpacing || '0.5px'};
+              border-radius: {theme?.scrollback?.roleLabel?.borderRadius || '4px'};
+              padding: {theme?.scrollback?.layout?.roleLabel?.padding || '2px 8px'};
+            "
+          >{message.role === 'user' ? 'Boss' : 'Samara'}</span>
         </div>
-        <div class="message-content">
+        <div 
+          class="message-content"
+          style="
+            color: {theme?.scrollback?.message?.textColor || '#DFD0B8'};
+            margin-left: {theme?.scrollback?.layout?.messageContent?.marginLeft || '19px'};
+          "
+        >
           {@html formatContent(message.content)}
         </div>
       </div>
@@ -134,11 +268,7 @@ Robert Langdon is the central protagonist who guides readers through the intrica
   .scrollback-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 114px);
-    color: #e0e0e0;
-    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
-    font-size: 13px;
-    line-height: 1.5;
+    /* Height and typography now come from inline styles via theme */
     align-items: center;
   }
 
@@ -146,98 +276,64 @@ Robert Langdon is the central protagonist who guides readers through the intrica
   .messages {
     flex: 1;
     overflow-y: auto;
-    padding: 20px 0;
-    padding-right: 16px;
-    padding-bottom: 20px;
-    width: 650px;
-    max-width: calc(100vw - 40px);
+    /* Width and padding now come from inline styles and CSS variables */
+    width: var(--default-width);
     box-sizing: border-box;
   }
 
   @media (min-width: 705px) {
     .messages {
-      width: 800px !important;
+      width: var(--large-width) !important;
     }
   }
 
   .message {
-    margin-bottom: 32px;
+    /* Margin and padding now come from inline styles via theme */
     padding: 0;
-    padding-right: 3px;
-    animation: fadeIn 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   .message-header {
-    margin-bottom: 10px;
+    /* Margin now comes from inline styles via theme */
   }
 
   .role-label {
     display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .message.user .role-label {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-  }
-
-  .message.assistant .role-label {
-    background: rgba(249, 115, 22, 0.2);
-    color: #f97316;
-    border: 1px solid rgba(249, 115, 22, 0.3);
+    /* All styling now comes from inline styles via theme */
+    border-width: 1px;
+    border-style: solid;
   }
 
   .message-content {
-    color: #DFD0B8;
-    margin-left: 19px;
+    /* All styling now comes from inline styles via theme */
     padding-left: 0;
   }
 
   .message-content :global(.message-paragraph) {
-    margin: 0 0 12px 0;
+    /* Margin now comes from inline styles via theme */
   }
 
   .message-content :global(.message-paragraph:last-child) {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
   }
 
   .message-content :global(strong) {
-    color: #DFD0B8;
-    font-weight: 600;
+    /* Color and font-weight now come from inline styles via theme */
   }
 
   .message-content :global(em) {
     font-style: italic;
-    color: #DFD0B8;
+    /* Color now comes from inline styles via theme */
   }
 
   .message-content :global(.bullet-item) {
     display: flex;
     margin: 0;
-    padding-left: 8px;
+    /* Padding now comes from inline styles via theme */
   }
 
   .message-content :global(.bullet) {
-    color: #f97316;
+    /* All styling now comes from inline styles via theme */
     font-weight: bold;
-    margin-right: 8px;
     flex-shrink: 0;
   }
 

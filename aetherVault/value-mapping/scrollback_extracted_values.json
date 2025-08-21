@@ -1,0 +1,1100 @@
+{
+  "file_info": {
+    "source_file": "apps/web/src/lib/components/MessageScrollback/MessageScrollback.svelte",
+    "component": "MessageScrollback",
+    "total_lines": 354
+  },
+  "extracted_values": {
+    "css_dimensions": [
+      {
+        "value": "705px",
+        "line_number": 284,
+        "context": "@media (min-width: 705px) {",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "1px",
+        "line_number": 302,
+        "context": "border-width: 1px;",
+        "is_theme_candidate": true
+      }
+    ],
+    "css_numbers": [
+      {
+        "value": "1",
+        "line_number": 92,
+        "context": "line = line.replace(/\\*\\*(.*?)\\*\\*/g, `<strong style=\"color: ${textColor}; font-weight: ${boldWeight};\">$1</strong>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "1",
+        "line_number": 93,
+        "context": "line = line.replace(/\\*(.*?)\\*/g, `<em style=\"color: ${textColor};\">$1</em>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "2",
+        "line_number": 97,
+        "context": "const bulletContent = line.substring(2);",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "1",
+        "line_number": 128,
+        "context": "id: '1',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "2",
+        "line_number": 133,
+        "context": "id: '2',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "3",
+        "line_number": 147,
+        "context": "id: '3',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "4",
+        "line_number": 152,
+        "context": "id: '4',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "5",
+        "line_number": 165,
+        "context": "id: '5',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "6",
+        "line_number": 170,
+        "context": "id: '6',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "7",
+        "line_number": 182,
+        "context": "id: '7',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "8",
+        "line_number": 187,
+        "context": "id: '8',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "2006",
+        "line_number": 192,
+        "context": "- *The Da Vinci Code* (2006)`",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "1",
+        "line_number": 277,
+        "context": "flex: 1;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 292,
+        "context": "padding: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 308,
+        "context": "padding-left: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 316,
+        "context": "margin-bottom: 0 !important;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 330,
+        "context": "margin: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 337,
+        "context": "flex-shrink: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "1",
+        "line_number": 341,
+        "context": "flex: 1;",
+        "is_theme_candidate": false
+      }
+    ],
+    "css_properties": [
+      {
+        "value": "id: string;",
+        "line_number": 6,
+        "context": "id: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "role: 'user' | 'assistant';",
+        "line_number": 7,
+        "context": "role: 'user' | 'assistant';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "content: string;",
+        "line_number": 8,
+        "context": "content: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "color: ${textColor};",
+        "line_number": 92,
+        "context": "line = line.replace(/\\*\\*(.*?)\\*\\*/g, `<strong style=\"color: ${textColor}; font-weight: ${boldWeight};\">$1</strong>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "font-weight: ${boldWeight};",
+        "line_number": 92,
+        "context": "line = line.replace(/\\*\\*(.*?)\\*\\*/g, `<strong style=\"color: ${textColor}; font-weight: ${boldWeight};\">$1</strong>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "color: ${textColor};",
+        "line_number": 93,
+        "context": "line = line.replace(/\\*(.*?)\\*/g, `<em style=\"color: ${textColor};\">$1</em>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "padding-left: ${bulletPaddingLeft};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "color: ${bulletColor};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "margin-right: ${bulletMarginRight};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "margin: 0 0 ${paragraphMargin} 0;",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "ontainer: HTMLDivElement;",
+        "line_number": 196,
+        "context": "let scrollContainer: HTMLDivElement;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: flex;",
+        "line_number": 269,
+        "context": "display: flex;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "flex-direction: column;",
+        "line_number": 270,
+        "context": "flex-direction: column;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "align-items: center;",
+        "line_number": 272,
+        "context": "align-items: center;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "flex: 1;",
+        "line_number": 277,
+        "context": "flex: 1;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "overflow-y: auto;",
+        "line_number": 278,
+        "context": "overflow-y: auto;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "box-sizing: border-box;",
+        "line_number": 281,
+        "context": "box-sizing: border-box;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "padding: 0;",
+        "line_number": 292,
+        "context": "padding: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: inline-block;",
+        "line_number": 300,
+        "context": "display: inline-block;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "border-width: 1px;",
+        "line_number": 302,
+        "context": "border-width: 1px;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "border-style: solid;",
+        "line_number": 303,
+        "context": "border-style: solid;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "padding-left: 0;",
+        "line_number": 308,
+        "context": "padding-left: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin-bottom: 0 !important;",
+        "line_number": 316,
+        "context": "margin-bottom: 0 !important;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "font-style: italic;",
+        "line_number": 324,
+        "context": "font-style: italic;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "display: flex;",
+        "line_number": 329,
+        "context": "display: flex;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin: 0;",
+        "line_number": 330,
+        "context": "margin: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "font-weight: bold;",
+        "line_number": 336,
+        "context": "font-weight: bold;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "flex-shrink: 0;",
+        "line_number": 337,
+        "context": "flex-shrink: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "flex: 1;",
+        "line_number": 341,
+        "context": "flex: 1;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: inline-block;",
+        "line_number": 342,
+        "context": "display: inline-block;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: none;",
+        "line_number": 347,
+        "context": "display: none;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "-ms-overflow-style: none;",
+        "line_number": 351,
+        "context": "-ms-overflow-style: none;  /* IE and Edge */",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "scrollbar-width: none;",
+        "line_number": 352,
+        "context": "scrollbar-width: none;  /* Firefox */",
+        "is_theme_candidate": false
+      }
+    ],
+    "border_styles": [
+      {
+        "value": "borderRadius?: string;",
+        "line_number": 61,
+        "context": "borderRadius?: string;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "borderColor?: string;",
+        "line_number": 65,
+        "context": "borderColor?: string;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "borderColor?: string;",
+        "line_number": 70,
+        "context": "borderColor?: string;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "border-width: 1px;",
+        "line_number": 302,
+        "context": "border-width: 1px;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "border-style: solid;",
+        "line_number": 303,
+        "context": "border-style: solid;",
+        "is_theme_candidate": true
+      }
+    ],
+    "font_properties": [
+      {
+        "value": "font-weight: ${boldWeight};",
+        "line_number": 92,
+        "context": "line = line.replace(/\\*\\*(.*?)\\*\\*/g, `<strong style=\"color: ${textColor}; font-weight: ${boldWeight};\">$1</strong>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "font-style: italic;",
+        "line_number": 324,
+        "context": "font-style: italic;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "font-weight: bold;",
+        "line_number": 336,
+        "context": "font-weight: bold;",
+        "is_theme_candidate": true
+      }
+    ],
+    "spacing": [
+      {
+        "value": "paddingTop?: string;",
+        "line_number": 22,
+        "context": "paddingTop?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "paddingBottom?: string;",
+        "line_number": 23,
+        "context": "paddingBottom?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "paddingRight?: string;",
+        "line_number": 24,
+        "context": "paddingRight?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginBottom?: string;",
+        "line_number": 27,
+        "context": "marginBottom?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "paddingRight?: string;",
+        "line_number": 28,
+        "context": "paddingRight?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginBottom?: string;",
+        "line_number": 31,
+        "context": "marginBottom?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginLeft?: string;",
+        "line_number": 34,
+        "context": "marginLeft?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding?: string;",
+        "line_number": 37,
+        "context": "padding?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginBottom?: string;",
+        "line_number": 40,
+        "context": "marginBottom?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "paddingLeft?: string;",
+        "line_number": 43,
+        "context": "paddingLeft?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginRight?: string;",
+        "line_number": 44,
+        "context": "marginRight?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding-left: ${bulletPaddingLeft};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "margin-right: ${bulletMarginRight};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "margin: 0 0 ${paragraphMargin} 0;",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding: 0;",
+        "line_number": 292,
+        "context": "padding: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding-left: 0;",
+        "line_number": 308,
+        "context": "padding-left: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin-bottom: 0 !important;",
+        "line_number": 316,
+        "context": "margin-bottom: 0 !important;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin: 0;",
+        "line_number": 330,
+        "context": "margin: 0;",
+        "is_theme_candidate": false
+      }
+    ],
+    "role_labels": [
+      {
+        "value": "role === 'user' ? 'Boss' : 'Samara'",
+        "line_number": 251,
+        "context": ">{message.role === 'user' ? 'Boss' : 'Samara'}</span>",
+        "is_theme_candidate": false
+      }
+    ]
+  },
+  "theme_candidates": {
+    "css_dimensions": [
+      {
+        "value": "1px",
+        "line_number": 302,
+        "context": "border-width: 1px;",
+        "is_theme_candidate": true
+      }
+    ],
+    "css_numbers": [
+      {
+        "value": "1",
+        "line_number": 92,
+        "context": "line = line.replace(/\\*\\*(.*?)\\*\\*/g, `<strong style=\"color: ${textColor}; font-weight: ${boldWeight};\">$1</strong>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "1",
+        "line_number": 93,
+        "context": "line = line.replace(/\\*(.*?)\\*/g, `<em style=\"color: ${textColor};\">$1</em>`);",
+        "is_theme_candidate": true
+      }
+    ],
+    "css_properties": [
+      {
+        "value": "color: ${textColor};",
+        "line_number": 92,
+        "context": "line = line.replace(/\\*\\*(.*?)\\*\\*/g, `<strong style=\"color: ${textColor}; font-weight: ${boldWeight};\">$1</strong>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "font-weight: ${boldWeight};",
+        "line_number": 92,
+        "context": "line = line.replace(/\\*\\*(.*?)\\*\\*/g, `<strong style=\"color: ${textColor}; font-weight: ${boldWeight};\">$1</strong>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "color: ${textColor};",
+        "line_number": 93,
+        "context": "line = line.replace(/\\*(.*?)\\*/g, `<em style=\"color: ${textColor};\">$1</em>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "padding-left: ${bulletPaddingLeft};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "color: ${bulletColor};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "margin-right: ${bulletMarginRight};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "box-sizing: border-box;",
+        "line_number": 281,
+        "context": "box-sizing: border-box;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "border-width: 1px;",
+        "line_number": 302,
+        "context": "border-width: 1px;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "border-style: solid;",
+        "line_number": 303,
+        "context": "border-style: solid;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "font-style: italic;",
+        "line_number": 324,
+        "context": "font-style: italic;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "font-weight: bold;",
+        "line_number": 336,
+        "context": "font-weight: bold;",
+        "is_theme_candidate": true
+      }
+    ],
+    "border_styles": [
+      {
+        "value": "borderRadius?: string;",
+        "line_number": 61,
+        "context": "borderRadius?: string;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "borderColor?: string;",
+        "line_number": 65,
+        "context": "borderColor?: string;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "borderColor?: string;",
+        "line_number": 70,
+        "context": "borderColor?: string;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "border-width: 1px;",
+        "line_number": 302,
+        "context": "border-width: 1px;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "border-style: solid;",
+        "line_number": 303,
+        "context": "border-style: solid;",
+        "is_theme_candidate": true
+      }
+    ],
+    "font_properties": [
+      {
+        "value": "font-weight: ${boldWeight};",
+        "line_number": 92,
+        "context": "line = line.replace(/\\*\\*(.*?)\\*\\*/g, `<strong style=\"color: ${textColor}; font-weight: ${boldWeight};\">$1</strong>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "font-style: italic;",
+        "line_number": 324,
+        "context": "font-style: italic;",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "font-weight: bold;",
+        "line_number": 336,
+        "context": "font-weight: bold;",
+        "is_theme_candidate": true
+      }
+    ],
+    "spacing": [
+      {
+        "value": "padding-left: ${bulletPaddingLeft};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      },
+      {
+        "value": "margin-right: ${bulletMarginRight};",
+        "line_number": 101,
+        "context": "processedLines.push(`<div class=\"bullet-item\" style=\"padding-left: ${bulletPaddingLeft};\"><span class=\"bullet\" style=\"color: ${bulletColor}; margin-right: ${bulletMarginRight};\">•</span><span class=\"bullet-content\">${bulletContent}</span></div>`);",
+        "is_theme_candidate": true
+      }
+    ]
+  },
+  "structural_values": {
+    "css_dimensions": [
+      {
+        "value": "705px",
+        "line_number": 284,
+        "context": "@media (min-width: 705px) {",
+        "is_theme_candidate": false
+      }
+    ],
+    "css_numbers": [
+      {
+        "value": "2",
+        "line_number": 97,
+        "context": "const bulletContent = line.substring(2);",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "1",
+        "line_number": 128,
+        "context": "id: '1',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "2",
+        "line_number": 133,
+        "context": "id: '2',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "3",
+        "line_number": 147,
+        "context": "id: '3',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "4",
+        "line_number": 152,
+        "context": "id: '4',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "5",
+        "line_number": 165,
+        "context": "id: '5',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "6",
+        "line_number": 170,
+        "context": "id: '6',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "7",
+        "line_number": 182,
+        "context": "id: '7',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "8",
+        "line_number": 187,
+        "context": "id: '8',",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "2006",
+        "line_number": 192,
+        "context": "- *The Da Vinci Code* (2006)`",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "1",
+        "line_number": 277,
+        "context": "flex: 1;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 292,
+        "context": "padding: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 308,
+        "context": "padding-left: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 316,
+        "context": "margin-bottom: 0 !important;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 330,
+        "context": "margin: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "0",
+        "line_number": 337,
+        "context": "flex-shrink: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "1",
+        "line_number": 341,
+        "context": "flex: 1;",
+        "is_theme_candidate": false
+      }
+    ],
+    "css_properties": [
+      {
+        "value": "id: string;",
+        "line_number": 6,
+        "context": "id: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "role: 'user' | 'assistant';",
+        "line_number": 7,
+        "context": "role: 'user' | 'assistant';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "content: string;",
+        "line_number": 8,
+        "context": "content: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin: 0 0 ${paragraphMargin} 0;",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "ontainer: HTMLDivElement;",
+        "line_number": 196,
+        "context": "let scrollContainer: HTMLDivElement;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: flex;",
+        "line_number": 269,
+        "context": "display: flex;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "flex-direction: column;",
+        "line_number": 270,
+        "context": "flex-direction: column;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "align-items: center;",
+        "line_number": 272,
+        "context": "align-items: center;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "flex: 1;",
+        "line_number": 277,
+        "context": "flex: 1;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "overflow-y: auto;",
+        "line_number": 278,
+        "context": "overflow-y: auto;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding: 0;",
+        "line_number": 292,
+        "context": "padding: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: inline-block;",
+        "line_number": 300,
+        "context": "display: inline-block;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding-left: 0;",
+        "line_number": 308,
+        "context": "padding-left: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin-bottom: 0 !important;",
+        "line_number": 316,
+        "context": "margin-bottom: 0 !important;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: flex;",
+        "line_number": 329,
+        "context": "display: flex;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin: 0;",
+        "line_number": 330,
+        "context": "margin: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "flex-shrink: 0;",
+        "line_number": 337,
+        "context": "flex-shrink: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "flex: 1;",
+        "line_number": 341,
+        "context": "flex: 1;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: inline-block;",
+        "line_number": 342,
+        "context": "display: inline-block;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "display: none;",
+        "line_number": 347,
+        "context": "display: none;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "-ms-overflow-style: none;",
+        "line_number": 351,
+        "context": "-ms-overflow-style: none;  /* IE and Edge */",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "scrollbar-width: none;",
+        "line_number": 352,
+        "context": "scrollbar-width: none;  /* Firefox */",
+        "is_theme_candidate": false
+      }
+    ],
+    "spacing": [
+      {
+        "value": "paddingTop?: string;",
+        "line_number": 22,
+        "context": "paddingTop?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "paddingBottom?: string;",
+        "line_number": 23,
+        "context": "paddingBottom?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "paddingRight?: string;",
+        "line_number": 24,
+        "context": "paddingRight?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginBottom?: string;",
+        "line_number": 27,
+        "context": "marginBottom?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "paddingRight?: string;",
+        "line_number": 28,
+        "context": "paddingRight?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginBottom?: string;",
+        "line_number": 31,
+        "context": "marginBottom?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginLeft?: string;",
+        "line_number": 34,
+        "context": "marginLeft?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding?: string;",
+        "line_number": 37,
+        "context": "padding?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginBottom?: string;",
+        "line_number": 40,
+        "context": "marginBottom?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "paddingLeft?: string;",
+        "line_number": 43,
+        "context": "paddingLeft?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "marginRight?: string;",
+        "line_number": 44,
+        "context": "marginRight?: string;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin: 0 0 ${paragraphMargin} 0;",
+        "line_number": 116,
+        "context": "formatted = `<p class=\"message-paragraph\" style=\"margin: 0 0 ${paragraphMargin} 0;\">` + formatted + '</p>';",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding: 0;",
+        "line_number": 292,
+        "context": "padding: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "padding-left: 0;",
+        "line_number": 308,
+        "context": "padding-left: 0;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin-bottom: 0 !important;",
+        "line_number": 316,
+        "context": "margin-bottom: 0 !important;",
+        "is_theme_candidate": false
+      },
+      {
+        "value": "margin: 0;",
+        "line_number": 330,
+        "context": "margin: 0;",
+        "is_theme_candidate": false
+      }
+    ],
+    "role_labels": [
+      {
+        "value": "role === 'user' ? 'Boss' : 'Samara'",
+        "line_number": 251,
+        "context": ">{message.role === 'user' ? 'Boss' : 'Samara'}</span>",
+        "is_theme_candidate": false
+      }
+    ]
+  },
+  "summary": {
+    "css_dimensions": {
+      "total_instances": 2,
+      "theme_candidates": 1,
+      "structural_values": 1
+    },
+    "css_numbers": {
+      "total_instances": 22,
+      "theme_candidates": 2,
+      "structural_values": 20
+    },
+    "css_properties": {
+      "total_instances": 33,
+      "theme_candidates": 11,
+      "structural_values": 22
+    },
+    "border_styles": {
+      "total_instances": 5,
+      "theme_candidates": 5,
+      "structural_values": 0
+    },
+    "font_properties": {
+      "total_instances": 3,
+      "theme_candidates": 3,
+      "structural_values": 0
+    },
+    "spacing": {
+      "total_instances": 18,
+      "theme_candidates": 2,
+      "structural_values": 16
+    },
+    "role_labels": {
+      "total_instances": 1,
+      "theme_candidates": 0,
+      "structural_values": 1
+    },
+    "totals": {
+      "total_instances": 84,
+      "theme_candidates": 24,
+      "structural_values": 60,
+      "categories": 6
+    }
+  }
+}
