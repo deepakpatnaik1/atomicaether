@@ -15,8 +15,6 @@
   // Import all bricks from main lib (now contains sandbox-13 InputBarUI)
   import { InputBarUI } from '$lib/bricks/InputBarUI';
 
-  let appReady = $state(false);
-
   onMount(async () => {
     console.log('🚀 AtomicAether Main App Starting...');
     
@@ -26,7 +24,6 @@
       await themeSelector.selectTheme('rainy-night');
       
       // App ready
-      appReady = true;
       eventBus.publish('app:ready', { timestamp: Date.now() });
       console.log('✅ App initialized successfully');
       
@@ -38,15 +35,9 @@
   
 </script>
 
-{#if appReady}
-  <main class="app">
-    <InputBarUI />
-  </main>
-{:else}
-  <div class="loading">
-    <p>⏳ Initializing AtomicAether...</p>
-  </div>
-{/if}
+<main class="app">
+  <InputBarUI />
+</main>
 
 <style>
   :global(body) {
@@ -64,15 +55,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-  
-  .loading {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2em;
-    color: var(--primary-color, #DFD0B8);
   }
   
 </style>
