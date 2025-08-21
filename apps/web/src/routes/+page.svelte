@@ -14,6 +14,7 @@
   
   // Import all bricks from main lib (now contains sandbox-13 InputBarUI)
   import { InputBarUI } from '$lib/bricks/InputBarUI';
+  import { MessageScrollback } from '$lib/components/MessageScrollback';
 
   onMount(async () => {
     console.log('🚀 AtomicAether Main App Starting...');
@@ -36,6 +37,7 @@
 </script>
 
 <main class="app">
+  <MessageScrollback />
   <InputBarUI />
 </main>
 
@@ -53,8 +55,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    position: relative;
   }
   
 </style>

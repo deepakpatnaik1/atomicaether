@@ -523,8 +523,8 @@
       rows="1"
       style="
         color: {theme?.textInput.typography.color || '#DFD0B8'};
-        font-size: {layout?.textInput.typography.fontSize || '14px'};
-        font-family: {layout?.textInput.typography.fontFamily || 'system-ui'};
+        font-size: {layout?.textInput.typography.fontSize || '13px'};
+        font-family: {theme?.textHandler?.textarea?.fontFamily || layout?.textInput.typography.fontFamily || 'system-ui'};
         line-height: {layout?.textInput.autoResize.lineHeight || '20px'};
         min-height: {layout?.textInput.autoResize.minHeight || '20px'};
         max-height: {layout?.textInput.autoResize.maxHeight || '240px'};
