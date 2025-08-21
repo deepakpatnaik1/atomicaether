@@ -37,6 +37,7 @@
 </script>
 
 <main class="app">
+  <a href="/demo/scrollback" class="demo-link">ScrollbackBrick Demo →</a>
   <MessageScrollback />
   <InputBarUI />
 </main>
@@ -56,6 +57,26 @@
     display: flex;
     flex-direction: column;
     position: relative;
+  }
+  
+  .demo-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    background: rgba(249, 115, 22, 0.2);
+    color: #f97316;
+    border: 1px solid rgba(249, 115, 22, 0.3);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 1000;
+    transition: background 0.2s;
+  }
+  
+  .demo-link:hover {
+    background: rgba(249, 115, 22, 0.3);
   }
   
 </style>

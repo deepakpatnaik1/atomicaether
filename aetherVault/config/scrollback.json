@@ -1,0 +1,8 @@
+{
+  "maxMessages": 100,
+  "autoScroll": true,
+  "showTimestamps": true,
+  "showMetadata": true,
+  "groupByTime": false,
+  "timeGroupingMinutes": 5
+}
