@@ -1,0 +1,126 @@
+{
+  "providers": {
+    "anthropic": {
+      "name": "Anthropic",
+      "apiKeyEnv": "ANTHROPIC_API_KEY",
+      "baseUrl": "https://api.anthropic.com/v1",
+      "models": [
+        {
+          "id": "claude-opus-4-1-20250805",
+          "name": "Claude Opus 4.1",
+          "description": "Most powerful reasoning model",
+          "contextWindow": 200000,
+          "outputTokens": 4096,
+          "tier": "flagship",
+          "capabilities": ["text", "vision", "streaming"]
+        },
+        {
+          "id": "claude-sonnet-4-20250522",
+          "name": "Claude Sonnet 4",
+          "description": "Balanced performance and speed",
+          "contextWindow": 200000,
+          "outputTokens": 4096,
+          "tier": "balanced",
+          "capabilities": ["text", "vision", "streaming"]
+        }
+      ]
+    },
+    "openai": {
+      "name": "OpenAI",
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "baseUrl": "https://api.openai.com/v1",
+      "models": [
+        {
+          "id": "gpt-5",
+          "name": "GPT-5",
+          "description": "Latest flagship model with advanced reasoning",
+          "contextWindow": 128000,
+          "outputTokens": 16384,
+          "tier": "flagship",
+          "capabilities": ["text", "vision", "streaming", "function-calling"]
+        },
+        {
+          "id": "gpt-4-1",
+          "name": "GPT-4.1",
+          "description": "Enhanced GPT-4 with improved capabilities",
+          "contextWindow": 1000000,
+          "outputTokens": 16384,
+          "tier": "flagship",
+          "capabilities": ["text", "vision", "streaming", "function-calling"]
+        },
+        {
+          "id": "gpt-4-1-mini",
+          "name": "GPT-4.1 Mini",
+          "description": "Fast and cost-efficient",
+          "contextWindow": 128000,
+          "outputTokens": 16384,
+          "tier": "efficient",
+          "capabilities": ["text", "vision", "streaming", "function-calling"]
+        },
+        {
+          "id": "gpt-4o-2024-08-06",
+          "name": "GPT-4o",
+          "description": "Optimized GPT-4 model",
+          "contextWindow": 128000,
+          "outputTokens": 4096,
+          "tier": "balanced",
+          "capabilities": ["text", "vision", "streaming", "function-calling"]
+        }
+      ]
+    },
+    "fireworks": {
+      "name": "Fireworks AI",
+      "apiKeyEnv": "FIREWORKS_API_KEY",
+      "baseUrl": "https://api.fireworks.ai/inference/v1",
+      "models": [
+        {
+          "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+          "name": "Llama 4 Maverick 17B",
+          "description": "Latest Llama 4 with enhanced capabilities",
+          "contextWindow": 128000,
+          "outputTokens": 8192,
+          "tier": "flagship",
+          "capabilities": ["text", "streaming"]
+        },
+        {
+          "id": "accounts/fireworks/models/llama-v3p3-70b-instruct",
+          "name": "Llama 3.3 70B",
+          "description": "Powerful open model with great performance",
+          "contextWindow": 128000,
+          "outputTokens": 8192,
+          "tier": "balanced",
+          "capabilities": ["text", "streaming", "multilingual"]
+        }
+      ]
+    }
+  },
+  "defaultModel": "claude-opus-4-1-20250805",
+  "modelGroups": {
+    "flagship": {
+      "name": "🚀 Flagship",
+      "description": "Most powerful models",
+      "models": [
+        "claude-opus-4-1-20250805",
+        "gpt-5",
+        "gpt-4-1",
+        "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"
+      ]
+    },
+    "balanced": {
+      "name": "⚖️ Balanced",
+      "description": "Good performance and cost",
+      "models": [
+        "claude-sonnet-4-20250522",
+        "gpt-4o-2024-08-06",
+        "accounts/fireworks/models/llama-v3p3-70b-instruct"
+      ]
+    },
+    "efficient": {
+      "name": "⚡ Efficient",
+      "description": "Fast and affordable",
+      "models": [
+        "gpt-4-1-mini"
+      ]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { configBus } from '../../../buses';
+  import { configBus, eventBus } from '../../../buses';
   import { InputBarService } from './InputBarService.js';
   import type { InputBarConfig, InputBarBehavior, DropdownData, RainyNightTheme, BTTConfig, FallbackMappings } from './types.js';
   
@@ -139,6 +139,47 @@
         }
       }
     }
+  }
+  
+  function handleTextareaKeydown(event: KeyboardEvent) {
+    // Handle Enter key - send message unless Shift is held
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+    // Shift+Enter will naturally create a newline
+  }
+  
+  function sendMessage() {
+    // Don't send empty messages
+    if (!textContent.trim() && files.length === 0) {
+      return;
+    }
+    
+    // Package up the message data
+    const messageData = {
+      text: textContent,
+      files: files,
+      model: selectedModel,
+      persona: selectedPersona,
+      timestamp: Date.now()
+    };
+    
+    // Broadcast the event - we don't know or care who's listening
+    eventBus.publish('input:submit', messageData);
+    
+    // Clear the input
+    textContent = '';
+    files = [];
+    fileInput.value = '';
+    
+    // Reset textarea height
+    if (textarea && behavior) {
+      textarea.style.height = `${behavior.autoResize.minHeight}px`;
+    }
+    
+    // Keep focus on textarea for continued conversation
+    focusInputBar();
   }
   
   function autoResize() {
@@ -520,6 +561,7 @@
       class="text-input" 
       placeholder="Type a message..."
       oninput={handleTextInput}
+      onkeydown={handleTextareaKeydown}
       rows="1"
       style="
         color: {theme?.textInput.typography.color || '#DFD0B8'};
