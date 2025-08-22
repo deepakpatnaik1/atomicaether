@@ -93,23 +93,32 @@ export class LLMBrick {
     const openaiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
     const fireworksKey = import.meta.env.VITE_FIREWORKS_API_KEY || '';
 
+    console.log('🔑 Initializing LLM services...');
+    console.log('  Anthropic key:', anthropicKey ? '✅ Found' : '❌ Missing');
+    console.log('  OpenAI key:', openaiKey ? '✅ Found' : '❌ Missing');
+    console.log('  Fireworks key:', fireworksKey ? '✅ Found' : '❌ Missing');
+
     if (anthropicKey) {
       this.anthropicService = new AnthropicService(anthropicKey);
+      console.log('  ✅ AnthropicService initialized');
     }
     
     if (openaiKey) {
       this.openaiService = new OpenAIService(openaiKey);
+      console.log('  ✅ OpenAIService initialized');
     }
     
     if (fireworksKey) {
       this.fireworksService = new FireworksService(fireworksKey);
+      console.log('  ✅ FireworksService initialized');
     }
   }
 
   private subscribeToEvents() {
-    // Listen for message send events
-    this.eventBus.subscribe('input:send', async (detail: any) => {
-      await this.handleUserMessage(detail.content);
+    // Listen for input:submit events from the void
+    // We don't know or care who sends these
+    this.eventBus.subscribe('input:submit', async (data: any) => {
+      await this.handleInputFromVoid(data);
     });
     
     // Listen for model change events
@@ -136,6 +145,93 @@ export class LLMBrick {
       if (this.config) {
         this.currentModel = this.config.defaultModel;
       }
+    }
+  }
+
+  private async handleInputFromVoid(data: any) {
+    // Extract data from the input:submit event
+    const { text, files, model, persona, timestamp } = data;
+    
+    // Validate input
+    if (!text?.trim() && (!files || files.length === 0)) {
+      return; // Nothing to process
+    }
+    
+    // Use the model specified in the event, not our internal currentModel
+    const targetModel = model || this.currentModel;
+    if (!targetModel) {
+      console.error('No model specified');
+      return;
+    }
+    
+    // Generate unique message ID for tracking
+    const messageId = `llm-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Broadcast that we're starting to process
+    this.eventBus.publish('llm:response:start', {
+      messageId,
+      model: targetModel,
+      persona,
+      timestamp: Date.now()
+    });
+    
+    try {
+      // Process the message
+      await this.processMessage({
+        messageId,
+        text,
+        files,
+        model: targetModel,
+        persona
+      });
+    } catch (error) {
+      // Broadcast error to the void
+      this.eventBus.publish('llm:response:error', {
+        messageId,
+        error: error.message || 'Failed to process message',
+        model: targetModel,
+        timestamp: Date.now()
+      });
+    }
+  }
+
+  private async processMessage(params: {
+    messageId: string;
+    text: string;
+    files?: File[];
+    model: string;
+    persona: string;
+  }) {
+    const { messageId, text, files, model, persona } = params;
+    
+    // Create request
+    const request: LLMRequest = {
+      model,
+      messages: [
+        { role: 'user', content: text }
+      ],
+      stream: this.isStreaming
+    };
+    
+    // Add persona as system message if needed
+    if (persona && persona !== 'user') {
+      request.messages.unshift({
+        role: 'system',
+        content: `You are acting as a ${persona}. Respond accordingly.`
+      });
+    }
+    
+    // Route to appropriate service based on model
+    const service = this.getServiceForModel(model);
+    if (!service) {
+      throw new Error(`No service available for model: ${model}`);
+    }
+    
+    // Handle streaming vs regular response
+    if (this.isStreaming) {
+      await this.handleStreamingResponse(service, request, messageId, model);
+    } else {
+      await this.handleRegularResponse(service, request, messageId, model);
     }
   }
 
@@ -185,49 +281,83 @@ export class LLMBrick {
     }
   }
 
-  private async handleStreamingResponse(service: any, request: LLMRequest) {
-    const messageId = `msg-${Date.now()}`;
-    
-    // Start streaming
-    this.eventBus.publish('message:stream:start', {
-      messageId,
-      model: this.currentModel
-    });
-    
+  private async handleStreamingResponse(service: any, request: LLMRequest, messageId: string, model: string) {
     try {
       let fullContent = '';
       
       for await (const chunk of service.stream(request)) {
         if (chunk.finished) {
-          // End streaming
-          this.eventBus.publish('message:stream:end', {
+          // Broadcast completion to the void
+          this.eventBus.publish('llm:response:complete', {
             messageId,
-            finalContent: fullContent
+            fullResponse: fullContent,
+            model,
+            timestamp: Date.now()
           });
         } else {
           fullContent += chunk.delta;
-          // Send chunk
-          this.eventBus.publish('message:stream:chunk', {
+          // Broadcast chunk to the void
+          this.eventBus.publish('llm:response:chunk', {
             messageId,
-            chunk: chunk.delta
+            chunk: chunk.delta,
+            timestamp: Date.now()
           });
         }
       }
     } catch (error) {
       console.error('Streaming failed:', error);
-      this.eventBus.publish('message:stream:error', {
+      // Broadcast error to the void
+      this.eventBus.publish('llm:response:error', {
         messageId,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Stream failed',
+        model,
+        timestamp: Date.now()
+      });
+    }
+  }
+  
+  private async handleRegularResponse(service: any, request: LLMRequest, messageId: string, model: string) {
+    try {
+      const response = await service.complete(request);
+      
+      // Broadcast complete response to the void
+      this.eventBus.publish('llm:response:complete', {
+        messageId,
+        fullResponse: response.content,
+        model,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      console.error('Regular response failed:', error);
+      // Broadcast error to the void
+      this.eventBus.publish('llm:response:error', {
+        messageId,
+        error: error instanceof Error ? error.message : 'Request failed',
+        model,
+        timestamp: Date.now()
       });
     }
   }
 
   private getServiceForModel(modelId: string): any {
-    if (!this.config) return null;
+    console.log(`🔍 Looking for service for model: ${modelId}`);
+    
+    if (!this.config) {
+      console.log('  ❌ No config loaded');
+      return null;
+    }
+    
+    console.log('  Available services:', {
+      anthropic: this.anthropicService ? '✅' : '❌',
+      openai: this.openaiService ? '✅' : '❌',
+      fireworks: this.fireworksService ? '✅' : '❌'
+    });
     
     // Find which provider has this model
     for (const [providerId, provider] of Object.entries(this.config.providers)) {
+      console.log(`  Checking provider: ${providerId}`);
       if (provider.models.some(m => m.id === modelId)) {
+        console.log(`  ✅ Found model in ${providerId}`);
         switch (providerId) {
           case 'anthropic':
             return this.anthropicService;
@@ -239,6 +369,7 @@ export class LLMBrick {
       }
     }
     
+    console.log('  ❌ Model not found in any provider');
     return null;
   }
 

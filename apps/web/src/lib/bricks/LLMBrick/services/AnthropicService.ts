@@ -15,36 +15,34 @@ export class AnthropicService {
   }
 
   async complete(request: LLMRequest): Promise<LLMResponse> {
-    const response = await fetch(`${this.baseUrl}/messages`, {
+    // Use our API endpoint instead of direct API call
+    const response = await fetch('/api/llm', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': this.apiKey,
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: request.model,
         messages: request.messages,
-        max_tokens: request.maxTokens || 4096,
-        temperature: request.temperature || 0.7,
         stream: false
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Anthropic API error: ${response.statusText}`);
+      const error = await response.json();
+      throw new Error(error.error || `API error: ${response.statusText}`);
     }
 
     const data = await response.json();
     
     return {
-      id: data.id,
-      model: data.model,
-      content: data.content[0].text,
+      id: `anthropic-${Date.now()}`,
+      model: data.model || request.model,
+      content: data.content,
       usage: {
-        promptTokens: data.usage.input_tokens,
-        completionTokens: data.usage.output_tokens,
-        totalTokens: data.usage.input_tokens + data.usage.output_tokens
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0
       }
     };
   }

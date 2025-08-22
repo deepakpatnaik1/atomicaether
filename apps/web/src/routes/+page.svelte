@@ -15,6 +15,9 @@
   // Import all bricks from main lib (now contains sandbox-13 InputBarUI)
   import { InputBarUI } from '$lib/bricks/InputBarUI';
   import { MessageScrollback } from '$lib/components/MessageScrollback';
+  import { LLMBrick } from '$lib/bricks/LLMBrick';
+  
+  let llmBrick;
 
   onMount(async () => {
     console.log('🚀 AtomicAether Main App Starting...');
@@ -24,13 +27,24 @@
       await themeApplier.initialize();
       await themeSelector.selectTheme('rainy-night');
       
-      // TEST: Listen for input:submit events
-      eventBus.subscribe('input:submit', (data) => {
-        console.log('📨 INPUT SUBMITTED:', data);
-        console.log('  - Text:', data.text);
-        console.log('  - Files:', data.files?.length || 0);
-        console.log('  - Model:', data.model);
-        console.log('  - Persona:', data.persona);
+      // Initialize LLMBrick - it will listen from the void
+      llmBrick = new LLMBrick(eventBus, configBus, stateBus, errorBus);
+      
+      // TEST: Listen for LLM response events
+      eventBus.subscribe('llm:response:start', (data) => {
+        console.log('🚀 LLM STARTED:', data);
+      });
+      
+      eventBus.subscribe('llm:response:chunk', (data) => {
+        console.log('📝 LLM CHUNK:', data.chunk);
+      });
+      
+      eventBus.subscribe('llm:response:complete', (data) => {
+        console.log('✅ LLM COMPLETE:', data);
+      });
+      
+      eventBus.subscribe('llm:response:error', (data) => {
+        console.log('❌ LLM ERROR:', data);
       });
       
       // App ready
