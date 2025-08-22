@@ -24,11 +24,18 @@ export interface LLMRequest {
   model: string;
   messages: Array<{
     role: 'system' | 'user' | 'assistant';
-    content: string;
+    content: string | Array<{
+      type: 'text' | 'image_url';
+      text?: string;
+      image_url?: {
+        url: string;
+      };
+    }>;
   }>;
   stream?: boolean;
   temperature?: number;
   maxTokens?: number;
+  fileUrls?: string[];
 }
 
 export interface LLMResponse {

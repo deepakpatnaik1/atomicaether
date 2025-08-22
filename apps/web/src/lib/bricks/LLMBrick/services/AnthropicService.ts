@@ -24,7 +24,8 @@ export class AnthropicService {
       body: JSON.stringify({
         model: request.model,
         messages: request.messages,
-        stream: false
+        stream: false,
+        fileUrls: request.fileUrls || []
       })
     });
 

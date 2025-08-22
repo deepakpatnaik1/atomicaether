@@ -150,10 +150,10 @@ export class LLMBrick {
 
   private async handleInputFromVoid(data: any) {
     // Extract data from the input:submit event
-    const { text, files, model, persona, timestamp } = data;
+    const { text, fileUrls, model, persona, timestamp } = data;
     
     // Validate input
-    if (!text?.trim() && (!files || files.length === 0)) {
+    if (!text?.trim() && (!fileUrls || fileUrls.length === 0)) {
       return; // Nothing to process
     }
     
@@ -180,7 +180,7 @@ export class LLMBrick {
       await this.processMessage({
         messageId,
         text,
-        files,
+        fileUrls,
         model: targetModel,
         persona
       });
@@ -198,11 +198,11 @@ export class LLMBrick {
   private async processMessage(params: {
     messageId: string;
     text: string;
-    files?: File[];
+    fileUrls?: string[];
     model: string;
     persona: string;
   }) {
-    const { messageId, text, files, model, persona } = params;
+    const { messageId, text, fileUrls, model, persona } = params;
     
     // Create request
     const request: LLMRequest = {
@@ -210,7 +210,8 @@ export class LLMBrick {
       messages: [
         { role: 'user', content: text }
       ],
-      stream: this.isStreaming
+      stream: this.isStreaming,
+      fileUrls: fileUrls || []
     };
     
     // Add persona as system message if needed
