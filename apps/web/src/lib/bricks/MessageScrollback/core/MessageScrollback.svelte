@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { stateBus } from '$lib/buses';
   import type { MessageTurnState } from './types';
+  import MarkdownRenderer from './MarkdownRenderer.svelte';
   
   // State
   let messageTurnState = $state<MessageTurnState | undefined>(undefined);
@@ -55,7 +56,7 @@
               <span class="role-label boss">Boss</span>
             </div>
             <div class="message-content">
-              {turn.bossMessage.content}
+              <MarkdownRenderer content={turn.bossMessage.content} speaker="boss" />
             </div>
           </div>
         {/if}
@@ -66,7 +67,7 @@
               <span class="role-label samara">Samara</span>
             </div>
             <div class="message-content">
-              {turn.samaraMessage.content}
+              <MarkdownRenderer content={turn.samaraMessage.content} speaker="samara" />
             </div>
           </div>
         {/if}
@@ -125,7 +126,6 @@
     font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
     font-size: 13px;
     line-height: 1.5;
-    white-space: pre-wrap;
     word-break: break-word;
   }
   
