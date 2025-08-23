@@ -1,11 +1,15 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { configBus } from '../../../buses';
+  import { configBus, eventBus } from '../../../buses';
   import { InputBarService } from './InputBarService.js';
+  import { fileUploadService } from '../../../services/FileUploadService.js';
   import type { InputBarConfig, InputBarBehavior, DropdownData, RainyNightTheme, BTTConfig, FallbackMappings } from './types.js';
   
   // State
   let files: File[] = $state([]);
+  let fileUrls: string[] = $state([]);
+  let uploadProgress: number[] = $state([]);
+  let isUploading = $state(false);
   let fileInput: HTMLInputElement;
   let textarea: HTMLTextAreaElement;
   let textContent = $state('');
@@ -75,17 +79,46 @@
     fileInput.click();
   }
 
-  function handleFileChange(event: Event) {
+  async function handleFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files) {
-      files = Array.from(target.files);
-      // Restore focus to textarea to preserve typing context
-      focusInputBar();
+      const newFiles = Array.from(target.files);
+      files = [...files, ...newFiles];
+      uploadProgress = [...uploadProgress, ...newFiles.map(() => 0)];
+      
+      // Upload files immediately
+      isUploading = true;
+      try {
+        const startIndex = fileUrls.length;
+        const newUrls = await fileUploadService.uploadFiles(
+          newFiles,
+          (fileIndex, percent) => {
+            uploadProgress[startIndex + fileIndex] = percent;
+          }
+        );
+        fileUrls = [...fileUrls, ...newUrls];
+      } catch (error) {
+        console.error('File upload failed:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown upload error';
+        eventBus.publish('error:show', {
+          message: `Upload failed: ${errorMessage}`,
+          type: 'error'
+        });
+        // Remove failed files
+        files = files.slice(0, fileUrls.length);
+        uploadProgress = uploadProgress.slice(0, fileUrls.length);
+      } finally {
+        isUploading = false;
+        // Restore focus to textarea
+        focusInputBar();
+      }
     }
   }
 
-  function removeFile(fileToRemove: File) {
-    files = files.filter(file => file !== fileToRemove);
+  function removeFile(index: number) {
+    files = files.filter((_, i) => i !== index);
+    fileUrls = fileUrls.filter((_, i) => i !== index);
+    uploadProgress = uploadProgress.filter((_, i) => i !== index);
   }
 
   function focusInputBar() {
@@ -139,6 +172,55 @@
         }
       }
     }
+  }
+  
+  function handleTextareaKeydown(event: KeyboardEvent) {
+    // Handle Enter key - send message unless Shift is held
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+    // Shift+Enter will naturally create a newline
+  }
+  
+  function sendMessage() {
+    // Don't send if uploading
+    if (isUploading) {
+      return;
+    }
+    
+    // Don't send empty messages
+    if (!textContent.trim() && fileUrls.length === 0) {
+      return;
+    }
+    
+    // Package up the message data with URLs instead of files
+    const messageData = {
+      text: textContent,
+      fileUrls: fileUrls,  // Changed from files to fileUrls
+      files: files.map(f => ({ name: f.name, type: f.type, size: f.size })), // Metadata only
+      model: selectedModel,
+      persona: selectedPersona,
+      timestamp: Date.now()
+    };
+    
+    // Broadcast the event - we don't know or care who's listening
+    eventBus.publish('input:submit', messageData);
+    
+    // Clear the input
+    textContent = '';
+    files = [];
+    fileUrls = [];
+    uploadProgress = [];
+    fileInput.value = '';
+    
+    // Reset textarea height
+    if (textarea && behavior) {
+      textarea.style.height = `${behavior.autoResize.minHeight}px`;
+    }
+    
+    // Keep focus on textarea for continued conversation
+    focusInputBar();
   }
   
   function autoResize() {
@@ -425,7 +507,7 @@
         backdrop-filter: {theme?.inputBar.background.backdropFilter || 'blur(20px)'};
       "
     >
-      {#each files as file}
+      {#each files as file, index}
         <div 
           class="file-preview"
           style="
@@ -434,17 +516,19 @@
             padding: {layout?.filePreviewZone.filePreview.padding || '8px'};
             min-width: {layout?.filePreviewZone.filePreview.minWidth || '80px'};
             max-width: {layout?.filePreviewZone.filePreview.maxWidth || '120px'};
+            position: relative;
           "
         >
           {#if file.type.startsWith('image/')}
             <img 
-              src={service?.getFilePreviewUrl(file)} 
+              src={fileUrls[index] || service?.getFilePreviewUrl(file)} 
               alt={file.name}
               style="
                 width: 100%;
                 height: auto;
                 border-radius: 4px;
                 max-height: 80px;
+                opacity: {uploadProgress[index] < 100 ? 0.5 : 1};
                 object-fit: cover;
               "
             />
@@ -478,7 +562,7 @@
           >{file.name}</span>
           <button 
             class="remove-file" 
-            onclick={() => removeFile(file)}
+            onclick={() => removeFile(index)}
             style="
               position: absolute;
               width: {layout?.filePreviewZone.removeButton.size || '20px'};
@@ -520,6 +604,7 @@
       class="text-input" 
       placeholder="Type a message..."
       oninput={handleTextInput}
+      onkeydown={handleTextareaKeydown}
       rows="1"
       style="
         color: {theme?.textInput.typography.color || '#DFD0B8'};

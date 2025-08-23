@@ -32,6 +32,84 @@ export interface AppEventMap {
     'debug:mode': {
         enabled: boolean;
     };
+    
+    // InputBar events
+    'input:submit': {
+        text: string;
+        fileUrls: string[];
+        files: Array<{ name: string; type: string; size: number }>;
+        model: string;
+        persona: string;
+        timestamp: number;
+    };
+    
+    // LLM events
+    'llm:ready': {
+        models: any[];
+        currentModel: string;
+    };
+    'llm:response:start': {
+        messageId: string;
+        model: string;
+        persona: string;
+        timestamp: number;
+    };
+    'llm:response:chunk': {
+        messageId: string;
+        chunk: string;
+        timestamp: number;
+    };
+    'llm:response:complete': {
+        messageId: string;
+        fullResponse: string;
+        model: string;
+        timestamp: number;
+    };
+    'llm:response:error': {
+        messageId: string;
+        error: string;
+        model: string;
+        timestamp: number;
+    };
+    'llm:error': {
+        error: string;
+        model: string;
+    };
+    
+    // Model events
+    'model:change': {
+        model: string;
+    };
+    'model:changed': {
+        model: string;
+    };
+    
+    // Streaming events
+    'streaming:toggle': {
+        enabled: boolean;
+    };
+    
+    // Message events  
+    'message:sent': {
+        content: string;
+        persona: string;
+    };
+    'message:received': {
+        content: string;
+        model: string;
+    };
+    
+    // Theme events
+    'theme:selected': {
+        name: string | null;
+        theme: any;
+    };
+    
+    // Error display events
+    'error:show': {
+        message: string;
+        type: string;
+    };
 }
 
 /**

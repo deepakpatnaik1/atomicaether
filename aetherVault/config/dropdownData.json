@@ -8,28 +8,48 @@
     "_purpose": "Model options displayed in the model picker dropdown",
     "Anthropic": [
       { 
-        "name": "Claude 4 Sonnet", 
-        "id": "claude-sonnet-4-20250514",
-        "_note": "Display name shown to user, ID used for API calls"
+        "name": "Claude Opus 4.1", 
+        "id": "claude-opus-4-1-20250805",
+        "_note": "Most powerful reasoning model"
       },
       { 
-        "name": "Claude 4 Opus", 
-        "id": "claude-opus-4-20250514",
-        "_note": "Premium model option"
+        "name": "Claude Sonnet 4", 
+        "id": "claude-sonnet-4-20250522",
+        "_note": "Balanced performance and speed"
       }
     ],
     "OpenAI": [
       { 
-        "name": "GPT 4.1 Mini", 
-        "id": "gpt-4.1-mini-2025-04-14",
-        "_note": "OpenAI's efficient model"
+        "name": "GPT-5", 
+        "id": "gpt-5",
+        "_note": "Latest flagship model with advanced reasoning"
+      },
+      { 
+        "name": "GPT-4.1", 
+        "id": "gpt-4-1",
+        "_note": "Enhanced GPT-4 with 1M token context"
+      },
+      { 
+        "name": "GPT-4.1 Mini", 
+        "id": "gpt-4-1-mini",
+        "_note": "Fast and cost-efficient"
+      },
+      { 
+        "name": "GPT-4o", 
+        "id": "gpt-4o-2024-08-06",
+        "_note": "Optimized GPT-4 model"
       }
     ],
-    "Firefox": [
+    "Fireworks": [
       { 
-        "name": "Llama 4 Maverick", 
-        "id": "meta.llama-4-maverick-17b-128e-instruct-fp8",
-        "_note": "Open source model option"
+        "name": "Llama 4 Maverick 17B", 
+        "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+        "_note": "Latest Llama 4 with enhanced capabilities"
+      },
+      { 
+        "name": "Llama 3.3 70B", 
+        "id": "accounts/fireworks/models/llama-v3p3-70b-instruct",
+        "_note": "Powerful open model with great performance"
       }
     ],
     "_usage": "Add new providers as top-level keys, models as arrays with name/id objects"
@@ -127,7 +147,7 @@
   "defaults": {
     "_comment": "Default selections when app loads",
     "_purpose": "Initial state for each dropdown picker",
-    "selectedModel": "claude-sonnet-4-20250514",
+    "selectedModel": "claude-opus-4-1-20250805",
     "_modelNote": "Must match an existing model ID from the models section",
     "selectedPersona": "user", 
     "_personaNote": "Must match an existing persona ID from the personas section",
