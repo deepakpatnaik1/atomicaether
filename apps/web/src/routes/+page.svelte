@@ -35,24 +35,6 @@
       // Initialize LLMBrick - it will listen from the void
       llmBrick = new LLMBrick(eventBus, configBus, stateBus, errorBus);
       
-      // TEST: Listen for LLM response events
-      eventBus.subscribe('llm:response:start', (data) => {
-        console.log('🚀 LLM STARTED:', data);
-      });
-      
-      eventBus.subscribe('llm:response:chunk', (data) => {
-        console.log('📝 LLM CHUNK:', data.chunk);
-      });
-      
-      eventBus.subscribe('llm:response:complete', (data) => {
-        console.log('✅ LLM COMPLETE:', data);
-        console.log('  Full response:', data.fullResponse);
-      });
-      
-      eventBus.subscribe('llm:response:error', (data) => {
-        console.log('❌ LLM ERROR:', data);
-      });
-      
       // App ready
       eventBus.publish('app:ready', { timestamp: Date.now() });
       console.log('✅ App initialized successfully');

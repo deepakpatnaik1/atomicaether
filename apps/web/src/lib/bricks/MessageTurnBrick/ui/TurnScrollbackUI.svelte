@@ -7,8 +7,6 @@
   let unsubscribeEvents: (() => void)[] = [];
   
   onMount(() => {
-    console.log('📜 TurnScrollbackUI: Mounting...');
-    
     // Initial load
     loadTurns();
     
@@ -29,7 +27,6 @@
     const state = stateBus.get('messageTurn') as MessageTurnState;
     if (state && state.turns) {
       turns = state.turns;
-      console.log('📜 TurnScrollbackUI: Updated turns', turns.length);
     }
   }
   
