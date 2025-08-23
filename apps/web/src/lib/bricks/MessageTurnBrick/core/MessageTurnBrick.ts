@@ -223,7 +223,7 @@ export class MessageTurnBrick {
       totalTurns: this.turns.length
     };
     
-    this.stateBus.publish('messageTurn', state);
+    this.stateBus.set('messageTurn', state);
   }
   
   public getTurns(): MessageTurn[] {

@@ -1,28 +1,22 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { stateBus } from '$lib/buses';
   import type { MessageTurn, MessageTurnState } from '../types/MessageTurn.types';
   
   let turns: MessageTurn[] = [];
-  let unsubscribe: (() => void) | null = null;
   
   onMount(() => {
     console.log('📜 TurnScrollbackUI: Mounting...');
-    
-    // Subscribe to message turn state
-    unsubscribe = stateBus.subscribe('messageTurn', (state: MessageTurnState) => {
-      if (state && state.turns) {
-        turns = state.turns;
-        console.log('📜 TurnScrollbackUI: Updated turns', turns.length);
-      }
-    });
   });
   
-  onDestroy(() => {
-    if (unsubscribe) {
-      unsubscribe();
+  // Use Svelte reactivity to watch for state changes
+  $: {
+    const state = stateBus.get('messageTurn') as MessageTurnState;
+    if (state && state.turns) {
+      turns = state.turns;
+      console.log('📜 TurnScrollbackUI: Updated turns', turns.length);
     }
-  });
+  }
   
   function formatTime(timestamp: number): string {
     const date = new Date(timestamp);
