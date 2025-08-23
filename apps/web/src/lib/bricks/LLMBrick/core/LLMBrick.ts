@@ -115,9 +115,9 @@ export class LLMBrick {
   }
 
   private subscribeToEvents() {
-    // Listen for input:submit events from the void
-    // We don't know or care who sends these
-    this.eventBus.subscribe('input:submit', async (data: any) => {
+    // CRITICAL: Listen for turn:input:ready instead of input:submit
+    // This ensures MessageTurnBrick has created the turn before we process
+    this.eventBus.subscribe('turn:input:ready', async (data: any) => {
       await this.handleInputFromVoid(data);
     });
     

@@ -14,9 +14,11 @@
   
   // Import all bricks from main lib (now contains sandbox-13 InputBarUI)
   import { InputBarUI } from '$lib/bricks/InputBarUI';
-  import { MessageScrollback } from '$lib/components/MessageScrollback';
+  import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
+  import TurnScrollbackUI from '$lib/bricks/MessageTurnBrick/ui/TurnScrollbackUI.svelte';
   import { LLMBrick } from '$lib/bricks/LLMBrick';
   
+  let messageTurnBrick;
   let llmBrick;
 
   onMount(async () => {
@@ -26,6 +28,9 @@
       // Initialize theme system
       await themeApplier.initialize();
       await themeSelector.selectTheme('rainy-night');
+      
+      // Initialize MessageTurnBrick - orchestrates conversation turns
+      messageTurnBrick = new MessageTurnBrick(eventBus, stateBus, configBus, errorBus);
       
       // Initialize LLMBrick - it will listen from the void
       llmBrick = new LLMBrick(eventBus, configBus, stateBus, errorBus);
@@ -60,7 +65,7 @@
 </script>
 
 <main class="app">
-  <MessageScrollback />
+  <TurnScrollbackUI />
   <InputBarUI />
 </main>
 
