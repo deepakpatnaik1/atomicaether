@@ -132,6 +132,7 @@
   /* Role labels - from scrollback.roleLabel */
   .role-label {
     padding: 2px 8px;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;

@@ -1040,7 +1040,7 @@
     border: none;
     color: rgba(223, 208, 184, 0.7);
     font-size: 12px;
-    font-family: system-ui;
+    font-family: 'Lexend', system-ui;
     cursor: pointer;
     display: flex;
     align-items: flex-start;
@@ -1106,7 +1106,7 @@
     width: 100%;
     background: transparent;
     border: none;
-    font-family: system-ui;
+    font-family: 'Lexend', system-ui;
     text-align: left;
     cursor: pointer;
   }
@@ -1162,7 +1162,7 @@
   .model-id {
     font-size: 10px;
     opacity: 0.6;
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    font-family: 'Lexend', system-ui;
     text-align: right;
     margin-left: 16px;
     flex-shrink: 1;

@@ -65,7 +65,6 @@
     transition: all 0.3s ease;
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, sans-serif;
   }
   
   .app {
