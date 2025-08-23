@@ -17,9 +17,11 @@
   import { MessageScrollback } from '$lib/bricks/MessageScrollback';
   import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
   import { LLMBrick } from '$lib/bricks/LLMBrick';
+  import { SuperJournalBrick } from '$lib/bricks/SuperJournalBrick';
   
   let messageTurnBrick;
   let llmBrick;
+  let superJournalBrick;
 
   onMount(async () => {
     console.log('🚀 AtomicAether Main App Starting...');
@@ -34,6 +36,10 @@
       
       // Initialize LLMBrick - it will listen from the void
       llmBrick = new LLMBrick(eventBus, configBus, stateBus, errorBus);
+      
+      // Initialize SuperJournal - Deep Memory System
+      superJournalBrick = new SuperJournalBrick(eventBus, stateBus, configBus, errorBus);
+      console.log('🧠 SuperJournal: Deep memory activated - recording everything forever');
       
       // App ready
       eventBus.publish('app:ready', { timestamp: Date.now() });
