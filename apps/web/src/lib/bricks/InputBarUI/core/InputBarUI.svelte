@@ -14,15 +14,19 @@
   let textarea: HTMLTextAreaElement;
   let textContent = $state('');
   
+  // FOUC prevention states
+  let isReady = $state(false);
+  let placeholderText = $state('');
+  
   // Dropdown states
   let showModelDropdown = $state(false);
   let showPersonaDropdown = $state(false);
   let showThemeDropdown = $state(false);
   
-  // Current selections - initialize with defaults matching Sandbox 11
-  let selectedModel = $state('claude-sonnet-4-20250514');
-  let selectedPersona = $state('user');
-  let selectedTheme = $state('rainy-night');
+  // Current selections - start empty to prevent flicker
+  let selectedModel = $state('');
+  let selectedPersona = $state('');
+  let selectedTheme = $state('');
   
   // Config state
   let layout: InputBarConfig | null = $state(null);
@@ -36,6 +40,16 @@
   let service: InputBarService;
 
   onMount(async () => {
+    // Small delay to ensure styles are loaded
+    await new Promise(resolve => setTimeout(resolve, 10));
+    
+    // Set text content to prevent flicker
+    placeholderText = 'Type a message...';
+    selectedModel = 'claude-sonnet-4-20250514';
+    selectedPersona = 'user';
+    selectedTheme = 'rainy-night';
+    isReady = true;
+    
     // Load all configs
     layout = await configBus.load('inputBarLayout');
     behavior = await configBus.load('inputBarBehavior');
@@ -491,6 +505,8 @@
     width: {layout?.container.dimensions.defaultWidth || '650px'};
     max-width: {layout?.container.dimensions.maxWidth || 'calc(100vw - 40px)'};
     z-index: {layout?.container.positioning.zIndex || '1000'};
+    opacity: {isReady ? '1' : '0'};
+    transition: opacity 0.2s ease;
   "
 >
   <!-- File Preview Zone - Outside Input Bar -->
@@ -602,7 +618,7 @@
       bind:this={textarea}
       bind:value={textContent}
       class="text-input" 
-      placeholder="Type a message..."
+      placeholder={placeholderText}
       oninput={handleTextInput}
       onkeydown={handleTextareaKeydown}
       rows="1"
