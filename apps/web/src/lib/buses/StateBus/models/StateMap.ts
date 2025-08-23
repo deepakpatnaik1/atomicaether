@@ -28,6 +28,9 @@ export interface StateMap {
     // Debug states
     'debug:enabled': boolean;
     'debug:verbose': boolean;
+    
+    // MessageTurnBrick states
+    'messageTurn': any; // Will be properly typed via module augmentation
 }
 
 /**

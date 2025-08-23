@@ -1,5 +1,76 @@
 # Field Report
 
+## Lesson #4: Input Bar Text Flicker (FOUC) Prevention
+
+### 🚨 Symptoms (How to recognize this problem)
+- Input bar placeholder text "Type a message..." flickers on browser refresh
+- Dropdown text (model names, personas) flickers on refresh
+- Chevron icons briefly show wrong color before correct theme loads
+- Text appears unstyled for a split second, then jumps to correct styling
+- Problem only affects dynamically rendered components, not hardcoded HTML
+
+### 🔍 Root Cause
+**Flash of Unstyled Content (FOUC)** occurs because:
+
+1. **SvelteKit SSR limitation** - Component styles are not inlined in initial HTML
+2. **CSS loads after HTML** - Browser renders HTML immediately, styles load via JavaScript
+3. **Scoped CSS specificity** - Svelte adds hash suffixes to classes (e.g., `.text-input.s-OrxL94rYAIdQ`)
+4. **Pseudo-elements can't be styled inline** - `::placeholder` requires CSS, not inline styles
+5. **Progressive rendering** - Browsers show content as soon as they have it, before all CSS loads
+
+### ❌ Failed Attempts (What doesn't work)
+1. **CSS variables in app.html** - Variables still load after initial paint
+2. **:global() styles** - Still loaded via JavaScript bundle
+3. **{@html} style injection** - Styles still arrive after HTML renders
+4. **svelte:head with dynamic values** - Not processed correctly during SSR
+5. **Inline styles on elements** - Can't style pseudo-elements like ::placeholder
+6. **Default theme in component** - Theme object exists but styles still load late
+
+### ✅ Solution
+**Hide elements until styles are ready:**
+
+```javascript
+// Component state
+let isReady = $state(false); // Start hidden
+let placeholderText = $state(''); // Start empty
+let selectedModel = $state(''); // Start empty
+
+onMount(async () => {
+  // Small delay ensures styles are loaded
+  await new Promise(resolve => setTimeout(resolve, 10));
+  
+  // Set all text content
+  placeholderText = 'Type a message...';
+  selectedModel = 'claude-sonnet-4-20250514';
+  selectedPersona = 'user';
+  
+  // Show everything with fade-in
+  isReady = true;
+});
+```
+
+```html
+<!-- Container with opacity transition -->
+<div 
+  class="input-container"
+  style="
+    opacity: {isReady ? '1' : '0'};
+    transition: opacity 0.2s ease;
+  "
+>
+```
+
+### 🎯 Key Insight
+**If you can't prevent the flicker, hide it.** Rather than trying to make styles load faster (impossible with SvelteKit's architecture), make the elements invisible until styles are ready. The brief blink on refresh (opacity fade-in) is far less jarring than text changing color.
+
+### 📝 Trade-offs
+- **Pro:** Completely eliminates text color flicker
+- **Pro:** Smooth fade-in looks intentional, not broken
+- **Con:** Brief delay before input bar appears (10ms + transition)
+- **Con:** Slight "blink" effect on refresh as opacity transitions
+
+# Field Report
+
 ## Lesson #3: Drag & Drop Opens New Tabs Despite Event Prevention
 
 ### 🚨 Symptoms (How to recognize this problem)
