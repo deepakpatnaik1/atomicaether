@@ -49,19 +49,17 @@ export class AnthropicService {
   }
 
   async *stream(request: LLMRequest): AsyncGenerator<LLMStreamChunk> {
-    const response = await fetch(`${this.baseUrl}/messages`, {
+    // Use our API endpoint for streaming
+    const response = await fetch('/api/llm', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': this.apiKey,
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: request.model,
         messages: request.messages,
-        max_tokens: request.maxTokens || 4096,
-        temperature: request.temperature || 0.7,
-        stream: true
+        stream: true,
+        fileUrls: request.fileUrls || []
       })
     });
 

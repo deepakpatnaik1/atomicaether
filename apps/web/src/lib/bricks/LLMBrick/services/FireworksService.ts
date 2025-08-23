@@ -48,18 +48,17 @@ export class FireworksService {
   }
 
   async *stream(request: LLMRequest): AsyncGenerator<LLMStreamChunk> {
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+    // Use our API endpoint for streaming
+    const response = await fetch('/api/llm', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: request.model,
         messages: request.messages,
-        max_tokens: request.maxTokens || 8192,
-        temperature: request.temperature || 0.7,
-        stream: true
+        stream: true,
+        fileUrls: request.fileUrls || []
       })
     });
 
