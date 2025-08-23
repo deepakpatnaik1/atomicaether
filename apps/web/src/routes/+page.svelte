@@ -14,6 +14,7 @@
   
   // Import all bricks from main lib (now contains sandbox-13 InputBarUI)
   import { InputBarUI } from '$lib/bricks/InputBarUI';
+  import { MessageScrollback } from '$lib/bricks/MessageScrollback';
   import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
   import { LLMBrick } from '$lib/bricks/LLMBrick';
   
@@ -47,6 +48,7 @@
 </script>
 
 <main class="app">
+  <MessageScrollback />
   <InputBarUI />
 </main>
 
@@ -61,10 +63,11 @@
   }
   
   .app {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
   }
   
 </style>
