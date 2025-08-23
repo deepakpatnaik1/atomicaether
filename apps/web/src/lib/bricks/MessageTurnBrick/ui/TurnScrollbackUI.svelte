@@ -1,16 +1,31 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { stateBus } from '$lib/buses';
+  import { onMount, onDestroy } from 'svelte';
+  import { stateBus, eventBus } from '$lib/buses';
   import type { MessageTurn, MessageTurnState } from '../types/MessageTurn.types';
   
   let turns: MessageTurn[] = [];
+  let unsubscribeEvents: (() => void)[] = [];
   
   onMount(() => {
     console.log('📜 TurnScrollbackUI: Mounting...');
+    
+    // Initial load
+    loadTurns();
+    
+    // Subscribe to turn events to know when to reload
+    unsubscribeEvents.push(
+      eventBus.subscribe('turn:created', () => loadTurns()),
+      eventBus.subscribe('turn:processing', () => loadTurns()),
+      eventBus.subscribe('turn:completed', () => loadTurns()),
+      eventBus.subscribe('turn:error', () => loadTurns())
+    );
   });
   
-  // Use Svelte reactivity to watch for state changes
-  $: {
+  onDestroy(() => {
+    unsubscribeEvents.forEach(unsub => unsub());
+  });
+  
+  function loadTurns() {
     const state = stateBus.get('messageTurn') as MessageTurnState;
     if (state && state.turns) {
       turns = state.turns;

@@ -46,6 +46,7 @@
       
       eventBus.subscribe('llm:response:complete', (data) => {
         console.log('✅ LLM COMPLETE:', data);
+        console.log('  Full response:', data.fullResponse);
       });
       
       eventBus.subscribe('llm:response:error', (data) => {

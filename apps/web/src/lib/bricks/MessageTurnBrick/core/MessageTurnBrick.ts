@@ -223,6 +223,7 @@ export class MessageTurnBrick {
       totalTurns: this.turns.length
     };
     
+    console.log('📊 MessageTurnBrick: Publishing state with', state.totalTurns, 'turns');
     this.stateBus.set('messageTurn', state);
   }
   
