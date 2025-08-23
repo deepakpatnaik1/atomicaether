@@ -15,7 +15,6 @@
   // Import all bricks from main lib (now contains sandbox-13 InputBarUI)
   import { InputBarUI } from '$lib/bricks/InputBarUI';
   import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
-  import TurnScrollbackUI from '$lib/bricks/MessageTurnBrick/ui/TurnScrollbackUI.svelte';
   import { LLMBrick } from '$lib/bricks/LLMBrick';
   
   let messageTurnBrick;
@@ -48,7 +47,6 @@
 </script>
 
 <main class="app">
-  <TurnScrollbackUI />
   <InputBarUI />
 </main>
 

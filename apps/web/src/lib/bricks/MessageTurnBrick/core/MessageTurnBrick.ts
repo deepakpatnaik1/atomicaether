@@ -31,15 +31,11 @@ export class MessageTurnBrick {
   }
   
   private initialize() {
-    console.log('🔄 MessageTurnBrick: Initializing...');
-    
     // Subscribe to events
     this.subscribeToEvents();
     
     // Initialize state
     this.publishState();
-    
-    console.log('✅ MessageTurnBrick: Ready');
   }
   
   private subscribeToEvents() {
@@ -67,8 +63,6 @@ export class MessageTurnBrick {
   }
   
   private handleBossInput(data: any) {
-    console.log('🎤 MessageTurnBrick: Boss input received', data);
-    
     // Create Boss message
     const bossMessage: BossMessage = {
       id: `boss-${Date.now()}`,
@@ -117,8 +111,6 @@ export class MessageTurnBrick {
       return;
     }
     
-    console.log('🤖 MessageTurnBrick: Samara started responding');
-    
     // Initialize Samara message
     this.currentTurn.samaraMessage = {
       id: `samara-${Date.now()}`,
@@ -162,8 +154,6 @@ export class MessageTurnBrick {
       return;
     }
     
-    console.log('✅ MessageTurnBrick: Turn completed');
-    
     // Update Samara message with final content
     // Handle both 'fullResponse' and 'content' field names (lesson from debugging)
     this.currentTurn.samaraMessage.content = 
@@ -195,8 +185,6 @@ export class MessageTurnBrick {
     if (!this.currentTurn) {
       return;
     }
-    
-    console.error('❌ MessageTurnBrick: Turn failed', data);
     
     // Mark turn as error
     this.currentTurn.status = 'error';
@@ -239,7 +227,5 @@ export class MessageTurnBrick {
     this.currentTurn = null;
     this.turnCounter = 0;
     this.publishState();
-    
-    console.log('🧹 MessageTurnBrick: History cleared');
   }
 }
