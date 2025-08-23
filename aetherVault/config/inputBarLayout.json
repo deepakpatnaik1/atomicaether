@@ -83,7 +83,7 @@
     },
     "typography": {
       "_purpose": "Text input typography sizing",
-      "fontSize": "14px",
+      "fontSize": "13px",
       "_fontSizeNote": "Main text size. Affects readability and input density",
       "fontFamily": "system-ui",
       "_fontFamilyNote": "Font family for text input. system-ui uses OS default"

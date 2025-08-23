@@ -14,6 +14,11 @@
   
   // Import all bricks from main lib (now contains sandbox-13 InputBarUI)
   import { InputBarUI } from '$lib/bricks/InputBarUI';
+  import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
+  import { LLMBrick } from '$lib/bricks/LLMBrick';
+  
+  let messageTurnBrick;
+  let llmBrick;
 
   onMount(async () => {
     console.log('🚀 AtomicAether Main App Starting...');
@@ -22,6 +27,12 @@
       // Initialize theme system
       await themeApplier.initialize();
       await themeSelector.selectTheme('rainy-night');
+      
+      // Initialize MessageTurnBrick - orchestrates conversation turns
+      messageTurnBrick = new MessageTurnBrick(eventBus, stateBus, configBus, errorBus);
+      
+      // Initialize LLMBrick - it will listen from the void
+      llmBrick = new LLMBrick(eventBus, configBus, stateBus, errorBus);
       
       // App ready
       eventBus.publish('app:ready', { timestamp: Date.now() });
@@ -53,8 +64,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    position: relative;
   }
   
 </style>
