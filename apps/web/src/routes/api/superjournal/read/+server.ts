@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3';
 import type { JournalEntry, ReadResponse } from '$lib/bricks/SuperJournalBrick/core/types';
 
 /**
@@ -8,7 +9,23 @@ import type { JournalEntry, ReadResponse } from '$lib/bricks/SuperJournalBrick/c
  * Cannot modify. Cannot delete. Only remember.
  */
 
-export const GET: RequestHandler = async ({ url, platform }) => {
+// Import R2 credentials from environment
+const R2_ENDPOINT = import.meta.env.VITE_R2_ENDPOINT;
+const R2_ACCESS_KEY_ID = import.meta.env.VITE_R2_ACCESS_KEY_ID;
+const R2_SECRET_ACCESS_KEY = import.meta.env.VITE_R2_SECRET_ACCESS_KEY;
+const R2_SUPERJOURNAL_BUCKET = import.meta.env.VITE_R2_SUPERJOURNAL_BUCKET;
+
+// Initialize S3 client for R2 (S3-compatible)
+const s3Client = R2_ENDPOINT ? new S3Client({
+  endpoint: R2_ENDPOINT,
+  region: 'auto',
+  credentials: {
+    accessKeyId: R2_ACCESS_KEY_ID || '',
+    secretAccessKey: R2_SECRET_ACCESS_KEY || ''
+  }
+}) : null;
+
+export const GET: RequestHandler = async ({ url }) => {
   try {
     // Parse query parameters
     const startTime = url.searchParams.get('startTime');
@@ -17,13 +34,9 @@ export const GET: RequestHandler = async ({ url, platform }) => {
     const offset = parseInt(url.searchParams.get('offset') || '0');
     const sessionId = url.searchParams.get('sessionId');
     
-    // Get R2 bucket
-    const R2 = platform?.env?.R2_SUPERJOURNAL;
-    
-    if (!R2) {
-      // Local development - return empty for now
-      console.log('🧠 SuperJournal: Local mode - no R2 access');
-      
+    // Check if R2 is configured
+    if (!s3Client || !R2_SUPERJOURNAL_BUCKET) {
+      console.log('🧠 SuperJournal: R2 not configured for read');
       return json({
         entries: [],
         total: 0,
@@ -31,15 +44,15 @@ export const GET: RequestHandler = async ({ url, platform }) => {
       } as ReadResponse);
     }
     
-    // List objects based on time range
+    // List objects based on time range or get recent
     let entries: JournalEntry[] = [];
     
     if (startTime && endTime) {
       // Time-based query
-      entries = await readTimeRange(R2, parseInt(startTime), parseInt(endTime), limit, offset);
+      entries = await readTimeRange(s3Client, R2_SUPERJOURNAL_BUCKET, parseInt(startTime), parseInt(endTime), limit, offset);
     } else {
       // Get recent entries
-      entries = await readRecent(R2, limit, offset);
+      entries = await readRecent(s3Client, R2_SUPERJOURNAL_BUCKET, limit, offset);
     }
     
     // Filter by session if specified
@@ -68,7 +81,8 @@ export const GET: RequestHandler = async ({ url, platform }) => {
  * Read entries within a time range
  */
 async function readTimeRange(
-  R2: any,
+  s3Client: S3Client,
+  bucket: string,
   startTime: number,
   endTime: number,
   limit: number,
@@ -81,21 +95,42 @@ async function readTimeRange(
   const endDate = new Date(endTime);
   
   const currentDate = new Date(startDate);
-  while (currentDate <= endDate) {
+  while (currentDate <= endDate && entries.length < (offset + limit)) {
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const day = String(currentDate.getDate()).padStart(2, '0');
     const prefix = `entries/${year}/${month}/${day}/`;
     
     // List objects for this day
-    const listed = await R2.list({ prefix, limit: 1000 });
+    const listCommand = new ListObjectsV2Command({
+      Bucket: bucket,
+      Prefix: prefix,
+      MaxKeys: 1000
+    });
     
-    for (const object of listed.objects) {
-      const entry = await object.json() as JournalEntry;
-      
-      // Check if within time range
-      if (entry.timestamp >= startTime && entry.timestamp <= endTime) {
-        entries.push(entry);
+    const listed = await s3Client.send(listCommand);
+    
+    if (listed.Contents) {
+      for (const object of listed.Contents) {
+        if (object.Key && entries.length < (offset + limit)) {
+          // Get the object
+          const getCommand = new GetObjectCommand({
+            Bucket: bucket,
+            Key: object.Key
+          });
+          
+          const response = await s3Client.send(getCommand);
+          const bodyString = await response.Body?.transformToString();
+          
+          if (bodyString) {
+            const entry = JSON.parse(bodyString) as JournalEntry;
+            
+            // Check if within time range
+            if (entry.timestamp >= startTime && entry.timestamp <= endTime) {
+              entries.push(entry);
+            }
+          }
+        }
       }
     }
     
@@ -113,7 +148,7 @@ async function readTimeRange(
 /**
  * Read recent entries
  */
-async function readRecent(R2: any, limit: number, offset: number): Promise<JournalEntry[]> {
+async function readRecent(s3Client: S3Client, bucket: string, limit: number, offset: number): Promise<JournalEntry[]> {
   const entries: JournalEntry[] = [];
   
   // Start from today and work backwards
@@ -128,15 +163,36 @@ async function readRecent(R2: any, limit: number, offset: number): Promise<Journ
     const prefix = `entries/${year}/${month}/${day}/`;
     
     // List objects for this day
-    const listed = await R2.list({ prefix, limit: 1000 });
+    const listCommand = new ListObjectsV2Command({
+      Bucket: bucket,
+      Prefix: prefix,
+      MaxKeys: 1000
+    });
     
-    for (const object of listed.objects) {
-      const entry = await object.json() as JournalEntry;
-      entries.push(entry);
+    try {
+      const listed = await s3Client.send(listCommand);
       
-      if (entries.length >= (offset + limit)) {
-        break;
+      if (listed.Contents) {
+        for (const object of listed.Contents) {
+          if (object.Key && entries.length < (offset + limit)) {
+            // Get the object
+            const getCommand = new GetObjectCommand({
+              Bucket: bucket,
+              Key: object.Key
+            });
+            
+            const response = await s3Client.send(getCommand);
+            const bodyString = await response.Body?.transformToString();
+            
+            if (bodyString) {
+              const entry = JSON.parse(bodyString) as JournalEntry;
+              entries.push(entry);
+            }
+          }
+        }
       }
+    } catch (error) {
+      console.log(`🧠 SuperJournal: No entries for ${year}-${month}-${day}`);
     }
     
     // Move to previous day
@@ -144,7 +200,7 @@ async function readRecent(R2: any, limit: number, offset: number): Promise<Journ
     daysScanned++;
   }
   
-  // Sort by timestamp (newest first)
+  // Sort by timestamp (newest first) 
   entries.sort((a, b) => b.timestamp - a.timestamp);
   
   // Apply pagination

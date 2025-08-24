@@ -54,7 +54,7 @@ export class SuperJournalBrick {
     this.loadManifest();
     
     // Listen for completed message turns
-    this.eventBus.subscribe('messageTurn:complete', this.handleMessageTurnComplete.bind(this));
+    this.eventBus.subscribe('turn:completed', this.handleMessageTurnComplete.bind(this));
     
     // Update StateBus with initial state
     this.updateStateBus();
