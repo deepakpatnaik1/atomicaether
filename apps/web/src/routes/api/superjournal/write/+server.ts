@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { env } from '$env/dynamic/private';
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { createHash } from 'crypto';
 import type { JournalEntry, WriteResponse } from '$lib/bricks/SuperJournalBrick/core/types';
 
@@ -10,7 +10,23 @@ import type { JournalEntry, WriteResponse } from '$lib/bricks/SuperJournalBrick/
  * Immutable. Forever.
  */
 
-export const POST: RequestHandler = async ({ request, platform }) => {
+// Import R2 credentials from environment
+const R2_ENDPOINT = import.meta.env.VITE_R2_ENDPOINT;
+const R2_ACCESS_KEY_ID = import.meta.env.VITE_R2_ACCESS_KEY_ID;
+const R2_SECRET_ACCESS_KEY = import.meta.env.VITE_R2_SECRET_ACCESS_KEY;
+const R2_SUPERJOURNAL_BUCKET = import.meta.env.VITE_R2_SUPERJOURNAL_BUCKET;
+
+// Initialize S3 client for R2 (S3-compatible)
+const s3Client = R2_ENDPOINT ? new S3Client({
+  endpoint: R2_ENDPOINT,
+  region: 'auto',
+  credentials: {
+    accessKeyId: R2_ACCESS_KEY_ID || '',
+    secretAccessKey: R2_SECRET_ACCESS_KEY || ''
+  }
+}) : null;
+
+export const POST: RequestHandler = async ({ request }) => {
   try {
     const entry: JournalEntry = await request.json();
     
@@ -23,6 +39,18 @@ export const POST: RequestHandler = async ({ request, platform }) => {
         timestamp: 0,
         r2Key: ''
       } as WriteResponse, { status: 400 });
+    }
+    
+    // Check if R2 is configured
+    if (!s3Client || !R2_SUPERJOURNAL_BUCKET) {
+      console.error('🧠 SuperJournal: R2 not configured');
+      return json({
+        success: false,
+        error: 'R2 storage not configured',
+        entryId: entry.id,
+        timestamp: entry.timestamp,
+        r2Key: ''
+      } as WriteResponse, { status: 500 });
     }
     
     // Compute SHA-256 checksum for immutability verification
@@ -42,48 +70,24 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const day = String(date.getDate()).padStart(2, '0');
     const r2Key = `entries/${year}/${month}/${day}/${entry.id}-${entry.timestamp}.json`;
     
-    // Get R2 bucket from platform bindings
-    const R2 = platform?.env?.R2_SUPERJOURNAL;
-    
-    if (!R2) {
-      // Fallback for local development - simulate R2 write
-      console.log('🧠 SuperJournal: Local mode - simulating R2 write:', r2Key);
-      
-      // In production, this would fail if R2 isn't configured
-      if (process.env.NODE_ENV === 'production') {
-        return json({
-          success: false,
-          error: 'R2 storage not configured',
-          entryId: entry.id,
-          timestamp: entry.timestamp,
-          r2Key: ''
-        } as WriteResponse, { status: 500 });
-      }
-      
-      // Local development success
-      return json({
-        success: true,
-        entryId: entry.id,
-        timestamp: entry.timestamp,
-        r2Key: r2Key
-      } as WriteResponse);
-    }
-    
     // Write to R2 (immutable object)
-    await R2.put(r2Key, JSON.stringify(entry, null, 2), {
-      httpMetadata: {
-        contentType: 'application/json',
-        cacheControl: 'public, max-age=31536000, immutable'  // Cache forever - it never changes
-      },
-      customMetadata: {
+    const putCommand = new PutObjectCommand({
+      Bucket: R2_SUPERJOURNAL_BUCKET,
+      Key: r2Key,
+      Body: JSON.stringify(entry, null, 2),
+      ContentType: 'application/json',
+      CacheControl: 'public, max-age=31536000, immutable',  // Cache forever - it never changes
+      Metadata: {
         checksum: entry.checksum,
         turnNumber: String(entry.turnNumber),
-        sessionId: entry.metadata.sessionId
+        sessionId: entry.metadata.sessionId || ''
       }
     });
     
+    await s3Client.send(putCommand);
+    
     // Update daily manifest
-    await updateManifest(R2, date, entry);
+    await updateManifest(s3Client, R2_SUPERJOURNAL_BUCKET, date, entry);
     
     console.log('🧠 SuperJournal: Written to R2:', r2Key);
     
@@ -111,7 +115,12 @@ export const POST: RequestHandler = async ({ request, platform }) => {
  * Update daily and master manifests
  * Manifests provide quick access to statistics without scanning all entries
  */
-async function updateManifest(R2: any, date: Date, entry: JournalEntry): Promise<void> {
+async function updateManifest(
+  s3Client: S3Client, 
+  bucket: string, 
+  date: Date, 
+  entry: JournalEntry
+): Promise<void> {
   try {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -120,11 +129,20 @@ async function updateManifest(R2: any, date: Date, entry: JournalEntry): Promise
     
     // Get or create daily manifest
     let dailyManifest;
-    const existing = await R2.get(dailyKey);
+    try {
+      const getCommand = new GetObjectCommand({
+        Bucket: bucket,
+        Key: dailyKey
+      });
+      const existing = await s3Client.send(getCommand);
+      const bodyString = await existing.Body?.transformToString();
+      dailyManifest = bodyString ? JSON.parse(bodyString) : null;
+    } catch (err) {
+      // Manifest doesn't exist yet
+      dailyManifest = null;
+    }
     
-    if (existing) {
-      dailyManifest = await existing.json();
-    } else {
+    if (!dailyManifest) {
       dailyManifest = {
         date: `${year}-${month}-${day}`,
         entries: [],
@@ -144,14 +162,16 @@ async function updateManifest(R2: any, date: Date, entry: JournalEntry): Promise
     dailyManifest.totalTokens += estimatedTokens;
     
     // Write updated daily manifest
-    await R2.put(dailyKey, JSON.stringify(dailyManifest, null, 2), {
-      httpMetadata: {
-        contentType: 'application/json'
-      }
+    const putCommand = new PutObjectCommand({
+      Bucket: bucket,
+      Key: dailyKey,
+      Body: JSON.stringify(dailyManifest, null, 2),
+      ContentType: 'application/json'
     });
+    await s3Client.send(putCommand);
     
     // Update master manifest
-    await updateMasterManifest(R2, entry, estimatedTokens);
+    await updateMasterManifest(s3Client, bucket, entry, estimatedTokens);
     
   } catch (error) {
     console.error('🧠 SuperJournal: Manifest update error:', error);
@@ -159,15 +179,29 @@ async function updateManifest(R2: any, date: Date, entry: JournalEntry): Promise
   }
 }
 
-async function updateMasterManifest(R2: any, entry: JournalEntry, tokens: number): Promise<void> {
+async function updateMasterManifest(
+  s3Client: S3Client, 
+  bucket: string, 
+  entry: JournalEntry, 
+  tokens: number
+): Promise<void> {
   const masterKey = 'manifests/master.json';
   
   let master;
-  const existing = await R2.get(masterKey);
+  try {
+    const getCommand = new GetObjectCommand({
+      Bucket: bucket,
+      Key: masterKey
+    });
+    const existing = await s3Client.send(getCommand);
+    const bodyString = await existing.Body?.transformToString();
+    master = bodyString ? JSON.parse(bodyString) : null;
+  } catch (err) {
+    // Master manifest doesn't exist yet
+    master = null;
+  }
   
-  if (existing) {
-    master = await existing.json();
-  } else {
+  if (!master) {
     master = {
       totalEntries: 0,
       firstEntry: null,
@@ -191,9 +225,11 @@ async function updateMasterManifest(R2: any, entry: JournalEntry, tokens: number
     .digest('hex');
   
   // Write updated master manifest
-  await R2.put(masterKey, JSON.stringify(master, null, 2), {
-    httpMetadata: {
-      contentType: 'application/json'
-    }
+  const putCommand = new PutObjectCommand({
+    Bucket: bucket,
+    Key: masterKey,
+    Body: JSON.stringify(master, null, 2),
+    ContentType: 'application/json'
   });
+  await s3Client.send(putCommand);
 }

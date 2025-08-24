@@ -54,7 +54,7 @@ export class SuperJournalBrick {
     this.loadManifest();
     
     // Listen for completed message turns
-    this.eventBus.subscribe('messageTurn:complete', this.handleMessageTurnComplete.bind(this));
+    this.eventBus.subscribe('turn:completed', this.handleMessageTurnComplete.bind(this));
     
     // Update StateBus with initial state
     this.updateStateBus();
@@ -64,13 +64,16 @@ export class SuperJournalBrick {
   
   private async handleMessageTurnComplete(data: any): Promise<void> {
     try {
-      // Extract message pair from the event
-      const { bossMessage, samaraMessage, metadata = {} } = data;
+      // Extract the turn from the event data
+      const { turn } = data;
       
-      if (!bossMessage || !samaraMessage) {
+      if (!turn || !turn.bossMessage || !turn.samaraMessage) {
         console.warn('🧠 SuperJournal: Incomplete message pair, skipping');
         return;
       }
+      
+      const { bossMessage, samaraMessage } = turn;
+      const metadata = {}
       
       // Increment global turn counter
       this.turnCounter++;
