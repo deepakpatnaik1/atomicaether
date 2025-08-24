@@ -43,6 +43,36 @@ export class StateBus {
     private states = new Map<keyof StateMap, StateEntry>();
     
     /**
+     * Keys that should be persisted to localStorage
+     */
+    private persistedKeys: Set<keyof StateMap> = new Set([
+        'selection:model',
+        'selection:persona',
+        'selection:theme'
+    ]);
+    
+    constructor() {
+        // Load persisted values from localStorage on initialization
+        if (typeof window !== 'undefined' && window.localStorage) {
+            this.persistedKeys.forEach(key => {
+                const storageKey = `stateBus:${key}`;
+                const persisted = localStorage.getItem(storageKey);
+                if (persisted !== null) {
+                    try {
+                        const value = JSON.parse(persisted);
+                        const entry = new StateEntry(value);
+                        this.states.set(key, entry);
+                    } catch (e) {
+                        // If JSON parse fails, treat as string
+                        const entry = new StateEntry(persisted);
+                        this.states.set(key, entry);
+                    }
+                }
+            });
+        }
+    }
+    
+    /**
      * Get a reactive state entry
      * Creates the state on first access (lazy initialization)
      * Returns the StateEntry which contains the reactive value
@@ -80,6 +110,17 @@ export class StateBus {
     set<K extends keyof StateMap>(key: K, value: StateValue<K>): void {
         const entry = this.getEntry(key);
         entry.value = value;
+        
+        // Persist to localStorage if this is a persisted key
+        if (this.persistedKeys.has(key) && typeof window !== 'undefined' && window.localStorage) {
+            const storageKey = `stateBus:${key}`;
+            try {
+                const serialized = typeof value === 'string' ? value : JSON.stringify(value);
+                localStorage.setItem(storageKey, serialized);
+            } catch (e) {
+                console.warn(`Failed to persist state for key ${key}:`, e);
+            }
+        }
     }
     
     /**

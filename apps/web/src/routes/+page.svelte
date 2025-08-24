@@ -18,10 +18,12 @@
   import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
   import { LLMBrick } from '$lib/bricks/LLMBrick';
   import { SuperJournalBrick } from '$lib/bricks/SuperJournalBrick';
+  import { SelectionPersistenceBrick } from '$lib/bricks/SelectionPersistenceBrick/core/SelectionPersistenceBrick';
   
   let messageTurnBrick;
   let llmBrick;
   let superJournalBrick;
+  let selectionPersistenceBrick;
 
   onMount(async () => {
     console.log('🚀 AtomicAether Main App Starting...');
@@ -30,6 +32,9 @@
       // Initialize theme system
       await themeApplier.initialize();
       await themeSelector.selectTheme('rainy-night');
+      
+      // Initialize SelectionPersistenceBrick - handles persisting user selections
+      selectionPersistenceBrick = new SelectionPersistenceBrick();
       
       // Initialize MessageTurnBrick - orchestrates conversation turns
       messageTurnBrick = new MessageTurnBrick(eventBus, stateBus, configBus, errorBus);

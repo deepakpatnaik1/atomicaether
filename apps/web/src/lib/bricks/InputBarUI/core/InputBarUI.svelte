@@ -61,12 +61,36 @@
     // Initialize service
     service = new InputBarService(behavior, bttConfig);
     
-    // Set defaults
+    // Set defaults from config first
     if (dropdownData) {
       selectedModel = dropdownData.defaults.selectedModel;
       selectedPersona = dropdownData.defaults.selectedPersona;
       selectedTheme = dropdownData.defaults.selectedTheme;
     }
+    
+    // Request persisted values (will override defaults if they exist)
+    eventBus.publish('selection:model:request', {});
+    eventBus.publish('selection:persona:request', {});
+    eventBus.publish('selection:theme:request', {});
+    
+    // Listen for responses with persisted values
+    eventBus.subscribe('selection:model:current', (data: any) => {
+      if (data.model) {
+        selectedModel = data.model;
+      }
+    });
+    
+    eventBus.subscribe('selection:persona:current', (data: any) => {
+      if (data.persona) {
+        selectedPersona = data.persona;
+      }
+    });
+    
+    eventBus.subscribe('selection:theme:current', (data: any) => {
+      if (data.theme) {
+        selectedTheme = data.theme;
+      }
+    });
     
     // Initialize textarea height
     if (textarea && behavior) {
@@ -283,6 +307,8 @@
   function selectModel(model: string) {
     selectedModel = model;
     showModelDropdown = false;
+    // Publish change event for persistence
+    eventBus.publish('selection:model:changed', { model });
     // Restore focus to input after dropdown interaction
     focusInputBar();
   }
@@ -290,6 +316,8 @@
   function selectPersona(persona: string) {
     selectedPersona = persona;
     showPersonaDropdown = false;
+    // Publish change event for persistence
+    eventBus.publish('selection:persona:changed', { persona });
     // Restore focus to input after dropdown interaction
     focusInputBar();
   }
@@ -297,6 +325,8 @@
   function selectTheme(themeId: string) {
     selectedTheme = themeId;
     showThemeDropdown = false;
+    // Publish change event for persistence
+    eventBus.publish('selection:theme:changed', { theme: themeId });
     // Restore focus to input after dropdown interaction
     focusInputBar();
   }

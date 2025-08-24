@@ -31,6 +31,11 @@ export interface StateMap {
     
     // MessageTurnBrick states
     'messageTurn': any; // Will be properly typed via module augmentation
+    
+    // Selection states (persisted)
+    'selection:model': string;
+    'selection:persona': string;
+    'selection:theme': string;
 }
 
 /**

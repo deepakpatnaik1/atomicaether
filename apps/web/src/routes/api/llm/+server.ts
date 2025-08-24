@@ -139,6 +139,9 @@ export const POST: RequestHandler = async ({ request }) => {
               // OpenAI API streaming
               const formattedMessages = formatOpenAIMessages(messages, fileUrls);
               
+              // GPT-5 requires max_completion_tokens instead of max_tokens
+              const useNewParam = model === 'gpt-5';
+              
               apiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -148,7 +151,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 body: JSON.stringify({
                   model,
                   messages: formattedMessages,
-                  max_tokens: 4096,
+                  ...(useNewParam ? { max_completion_tokens: 4096 } : { max_tokens: 4096 }),
                   stream: true
                 })
               });
@@ -171,7 +174,9 @@ export const POST: RequestHandler = async ({ request }) => {
             
             if (!apiResponse.ok) {
               const error = await apiResponse.text();
-              controller.enqueue(new TextEncoder().encode(`data: {"error": "${error}"}\n\n`));
+              // Properly escape the error message for JSON
+              const escapedError = JSON.stringify(error);
+              controller.enqueue(new TextEncoder().encode(`data: {"error": ${escapedError}}\n\n`));
               controller.close();
               return;
             }
@@ -248,6 +253,9 @@ export const POST: RequestHandler = async ({ request }) => {
       // OpenAI API
       const formattedMessages = formatOpenAIMessages(messages, fileUrls);
       
+      // GPT-5 requires max_completion_tokens instead of max_tokens
+      const useNewParam = model === 'gpt-5';
+      
       apiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -257,7 +265,7 @@ export const POST: RequestHandler = async ({ request }) => {
         body: JSON.stringify({
           model,
           messages: formattedMessages,
-          max_tokens: 4096,
+          ...(useNewParam ? { max_completion_tokens: 4096 } : { max_tokens: 4096 }),
           stream: false
         })
       });

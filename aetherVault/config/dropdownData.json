@@ -14,7 +14,7 @@
       },
       { 
         "name": "Claude Sonnet 4", 
-        "id": "claude-sonnet-4-20250522",
+        "id": "claude-sonnet-4-20250514",
         "_note": "Balanced performance and speed"
       }
     ],
@@ -25,13 +25,13 @@
         "_note": "Latest flagship model with advanced reasoning"
       },
       { 
-        "name": "GPT-4.1", 
-        "id": "gpt-4-1",
+        "name": "GPT-4 Turbo", 
+        "id": "gpt-4-turbo",
         "_note": "Enhanced GPT-4 with 1M token context"
       },
       { 
-        "name": "GPT-4.1 Mini", 
-        "id": "gpt-4-1-mini",
+        "name": "GPT-4o Mini", 
+        "id": "gpt-4o-mini",
         "_note": "Fast and cost-efficient"
       },
       { 
@@ -42,9 +42,9 @@
     ],
     "Fireworks": [
       { 
-        "name": "Llama 4 Maverick 17B", 
-        "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
-        "_note": "Latest Llama 4 with enhanced capabilities"
+        "name": "Llama 3.1 405B Instruct", 
+        "id": "accounts/fireworks/models/llama-v3p1-405b-instruct",
+        "_note": "Most powerful Llama model"
       },
       { 
         "name": "Llama 3.3 70B", 

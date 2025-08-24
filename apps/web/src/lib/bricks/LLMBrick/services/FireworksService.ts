@@ -57,8 +57,7 @@ export class FireworksService {
       body: JSON.stringify({
         model: request.model,
         messages: request.messages,
-        stream: true,
-        fileUrls: request.fileUrls || []
+        stream: true
       })
     });
 
@@ -95,6 +94,13 @@ export class FireworksService {
           
           try {
             const event = JSON.parse(data);
+            
+            // Check for error in the stream
+            if (event.error) {
+              console.error('Fireworks API Error:', event.error);
+              throw new Error(event.error);
+            }
+            
             const delta = event.choices[0]?.delta?.content;
             
             if (delta) {
@@ -107,6 +113,7 @@ export class FireworksService {
             }
           } catch (e) {
             console.warn('Failed to parse SSE event:', e);
+            console.warn('Raw data that failed:', data);
           }
         }
       }
