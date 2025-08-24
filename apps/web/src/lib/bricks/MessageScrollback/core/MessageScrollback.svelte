@@ -26,10 +26,30 @@
   // Refs
   let scrollContainer: HTMLDivElement;
   
-  // Config
-  const scrollbackConfig = {
-    autoScroll: true
-  };
+  // Scroll state management
+  let isUserScrolling = $state(false);
+  let lastMessageCount = $state(0);
+  let isNearBottom = $state(true);
+  
+  // Check if scrolled near bottom (within 100px)
+  function checkIfNearBottom() {
+    if (!scrollContainer) return true;
+    const threshold = 100;
+    return scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight < threshold;
+  }
+  
+  // Handle user scroll events
+  function handleScroll() {
+    isNearBottom = checkIfNearBottom();
+    
+    // If user scrolled back to bottom, resume auto-scroll
+    if (isNearBottom) {
+      isUserScrolling = false;
+    } else {
+      // User is reading older messages
+      isUserScrolling = true;
+    }
+  }
   
   // Poll StateBus for updates
   $effect(() => {
@@ -38,14 +58,34 @@
     messageTurnState = state;
   });
   
-  // Auto-scroll effect - scrolls to bottom whenever content updates
+  // Smart auto-scroll - only when new content arrives and user isn't scrolling
   $effect(() => {
-    updateTrigger; // Trigger on every poll (every 100ms)
+    updateTrigger; // Trigger on polling updates
+    const currentTurns = visibleTurns();
+    const currentMessageCount = currentTurns.length;
     
-    // Auto-scroll to bottom to keep streaming messages visible
-    if (scrollContainer && scrollbackConfig.autoScroll && visibleTurns().length > 0) {
-      scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    // Check if new messages arrived
+    const hasNewMessages = currentMessageCount > lastMessageCount;
+    
+    // Also check if content is actively streaming (last message is in_progress)
+    const isActivelyStreaming = currentTurns.length > 0 && 
+      currentTurns[currentTurns.length - 1].status === 'in_progress';
+    
+    if (scrollContainer && currentMessageCount > 0) {
+      // Scenario A: Initial load or refresh - snap to bottom
+      if (lastMessageCount === 0) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        isUserScrolling = false;
+      }
+      // Scenario B: New messages or streaming content and user is at bottom - auto-scroll
+      else if ((hasNewMessages || isActivelyStreaming) && !isUserScrolling) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
+      // Scenario C: User is scrolling up - don't interfere
+      // (no action needed)
     }
+    
+    lastMessageCount = currentMessageCount;
   });
   
   // Load SuperJournal history and set up polling
@@ -183,7 +223,7 @@
   }
 </script>
 
-<div class="scrollback-container" bind:this={scrollContainer}>
+<div class="scrollback-container" bind:this={scrollContainer} onscroll={handleScroll}>
   <div class="messages">
     {#each visibleTurns() as turn}
       <div class="message-turn">
