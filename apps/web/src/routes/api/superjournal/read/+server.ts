@@ -44,6 +44,9 @@ export const GET: RequestHandler = async ({ url }) => {
       } as ReadResponse);
     }
     
+    // Get list of deleted turns
+    const deletedTurns = await getDeletedTurns(s3Client, R2_SUPERJOURNAL_BUCKET);
+    
     // List objects based on time range
     let entries: JournalEntry[] = [];
     
@@ -59,6 +62,9 @@ export const GET: RequestHandler = async ({ url }) => {
     if (sessionId) {
       entries = entries.filter(e => e.metadata.sessionId === sessionId);
     }
+    
+    // Filter out deleted entries
+    entries = entries.filter(e => !deletedTurns.includes(e.id));
     
     return json({
       entries: entries,
@@ -224,4 +230,33 @@ async function readRecent(
   
   // Apply pagination
   return entries.slice(offset, offset + limit);
+}
+
+/**
+ * Get list of deleted turn IDs
+ */
+async function getDeletedTurns(
+  s3Client: S3Client,
+  bucket: string
+): Promise<string[]> {
+  try {
+    const manifestKey = 'manifests/deletions.json';
+    const getCommand = new GetObjectCommand({
+      Bucket: bucket,
+      Key: manifestKey
+    });
+    
+    const result = await s3Client.send(getCommand);
+    const bodyString = await result.Body?.transformToString();
+    
+    if (bodyString) {
+      const manifest = JSON.parse(bodyString);
+      return manifest.deletedTurns || [];
+    }
+  } catch (err) {
+    // No deletions manifest yet - return empty array
+    console.log('🧠 SuperJournal: No deletions manifest found');
+  }
+  
+  return [];
 }

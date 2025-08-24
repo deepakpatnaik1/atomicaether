@@ -234,7 +234,38 @@
   }
   
   // Handle delete action
-  function handleDelete(turnId: string) {
+  async function handleDelete(turnId: string) {
+    // First, delete from SuperJournal (permanent storage)
+    try {
+      const response = await fetch('/api/superjournal/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ turnId })
+      });
+      
+      if (!response.ok) {
+        console.error('Failed to delete from SuperJournal');
+        eventBus.publish('notification:show', {
+          message: 'Failed to delete message',
+          type: 'error',
+          duration: 3000
+        });
+        return;
+      }
+      
+      console.log('🧠 SuperJournal: Deleted turn:', turnId);
+    } catch (error) {
+      console.error('Error deleting from SuperJournal:', error);
+      eventBus.publish('notification:show', {
+        message: 'Failed to delete message',
+        type: 'error',
+        duration: 3000
+      });
+      return;
+    }
+    
     // Remove from historical turns
     historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
     
@@ -245,6 +276,22 @@
         ...messageTurnState,
         turns: updatedTurns
       });
+    }
+    
+    // Update localStorage cache to reflect deletion
+    const cacheKey = 'superjournal_cache';
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const { entries, timestamp } = JSON.parse(cached);
+        const filteredEntries = entries.filter((e: any) => e.id !== turnId);
+        localStorage.setItem(cacheKey, JSON.stringify({
+          entries: filteredEntries,
+          timestamp
+        }));
+      } catch (e) {
+        console.error('Failed to update cache:', e);
+      }
     }
     
     // Publish event for other components
