@@ -8,6 +8,7 @@
   // State
   let historicalTurns = $state<MessageTurn[]>([]);  // From SuperJournal
   let messageTurnState = $state<MessageTurnState | undefined>(undefined);
+  let isLoadingHistory = $state(true);  // Loading state
   
   // Get live turns from MessageTurnBrick
   let liveTurns = $derived(messageTurnState?.turns || []);
@@ -66,6 +67,32 @@
     try {
       console.log('📜 Loading historical messages from SuperJournal...');
       
+      // Check localStorage cache first
+      const cacheKey = 'superjournal_cache';
+      const cached = localStorage.getItem(cacheKey);
+      
+      if (cached) {
+        try {
+          const { entries, timestamp } = JSON.parse(cached);
+          const cacheAge = Date.now() - timestamp;
+          
+          // Use cache if less than 5 minutes old
+          if (cacheAge < 5 * 60 * 1000) {
+            console.log('📜 Using cached messages (age:', Math.round(cacheAge/1000), 'seconds)');
+            processEntries(entries);
+            isLoadingHistory = false;
+            
+            // Fetch fresh data in background
+            fetchAndUpdateCache(cacheKey);
+            return;
+          }
+        } catch (e) {
+          console.warn('📜 Invalid cache, fetching fresh');
+        }
+      }
+      
+      isLoadingHistory = true;
+      
       // Fetch from SuperJournal read endpoint
       const response = await fetch('/api/superjournal/read?limit=1000');
       
@@ -77,33 +104,13 @@
       const data = await response.json();
       const entries: JournalEntry[] = data.entries || [];
       
-      // Convert SuperJournal entries to MessageTurn format
-      historicalTurns = entries.map((entry, index) => ({
-        id: entry.id,
-        turnNumber: entry.turnNumber || index + 1,
-        bossMessage: {
-          id: `boss-${entry.id}`,
-          content: entry.bossMessage,
-          persona: entry.metadata?.persona || 'default',
-          model: entry.metadata?.model || 'unknown',
-          timestamp: entry.timestamp
-        },
-        samaraMessage: {
-          id: `samara-${entry.id}`,
-          content: entry.samaraMessage,
-          model: entry.metadata?.model || 'unknown',
-          timestamp: entry.timestamp,
-          processingTime: entry.metadata?.streamDuration
-        },
-        status: 'completed' as const,
-        startedAt: entry.timestamp,
-        completedAt: entry.timestamp
+      // Cache the data
+      localStorage.setItem(cacheKey, JSON.stringify({
+        entries,
+        timestamp: Date.now()
       }));
       
-      // Sort by timestamp (oldest first)
-      historicalTurns.sort((a, b) => a.startedAt - b.startedAt);
-      
-      console.log(`📜 Loaded ${historicalTurns.length} historical message pairs`);
+      processEntries(entries);
       
       // Auto-scroll to bottom after loading history
       setTimeout(() => {
@@ -115,6 +122,63 @@
       
     } catch (error) {
       console.error('📜 Error loading historical messages:', error);
+    } finally {
+      isLoadingHistory = false;
+    }
+  }
+  
+  // Process entries and convert to MessageTurn format
+  function processEntries(entries: JournalEntry[]) {
+    historicalTurns = entries.map((entry, index) => ({
+      id: entry.id,
+      turnNumber: entry.turnNumber || index + 1,
+      bossMessage: {
+        id: `boss-${entry.id}`,
+        content: entry.bossMessage,
+        persona: entry.metadata?.persona || 'default',
+        model: entry.metadata?.model || 'unknown',
+        timestamp: entry.timestamp
+      },
+      samaraMessage: {
+        id: `samara-${entry.id}`,
+        content: entry.samaraMessage,
+        model: entry.metadata?.model || 'unknown',
+        timestamp: entry.timestamp,
+        processingTime: entry.metadata?.streamDuration
+      },
+      status: 'completed' as const,
+      startedAt: entry.timestamp,
+      completedAt: entry.timestamp
+    }));
+    
+    // Sort by timestamp (oldest first)
+    historicalTurns.sort((a, b) => a.startedAt - b.startedAt);
+    
+    console.log(`📜 Loaded ${historicalTurns.length} historical message pairs`);
+  }
+  
+  // Fetch fresh data in background and update cache
+  async function fetchAndUpdateCache(cacheKey: string) {
+    try {
+      const response = await fetch('/api/superjournal/read?limit=1000');
+      if (response.ok) {
+        const data = await response.json();
+        const entries: JournalEntry[] = data.entries || [];
+        
+        // Update cache
+        localStorage.setItem(cacheKey, JSON.stringify({
+          entries,
+          timestamp: Date.now()
+        }));
+        
+        // Update display if there are new messages
+        if (entries.length > historicalTurns.length) {
+          console.log('📜 Found new messages in background fetch');
+          processEntries(entries);
+        }
+      }
+    } catch (error) {
+      console.log('📜 Background fetch failed:', error);
     }
   }
 </script>
@@ -147,7 +211,11 @@
       </div>
     {/each}
     
-    {#if visibleTurns().length === 0}
+    {#if isLoadingHistory}
+      <div class="loading-state">
+        Loading message history...
+      </div>
+    {:else if visibleTurns().length === 0}
       <div class="empty-state">
         No messages yet. Start a conversation!
       </div>
@@ -236,6 +304,22 @@
     color: #DFD0B8;
     font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
     font-size: 13px;
+  }
+  
+  /* Loading state */
+  .loading-state {
+    text-align: center;
+    opacity: 0.7;
+    padding: 2rem;
+    color: #DFD0B8;
+    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.3; }
   }
   
   /* Hide scrollbar */

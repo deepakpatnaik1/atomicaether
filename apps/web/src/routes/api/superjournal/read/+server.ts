@@ -177,24 +177,38 @@ async function readRecent(
     const listed = await s3Client.send(listCommand);
     
     if (listed.Contents) {
-      for (const object of listed.Contents) {
-        if (object.Key) {
-          // Get the object
-          const getCommand = new GetObjectCommand({
-            Bucket: bucket,
-            Key: object.Key
-          });
-          
-          const result = await s3Client.send(getCommand);
-          const bodyString = await result.Body?.transformToString();
-          
-          if (bodyString) {
-            const entry = JSON.parse(bodyString) as JournalEntry;
-            entries.push(entry);
+      // Batch fetch all objects in parallel
+      const fetchPromises = listed.Contents
+        .filter(obj => obj.Key)
+        .slice(0, (offset + limit) - entries.length)  // Only fetch what we need
+        .map(async (object) => {
+          try {
+            const getCommand = new GetObjectCommand({
+              Bucket: bucket,
+              Key: object.Key!
+            });
             
-            if (entries.length >= (offset + limit)) {
-              break;
+            const result = await s3Client.send(getCommand);
+            const bodyString = await result.Body?.transformToString();
+            
+            if (bodyString) {
+              return JSON.parse(bodyString) as JournalEntry;
             }
+          } catch (err) {
+            console.error(`Failed to fetch ${object.Key}:`, err);
+            return null;
+          }
+        });
+      
+      // Wait for all fetches to complete in parallel
+      const dayEntries = await Promise.all(fetchPromises);
+      
+      // Add non-null entries
+      for (const entry of dayEntries) {
+        if (entry) {
+          entries.push(entry);
+          if (entries.length >= (offset + limit)) {
+            break;
           }
         }
       }
