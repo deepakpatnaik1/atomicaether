@@ -29,6 +29,7 @@
   // Scroll state management
   let isUserScrolling = $state(false);
   let lastMessageCount = $state(0);
+  let lastContentLength = $state(0);
   let isNearBottom = $state(true);
   
   // Check if scrolled near bottom (within 100px)
@@ -58,18 +59,26 @@
     messageTurnState = state;
   });
   
-  // Smart auto-scroll - only when new content arrives and user isn't scrolling
+  // Smart auto-scroll - detects content changes and respects user scrolling
   $effect(() => {
     updateTrigger; // Trigger on polling updates
     const currentTurns = visibleTurns();
     const currentMessageCount = currentTurns.length;
     
+    // Calculate total content length to detect streaming updates
+    let currentContentLength = 0;
+    if (currentTurns.length > 0) {
+      const lastTurn = currentTurns[currentTurns.length - 1];
+      if (lastTurn.samaraMessage) {
+        currentContentLength = lastTurn.samaraMessage.content.length;
+      }
+    }
+    
     // Check if new messages arrived
     const hasNewMessages = currentMessageCount > lastMessageCount;
     
-    // Also check if content is actively streaming (last message is in_progress)
-    const isActivelyStreaming = currentTurns.length > 0 && 
-      currentTurns[currentTurns.length - 1].status === 'in_progress';
+    // Check if content is growing (streaming)
+    const contentIsGrowing = currentContentLength > lastContentLength;
     
     if (scrollContainer && currentMessageCount > 0) {
       // Scenario A: Initial load or refresh - snap to bottom
@@ -77,8 +86,8 @@
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
         isUserScrolling = false;
       }
-      // Scenario B: New messages or streaming content and user is at bottom - auto-scroll
-      else if ((hasNewMessages || isActivelyStreaming) && !isUserScrolling) {
+      // Scenario B: New messages or streaming content and user is NOT scrolling - auto-scroll
+      else if ((hasNewMessages || contentIsGrowing) && !isUserScrolling) {
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
       // Scenario C: User is scrolling up - don't interfere
@@ -86,6 +95,7 @@
     }
     
     lastMessageCount = currentMessageCount;
+    lastContentLength = currentContentLength;
   });
   
   // Load SuperJournal history and set up polling
