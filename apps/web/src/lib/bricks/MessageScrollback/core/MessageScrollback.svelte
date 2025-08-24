@@ -286,7 +286,7 @@
     padding-top: 20px;
     padding-bottom: 20px;
     padding-right: 16px;
-    padding-left: 20px;
+    padding-left: 0;
   }
   
   /* Individual message - from scrollback.layout.message */
