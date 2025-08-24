@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { stateBus } from '$lib/buses';
+  import { stateBus, eventBus } from '$lib/buses';
   import type { MessageTurnState, MessageTurn } from './types';
   import type { JournalEntry } from '$lib/bricks/SuperJournalBrick/core/types';
   import MarkdownRenderer from './MarkdownRenderer.svelte';
@@ -9,6 +9,7 @@
   let historicalTurns = $state<MessageTurn[]>([]);  // From SuperJournal
   let messageTurnState = $state<MessageTurnState | undefined>(undefined);
   let isLoadingHistory = $state(true);  // Loading state
+  let hoveredTurnId = $state<string | null>(null);  // Track which message pair is hovered
   
   // Get live turns from MessageTurnBrick
   let liveTurns = $derived(messageTurnState?.turns || []);
@@ -231,12 +232,58 @@
       console.log('📜 Background fetch failed:', error);
     }
   }
+  
+  // Handle delete action
+  function handleDelete(turnId: string) {
+    // Remove from historical turns
+    historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
+    
+    // Also remove from live turns if present
+    if (messageTurnState) {
+      const updatedTurns = messageTurnState.turns.filter(turn => turn.id !== turnId);
+      stateBus.set('messageTurn', {
+        ...messageTurnState,
+        turns: updatedTurns
+      });
+    }
+    
+    // Publish event for other components
+    eventBus.publish('message:deleted', { turnId });
+    
+    // Clear hover state
+    hoveredTurnId = null;
+  }
+  
+  // Handle copy action
+  async function handleCopy(content: string) {
+    try {
+      await navigator.clipboard.writeText(content);
+      
+      // Show subtle feedback
+      eventBus.publish('notification:show', {
+        message: 'Copied to clipboard',
+        type: 'success',
+        duration: 2000
+      });
+    } catch (error) {
+      console.error('Failed to copy:', error);
+      eventBus.publish('notification:show', {
+        message: 'Failed to copy',
+        type: 'error',
+        duration: 2000
+      });
+    }
+  }
 </script>
 
 <div class="scrollback-container" bind:this={scrollContainer} onscroll={handleScroll}>
   <div class="messages">
     {#each visibleTurns() as turn}
-      <div class="message-turn">
+      <div 
+        class="message-turn"
+        onmouseenter={() => hoveredTurnId = turn.id}
+        onmouseleave={() => hoveredTurnId = null}
+      >
         {#if turn.bossMessage}
           <div class="message">
             <div class="message-header">
@@ -249,13 +296,38 @@
         {/if}
         
         {#if turn.samaraMessage}
-          <div class="message">
+          <div class="message samara-message">
             <div class="message-header">
               <span class="role-label samara">Samara</span>
             </div>
             <div class="message-content">
               <MarkdownRenderer content={turn.samaraMessage.content} speaker="samara" />
             </div>
+            
+            <!-- Professional action icons -->
+            {#if hoveredTurnId === turn.id}
+              <div class="action-icons">
+                <button 
+                  class="action-icon"
+                  onclick={() => handleCopy(turn.samaraMessage.content)}
+                  aria-label="Copy message"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="5.5" y="5.5" width="8" height="8" rx="1"/>
+                    <path d="M10.5 5.5V3.5C10.5 2.94772 10.0523 2.5 9.5 2.5H3.5C2.94772 2.5 2.5 2.94772 2.5 3.5V9.5C2.5 10.0523 2.94772 10.5 3.5 10.5H5.5"/>
+                  </svg>
+                </button>
+                <button 
+                  class="action-icon"
+                  onclick={() => handleDelete(turn.id)}
+                  aria-label="Delete message"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>
+                  </svg>
+                </button>
+              </div>
+            {/if}
           </div>
         {/if}
       </div>
@@ -344,6 +416,80 @@
     color: #f97316;
     background: rgba(249, 115, 22, 0.2);
     border-color: rgba(249, 115, 22, 0.3);
+  }
+  
+  /* Message turn container */
+  .message-turn {
+    position: relative;
+  }
+  
+  /* Samara message - needed for positioning icons */
+  .samara-message {
+    position: relative;
+  }
+  
+  /* Professional action icons container */
+  .action-icons {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    gap: 4px;
+    padding: 6px 8px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    animation: fadeIn 0.2s ease-out;
+    transform: translateY(4px);
+  }
+  
+  /* Individual action buttons */
+  .action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+  
+  .action-icon:hover {
+    color: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+  }
+  
+  .action-icon:active {
+    transform: scale(0.95);
+  }
+  
+  /* Icon SVGs */
+  .action-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  
+  /* Fade in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(4px);
+    }
   }
   
   /* Empty state */
