@@ -7,6 +7,7 @@
   // State - matching MessageScrollback exactly
   let deletedMessages = $state<DeletedMessage[]>([]);
   let hoveredTurnId = $state<string | null>(null);
+  let isLoadingHistory = $state(true);
   
   // Refs
   let scrollContainer: HTMLDivElement;
@@ -17,6 +18,7 @@
     // Listen for recycle bin data
     eventBus.subscribe('recyclebin:data', (data: any) => {
       deletedMessages = data.messages || [];
+      isLoadingHistory = false;
       console.log(`📜 RecycleBinScrollback: Received ${deletedMessages.length} deleted messages`);
     });
     
@@ -59,133 +61,155 @@
 
 <div class="scrollback-container" bind:this={scrollContainer}>
   <div class="messages">
-    {#if deletedMessages.length === 0}
+    {#each deletedMessages as message}
+      <div 
+        class="message-turn"
+        onmouseenter={() => hoveredTurnId = message.turnId}
+        onmouseleave={() => hoveredTurnId = null}
+      >
+        <!-- Show deletion timestamp subtly -->
+        <div style="font-size: 10px; color: rgba(255, 255, 255, 0.2); margin-bottom: 16px; margin-left: 19px;">
+          Deleted: {formatTimestamp(message.timestamp)}
+        </div>
+        
+        {#if message.userMessage}
+          <div class="message">
+            <div class="message-header">
+              <span class="role-label boss">Boss</span>
+            </div>
+            <div class="message-content">
+              <MarkdownRenderer content={message.userMessage} speaker="boss" />
+            </div>
+          </div>
+        {/if}
+        
+        {#if message.assistantMessage}
+          <div class="message samara-message">
+            <div class="message-header">
+              <span class="role-label samara">{getPersonaName(message.persona)}</span>
+            </div>
+            <div class="message-content">
+              <MarkdownRenderer content={message.assistantMessage} speaker="samara" />
+            </div>
+            
+            <!-- Professional action icons -->
+            {#if hoveredTurnId === message.turnId}
+              <div class="action-icons">
+                <button 
+                  class="action-icon"
+                  onclick={() => handleRestore(message.turnId)}
+                  aria-label="Restore message"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M2 8a6 6 0 0 1 10.39-4.1"/>
+                    <polyline points="12 2 12 6 8 6"/>
+                    <path d="M14 8a6 6 0 0 1-10.39 4.1"/>
+                    <polyline points="4 14 4 10 8 10"/>
+                  </svg>
+                </button>
+              </div>
+            {/if}
+          </div>
+        {/if}
+      </div>
+    {/each}
+    
+    {#if isLoadingHistory}
+      <div class="loading-state">
+        Loading deleted messages...
+      </div>
+    {:else if deletedMessages.length === 0}
       <div class="empty-state">
         No deleted messages
       </div>
-    {:else}
-      {#each deletedMessages as message}
-        <div 
-          class="message-turn"
-          onmouseenter={() => hoveredTurnId = message.turnId}
-          onmouseleave={() => hoveredTurnId = null}
-        >
-          <!-- Show deletion timestamp -->
-          <div style="font-size: 11px; color: rgba(255, 255, 255, 0.3); margin-bottom: 8px;">
-            Deleted: {formatTimestamp(message.timestamp)}
-          </div>
-          
-          <!-- Boss message -->
-          {#if message.userMessage}
-            <div class="message">
-              <div class="message-header">
-                <span class="role-label boss">Boss</span>
-              </div>
-              <div class="message-content">
-                <MarkdownRenderer content={message.userMessage} speaker="boss" />
-              </div>
-            </div>
-          {/if}
-          
-          <!-- Assistant message with persona name -->
-          {#if message.assistantMessage}
-            <div class="message samara-message">
-              <div class="message-header">
-                <span class="role-label samara">{getPersonaName(message.persona)}</span>
-              </div>
-              <div class="message-content">
-                <MarkdownRenderer content={message.assistantMessage} speaker="samara" />
-              </div>
-              
-              <!-- Restore action icon - matching delete/copy style exactly -->
-              {#if hoveredTurnId === message.turnId}
-                <div class="action-icons">
-                  <button 
-                    class="action-icon"
-                    onclick={() => handleRestore(message.turnId)}
-                    aria-label="Restore message"
-                    title="Restore this message"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                      <path d="M2 8a6 6 0 0 1 10.39-4.1"/>
-                      <polyline points="12 2 12 6 8 6"/>
-                      <path d="M14 8a6 6 0 0 1-10.39 4.1"/>
-                      <polyline points="4 14 4 10 8 10"/>
-                    </svg>
-                  </button>
-                </div>
-              {/if}
-            </div>
-          {/if}
-        </div>
-      {/each}
     {/if}
   </div>
 </div>
 
 <style>
-  /* Import exact styles from MessageScrollback */
+  /* Container - from rainy-night.json scrollback.layout.container */
   .scrollback-container {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 20px 100px 20px;
-    scroll-behavior: smooth;
-  }
-  
-  .messages {
-    max-width: 800px;
+    height: calc(100vh - 114px);
+    width: 650px;
+    max-width: calc(100vw - 40px);
     margin: 0 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: transparent;
   }
   
-  .message-turn {
-    margin-bottom: 32px;
-    position: relative;
+  @media (min-width: 705px) {
+    .scrollback-container {
+      width: 800px;
+    }
   }
   
+  /* Messages area - from scrollback.layout.messages */
+  .messages {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 16px;
+    padding-left: 0;
+  }
+  
+  /* Individual message - from scrollback.layout.message */
   .message {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 8px;
+    margin-bottom: 32px;
+    padding-right: 3px;
   }
   
-  .samara-message {
-    position: relative;
-  }
-  
+  /* Message header - from scrollback.layout.messageHeader */
   .message-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   
+  /* Message content - from scrollback.layout.messageContent & scrollback.typography */
+  .message-content {
+    margin-left: 19px;
+    color: #DFD0B8;
+    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+  
+  /* Role labels - from scrollback.roleLabel */
   .role-label {
+    padding: 2px 8px;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    padding: 2px 6px;
     border-radius: 4px;
+    display: inline-block;
+    border: 1px solid;
   }
   
+  /* Boss label - from scrollback.roleLabel.user */
   .role-label.boss {
-    background: rgba(100, 150, 255, 0.15);
-    color: rgba(140, 180, 255, 0.9);
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.3);
   }
   
+  /* Samara label - from scrollback.roleLabel.assistant */
   .role-label.samara {
-    background: rgba(255, 180, 100, 0.15);
-    color: rgba(255, 200, 140, 0.9);
+    color: #f97316;
+    background: rgba(249, 115, 22, 0.2);
+    border-color: rgba(249, 115, 22, 0.3);
   }
   
-  .message-content {
-    color: rgba(223, 208, 184, 0.95);
-    line-height: 1.6;
-    font-size: 14px;
+  /* Message turn container */
+  .message-turn {
+    position: relative;
   }
   
-  /* Action icons - exact copy from MessageScrollback */
+  /* Samara message - needed for positioning icons */
+  .samara-message {
+    position: relative;
+  }
+  
+  /* Professional action icons container */
   .action-icons {
     position: absolute;
     bottom: 0;
@@ -202,6 +226,7 @@
     transform: translateY(4px);
   }
   
+  /* Individual action buttons */
   .action-icon {
     display: flex;
     align-items: center;
@@ -228,6 +253,7 @@
     transform: scale(0.95);
   }
   
+  /* Icon SVGs */
   .action-icon svg {
     width: 16px;
     height: 16px;
@@ -235,6 +261,7 @@
     stroke-linejoin: round;
   }
   
+  /* Fade in animation */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -251,6 +278,14 @@
     text-align: center;
     padding: 80px 20px;
     color: rgba(255, 255, 255, 0.3);
+    font-size: 14px;
+  }
+  
+  /* Loading state */
+  .loading-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: rgba(255, 255, 255, 0.5);
     font-size: 14px;
   }
 </style>
