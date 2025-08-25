@@ -36,6 +36,11 @@ class ThemeApplier {
       rootElement.style.setProperty(cssVar, value);
     });
     
+    // Mark theme as ready after applying variables
+    requestAnimationFrame(() => {
+      document.documentElement.classList.add('theme-ready');
+    });
+    
     console.log(`ThemeApplier: Applied ${Object.keys(cssVariables).length} CSS variables`);
   }
 

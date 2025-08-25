@@ -40,10 +40,7 @@
   let service: InputBarService;
 
   onMount(async () => {
-    // Small delay to ensure styles are loaded
-    await new Promise(resolve => setTimeout(resolve, 10));
-    
-    // Set text content to prevent flicker
+    // Set text content immediately - no delay needed with FOUC prevention
     placeholderText = 'Type a message...';
     selectedModel = 'claude-sonnet-4-20250514';
     selectedPersona = 'user';
@@ -325,8 +322,16 @@
   function selectTheme(themeId: string) {
     selectedTheme = themeId;
     showThemeDropdown = false;
+    
+    // Set cookie for SSR persistence (prevents FOUC on reload)
+    document.cookie = `selected-theme=${themeId};path=/;max-age=31536000;SameSite=Lax`;
+    
+    // Update data attribute
+    document.documentElement.setAttribute('data-theme', themeId);
+    
     // Publish change event for persistence
     eventBus.publish('selection:theme:changed', { theme: themeId });
+    
     // Restore focus to input after dropdown interaction
     focusInputBar();
   }
@@ -535,8 +540,6 @@
     width: {layout?.container.dimensions.defaultWidth};
     max-width: {layout?.container.dimensions.maxWidth};
     z-index: {layout?.container.positioning.zIndex};
-    opacity: {isReady ? '1' : '0'};
-    transition: opacity 0.2s ease;
   "
 >
   <!-- File Preview Zone - Outside Input Bar -->
@@ -639,7 +642,6 @@
       box-shadow: {theme?.inputBar.shadow.outer}, {theme?.inputBar.shadow.inner};
       padding: {layout?.container.spacing.padding};
       gap: {layout?.container.spacing.gridGap};
-      transition: {layout?.animation.globalTransition};
     "
   >
     

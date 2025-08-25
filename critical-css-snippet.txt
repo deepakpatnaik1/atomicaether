@@ -1,0 +1,58 @@
+  /* CRITICAL CSS - Prevents FOUC */
+  /* Auto-generated from theme - do not edit manually */
+  :root {
+    /* Theme variables for immediate render */
+    --app-background: #222831;
+    --app-color: #e0e0e0;
+    --input-bar-background: rgba(0, 0, 0, 0.85);
+    --input-bar-backdrop: blur(20px);
+    --input-bar-radius: 9px;
+    --input-bar-border-width: 2px;
+    --input-bar-border-style: solid;
+    --input-bar-gradient-top: rgba(255, 255, 255, 0.3);
+    --input-bar-gradient-bottom: rgba(255, 255, 255, 0.1);
+    --text-input-color: #DFD0B8;
+    --text-input-placeholder: rgba(223, 208, 184, 0.6);
+    --dropdown-trigger-color: rgba(223, 208, 184, 0.7);
+    --chevron-color: rgba(223, 208, 184, 0.5);
+    --plus-icon-color: rgba(223, 208, 184, 0.7);
+    --status-indicator-color: #00ff00;
+    --spacing-micro: 4px;
+    --spacing-tiny: 6px;
+    --spacing-small: 8px;
+    --spacing-compact: 12px;
+    --spacing-medium: 16px;
+    --borders-width-subtle: 1.5px;
+    --borders-radius-small: 4px;
+    --borders-radius-medium: 6px;
+    --typography-font-family-system: system-ui, -apple-system, sans-serif;
+    --typography-font-size-small: 12px;
+    --typography-font-size-medium: 14px;
+    --effects-opacity-muted: 0.6;
+    --effects-transitions-quick: all 0.2s ease;
+    
+    /* FOUC prevention */
+    --app-initial-opacity: 0;
+  }
+  
+  /* Prevent FOUC - hide until theme loads */
+  html:not(.theme-ready) {
+    opacity: 0;
+  }
+  
+  html {
+    transition: opacity 0.15s ease-out;
+  }
+  
+  html.theme-ready {
+    opacity: 1;
+  }
+  
+  /* Immediate body styles */
+  body {
+    background: var(--app-background);
+    color: var(--app-color);
+    margin: 0;
+    padding: 0;
+    font-family: var(--typography-font-family-system);
+  }

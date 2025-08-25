@@ -1,0 +1,82 @@
+import { writable, derived } from 'svelte/store';
+import { browser } from '$app/environment';
+
+// Theme state
+export const currentTheme = writable<string>('rainy-night');
+export const themeLoading = writable<boolean>(true);
+export const themeError = writable<string | null>(null);
+
+// Theme persistence
+export function setTheme(theme: string) {
+  currentTheme.set(theme);
+  
+  if (browser) {
+    // Set cookie for SSR
+    document.cookie = `selected-theme=${theme};path=/;max-age=31536000;SameSite=Lax`;
+    
+    // Update data attribute
+    document.documentElement.setAttribute('data-theme', theme);
+    
+    // Reload theme (you'll need to implement this based on your theme loader)
+    loadThemeVariables(theme);
+  }
+}
+
+// Load theme variables dynamically
+async function loadThemeVariables(themeName: string) {
+  try {
+    themeLoading.set(true);
+    themeError.set(null);
+    
+    const response = await fetch(`/themes/${themeName}.json`);
+    if (!response.ok) throw new Error(`Failed to load theme: ${themeName}`);
+    
+    const theme = await response.json();
+    
+    // Apply theme variables to root
+    applyThemeVariables(theme);
+    
+    // Mark as ready
+    document.documentElement.classList.add('theme-ready');
+    
+  } catch (error) {
+    console.error('Theme loading error:', error);
+    themeError.set(error.message);
+  } finally {
+    themeLoading.set(false);
+  }
+}
+
+function applyThemeVariables(theme: any, prefix = '--', path: string[] = []) {
+  const root = document.documentElement;
+  
+  for (const [key, value] of Object.entries(theme)) {
+    if (key.startsWith('_')) continue;
+    
+    const newPath = [...path, key];
+    const cssVarName = prefix + newPath.join('-').replace(/([A-Z])/g, '-$1').toLowerCase();
+    
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      applyThemeVariables(value, prefix, newPath);
+    } else if (typeof value === 'string' || typeof value === 'number') {
+      root.style.setProperty(cssVarName, String(value));
+    }
+  }
+}
+
+// Initialize on mount
+if (browser) {
+  // Check for saved theme
+  const savedTheme = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('selected-theme='))
+    ?.split('=')[1];
+  
+  if (savedTheme) {
+    currentTheme.set(savedTheme);
+  }
+  
+  // Theme is already loaded via SSR, just mark as ready
+  document.documentElement.classList.add('theme-ready');
+  themeLoading.set(false);
+}
