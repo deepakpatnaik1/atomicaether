@@ -85,15 +85,19 @@ export class RecycleBinBrick {
       const superJournalDeleted: DeletedMessage[] = [];
       
       for (const entry of entries) {
-        if (entry.type === 'message-turn' && entry.data) {
+        // Handle both old format (bossMessage/samaraMessage) and new format
+        const userMsg = entry.userMessage || entry.bossMessage || entry.data?.userMessage || '';
+        const assistantMsg = entry.assistantMessage || entry.samaraMessage || entry.data?.assistantMessage || '';
+        
+        if (userMsg || assistantMsg) {
           const deleted: DeletedMessage = {
             turnId: entry.id,
-            userMessage: entry.data.userMessage || '',
-            assistantMessage: entry.data.assistantMessage || '',
+            userMessage: userMsg,
+            assistantMessage: assistantMsg,
             timestamp: entry.timestamp,
             deletedAt: Date.now(), // We don't have exact deletion time
-            model: entry.data.model,
-            persona: entry.data.persona
+            model: entry.model || entry.data?.model,
+            persona: entry.persona || entry.data?.persona
           };
           superJournalDeleted.push(deleted);
         }
