@@ -169,20 +169,33 @@ export const POST: RequestHandler = async ({ request }) => {
     // Load machine trim configuration
     const config = await loadMachineTrimConfig();
     
-    // Add machine trim instructions to system message
+    // Add machine trim instructions 
     let enhancedMessages = [...messages];
+    let systemPrompt = '';
+    
     if (config.enabled) {
       const machinePrompt = generateMachineTrimPrompt(config);
       
-      // Find system message or create one
-      const systemMsgIndex = enhancedMessages.findIndex(m => m.role === 'system');
-      if (systemMsgIndex !== -1) {
-        enhancedMessages[systemMsgIndex].content += machinePrompt;
+      // For Anthropic, extract system messages and combine them
+      if (model.includes('claude')) {
+        const systemMsgIndex = enhancedMessages.findIndex(m => m.role === 'system');
+        if (systemMsgIndex !== -1) {
+          systemPrompt = enhancedMessages[systemMsgIndex].content + machinePrompt;
+          enhancedMessages.splice(systemMsgIndex, 1); // Remove system message from messages array
+        } else {
+          systemPrompt = machinePrompt.trim();
+        }
       } else {
-        enhancedMessages.unshift({
-          role: 'system',
-          content: machinePrompt.trim()
-        });
+        // For OpenAI/Fireworks, add system message to messages array
+        const systemMsgIndex = enhancedMessages.findIndex(m => m.role === 'system');
+        if (systemMsgIndex !== -1) {
+          enhancedMessages[systemMsgIndex].content += machinePrompt;
+        } else {
+          enhancedMessages.unshift({
+            role: 'system',
+            content: machinePrompt.trim()
+          });
+        }
       }
     }
     
@@ -197,6 +210,18 @@ export const POST: RequestHandler = async ({ request }) => {
               // Anthropic API streaming
               const formattedMessages = formatAnthropicMessages(enhancedMessages, fileUrls);
               
+              const requestBody: any = {
+                model,
+                messages: formattedMessages,
+                max_tokens: 4096,
+                stream: true
+              };
+              
+              // Add system prompt if we have one
+              if (systemPrompt) {
+                requestBody.system = systemPrompt;
+              }
+              
               apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
                 headers: {
@@ -204,12 +229,7 @@ export const POST: RequestHandler = async ({ request }) => {
                   'x-api-key': VITE_ANTHROPIC_API_KEY,
                   'anthropic-version': '2023-06-01'
                 },
-                body: JSON.stringify({
-                  model,
-                  messages: formattedMessages,
-                  max_tokens: 4096,
-                  stream: true
-                })
+                body: JSON.stringify(requestBody)
               });
             } else if (model.includes('gpt')) {
               // OpenAI API streaming
@@ -299,6 +319,18 @@ export const POST: RequestHandler = async ({ request }) => {
       // Anthropic API
       const formattedMessages = formatAnthropicMessages(enhancedMessages, fileUrls);
       
+      const requestBody: any = {
+        model,
+        messages: formattedMessages,
+        max_tokens: 4096,
+        stream: false
+      };
+      
+      // Add system prompt if we have one
+      if (systemPrompt) {
+        requestBody.system = systemPrompt;
+      }
+      
       apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -306,12 +338,7 @@ export const POST: RequestHandler = async ({ request }) => {
           'x-api-key': VITE_ANTHROPIC_API_KEY,
           'anthropic-version': '2023-06-01'
         },
-        body: JSON.stringify({
-          model,
-          messages: formattedMessages,
-          max_tokens: 4096,
-          stream: false
-        })
+        body: JSON.stringify(requestBody)
       });
       
       if (!apiResponse.ok) {
