@@ -1,5 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import fs from 'fs/promises';
+import path from 'path';
 
 // Import environment variables server-side
 import { 
@@ -7,6 +9,60 @@ import {
   VITE_OPENAI_API_KEY,
   VITE_FIREWORKS_API_KEY
 } from '$env/static/private';
+
+// Machine trim configuration
+let machineTrimConfig: any = null;
+
+async function loadMachineTrimConfig() {
+  if (!machineTrimConfig) {
+    try {
+      const configPath = path.join(process.cwd(), '../..', 'aetherVault/config/machineTrim.json');
+      const configData = await fs.readFile(configPath, 'utf-8');
+      machineTrimConfig = JSON.parse(configData);
+    } catch (error) {
+      console.warn('Failed to load machine trim config:', error);
+      machineTrimConfig = { enabled: false };
+    }
+  }
+  return machineTrimConfig;
+}
+
+function generateMachineTrimPrompt(config: any): string {
+  if (!config.enabled) return '';
+  
+  return `
+
+=== MACHINE TRIM INSTRUCTIONS ===
+
+You must respond in JSON format with this exact structure:
+{
+  "fullResponse": "your detailed conversational response",
+  "trim": "compressed version following the format: Boss: [user message]\\nSamara: [your compressed response]",
+  "metadata": {
+    "hasDecisions": boolean,
+    "isInferable": boolean, 
+    "priority": "high|medium|low"
+  }
+}
+
+COMPRESSION RULES:
+- Preserve semantic meaning while removing redundancy
+- Use proper punctuation and sentence structure
+- Include both user message and your response in trim
+- Mark pure acknowledgments as [INFERABLE - NOT STORED]
+- Use [INFERABLE] for obvious connecting phrases only
+
+ALWAYS PRESERVE (never mark inferable):
+${config.alwaysPreserve?.map((rule: string) => `- ${rule}`).join('\n') || '- Decisions and conclusions\n- Factual information\n- Insights and realizations'}
+
+INFERABILITY GUIDELINES:
+${config.inferabilityGuidelines?.map((rule: string) => `- ${rule}`).join('\n') || '- When uncertain, preserve content'}
+
+PRIORITY HIERARCHY: Life decisions (high) > Work decisions (medium) > Technical details (low) > Social pleasantries (low)
+
+Example responses:
+${JSON.stringify(config.examples?.[0]?.expectedOutput || {}, null, 2)}`;
+}
 
 /**
  * Format messages with images for Anthropic API
@@ -110,6 +166,26 @@ export const POST: RequestHandler = async ({ request }) => {
   try {
     const { model, messages, stream, fileUrls } = await request.json();
     
+    // Load machine trim configuration
+    const config = await loadMachineTrimConfig();
+    
+    // Add machine trim instructions to system message
+    let enhancedMessages = [...messages];
+    if (config.enabled) {
+      const machinePrompt = generateMachineTrimPrompt(config);
+      
+      // Find system message or create one
+      const systemMsgIndex = enhancedMessages.findIndex(m => m.role === 'system');
+      if (systemMsgIndex !== -1) {
+        enhancedMessages[systemMsgIndex].content += machinePrompt;
+      } else {
+        enhancedMessages.unshift({
+          role: 'system',
+          content: machinePrompt.trim()
+        });
+      }
+    }
+    
     // Handle streaming requests
     if (stream) {
       const readable = new ReadableStream({
@@ -119,7 +195,7 @@ export const POST: RequestHandler = async ({ request }) => {
             
             if (model.includes('claude')) {
               // Anthropic API streaming
-              const formattedMessages = formatAnthropicMessages(messages, fileUrls);
+              const formattedMessages = formatAnthropicMessages(enhancedMessages, fileUrls);
               
               apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
@@ -137,7 +213,7 @@ export const POST: RequestHandler = async ({ request }) => {
               });
             } else if (model.includes('gpt')) {
               // OpenAI API streaming
-              const formattedMessages = formatOpenAIMessages(messages, fileUrls);
+              const formattedMessages = formatOpenAIMessages(enhancedMessages, fileUrls);
               
               // GPT-5 requires max_completion_tokens instead of max_tokens
               const useNewParam = model === 'gpt-5';
@@ -165,7 +241,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 },
                 body: JSON.stringify({
                   model,
-                  messages,
+                  messages: enhancedMessages,
                   max_tokens: 4096,
                   stream: true
                 })
@@ -221,7 +297,7 @@ export const POST: RequestHandler = async ({ request }) => {
     
     if (model.includes('claude')) {
       // Anthropic API
-      const formattedMessages = formatAnthropicMessages(messages, fileUrls);
+      const formattedMessages = formatAnthropicMessages(enhancedMessages, fileUrls);
       
       apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -244,14 +320,32 @@ export const POST: RequestHandler = async ({ request }) => {
       }
       
       const data = await apiResponse.json();
+      let content = data.content[0].text;
+      
+      // Parse machine trim JSON if enabled
+      let parsedResponse = null;
+      if (config.enabled) {
+        try {
+          parsedResponse = JSON.parse(content);
+          // Validate structure
+          if (!parsedResponse.fullResponse || !parsedResponse.trim || !parsedResponse.metadata) {
+            throw new Error('Invalid machine trim JSON structure');
+          }
+        } catch (error) {
+          console.warn('Failed to parse machine trim JSON, using raw response:', error);
+          // Fallback to raw content if JSON parsing fails
+        }
+      }
+      
       return json({
-        content: data.content[0].text,
-        model: data.model
+        content,
+        model: data.model,
+        machineTrim: parsedResponse
       });
       
     } else if (model.includes('gpt')) {
       // OpenAI API
-      const formattedMessages = formatOpenAIMessages(messages, fileUrls);
+      const formattedMessages = formatOpenAIMessages(enhancedMessages, fileUrls);
       
       // GPT-5 requires max_completion_tokens instead of max_tokens
       const useNewParam = model === 'gpt-5';
@@ -276,9 +370,25 @@ export const POST: RequestHandler = async ({ request }) => {
       }
       
       const data = await apiResponse.json();
+      let content = data.choices[0].message.content;
+      
+      // Parse machine trim JSON if enabled
+      let parsedResponse = null;
+      if (config.enabled) {
+        try {
+          parsedResponse = JSON.parse(content);
+          if (!parsedResponse.fullResponse || !parsedResponse.trim || !parsedResponse.metadata) {
+            throw new Error('Invalid machine trim JSON structure');
+          }
+        } catch (error) {
+          console.warn('Failed to parse machine trim JSON, using raw response:', error);
+        }
+      }
+      
       return json({
-        content: data.choices[0].message.content,
-        model: data.model
+        content,
+        model: data.model,
+        machineTrim: parsedResponse
       });
       
     } else {
@@ -292,7 +402,7 @@ export const POST: RequestHandler = async ({ request }) => {
         },
         body: JSON.stringify({
           model,
-          messages,
+          messages: enhancedMessages,
           max_tokens: 4096,
           stream: false
         })
@@ -304,9 +414,25 @@ export const POST: RequestHandler = async ({ request }) => {
       }
       
       const data = await apiResponse.json();
+      let content = data.choices[0].message.content;
+      
+      // Parse machine trim JSON if enabled
+      let parsedResponse = null;
+      if (config.enabled) {
+        try {
+          parsedResponse = JSON.parse(content);
+          if (!parsedResponse.fullResponse || !parsedResponse.trim || !parsedResponse.metadata) {
+            throw new Error('Invalid machine trim JSON structure');
+          }
+        } catch (error) {
+          console.warn('Failed to parse machine trim JSON, using raw response:', error);
+        }
+      }
+      
       return json({
-        content: data.choices[0].message.content,
-        model: data.model
+        content,
+        model: data.model,
+        machineTrim: parsedResponse
       });
     }
     

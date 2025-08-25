@@ -1,0 +1,653 @@
+{
+  "apps/web/build-plugins/theme-injector.js": [
+    {
+      "file": "apps/web/build-plugins/theme-injector.js",
+      "line": 51,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: ${themeData.globalBody.transition",
+      "line_content": "transition: ${themeData.globalBody.transition};"
+    }
+  ],
+  "apps/web/scripts/inject-theme.js": [
+    {
+      "file": "apps/web/scripts/inject-theme.js",
+      "line": 30,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: ${themeData.globalBody.transition",
+      "line_content": "\\t\\t\\t\\ttransition: ${themeData.globalBody.transition};"
+    }
+  ],
+  "apps/web/src/app.html": [
+    {
+      "file": "apps/web/src/app.html",
+      "line": 175,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: opacity 0.15s ease-out",
+      "line_content": "transition: opacity 0.15s ease-out;"
+    },
+    {
+      "file": "apps/web/src/app.html",
+      "line": 335,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: undefined",
+      "line_content": "transition: undefined;"
+    },
+    {
+      "file": "apps/web/src/app.html",
+      "line": 166,
+      "pattern": "ease(?:-in|-out|-in-out)?(?:\\s|;|,|\\))",
+      "match": "ease;",
+      "line_content": "--effects-transitions-quick: all 0.2s ease;"
+    },
+    {
+      "file": "apps/web/src/app.html",
+      "line": 175,
+      "pattern": "ease(?:-in|-out|-in-out)?(?:\\s|;|,|\\))",
+      "match": "ease-out;",
+      "line_content": "transition: opacity 0.15s ease-out;"
+    },
+    {
+      "file": "apps/web/src/app.html",
+      "line": 171,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0;",
+      "line_content": "opacity: 0;"
+    },
+    {
+      "file": "apps/web/src/app.html",
+      "line": 179,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 1;",
+      "line_content": "opacity: 1;"
+    },
+    {
+      "file": "apps/web/src/app.html",
+      "line": 166,
+      "pattern": "--[\\w-]*(?:transition|animation|ease|duration|delay)[\\w-]*\\s*:\\s*[^;}\\n]+",
+      "match": "--effects-transitions-quick: all 0.2s ease",
+      "line_content": "--effects-transitions-quick: all 0.2s ease;"
+    }
+  ],
+  "apps/web/src/styles/shared.css": [
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 62,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: var(--effects-transitions-quick)",
+      "line_content": "transition: var(--effects-transitions-quick);"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 179,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "animation: fadeIn 0.2s ease-out",
+      "line_content": "animation: fadeIn 0.2s ease-out;"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 286,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "animation: pulse 1.5s ease-in-out infinite",
+      "line_content": "animation: pulse 1.5s ease-in-out infinite;"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 183,
+      "pattern": "@keyframes\\s+[\\w-]+\\s*\\{[^}]*\\}",
+      "match": "@keyframes fadeIn {\n  from {\n    opacity: 0;\n    transform: translateY(8px);\n  }",
+      "line_content": "@keyframes fadeIn {"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 289,
+      "pattern": "@keyframes\\s+[\\w-]+\\s*\\{[^}]*\\}",
+      "match": "@keyframes pulse {\n  0%, 100% { opacity: 0.7; }",
+      "line_content": "@keyframes pulse {"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 179,
+      "pattern": "ease(?:-in|-out|-in-out)?(?:\\s|;|,|\\))",
+      "match": "ease-out;",
+      "line_content": "animation: fadeIn 0.2s ease-out;"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 286,
+      "pattern": "ease(?:-in|-out|-in-out)?(?:\\s|;|,|\\))",
+      "match": "ease-in-out ",
+      "line_content": "animation: pulse 1.5s ease-in-out infinite;"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 70,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: var(--icons-effects-scale-hover)",
+      "line_content": "transform: var(--icons-effects-scale-hover);"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 74,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: var(--icons-effects-scale-active)",
+      "line_content": "transform: var(--icons-effects-scale-active);"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 142,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: var(--scrollback-role-label-text-transform)",
+      "line_content": "text-transform: var(--scrollback-role-label-text-transform);"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 180,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: translateY(4px)",
+      "line_content": "transform: translateY(4px);"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 186,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: translateY(8px)",
+      "line_content": "transform: translateY(8px);"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 190,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: translateY(4px)",
+      "line_content": "transform: translateY(4px);"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 185,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0;",
+      "line_content": "opacity: 0;"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 189,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 1;",
+      "line_content": "opacity: 1;"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 272,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.5;",
+      "line_content": "opacity: 0.5;"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 281,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.7;",
+      "line_content": "opacity: 0.7;"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 290,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.7;",
+      "line_content": "0%, 100% { opacity: 0.7; }"
+    },
+    {
+      "file": "apps/web/src/styles/shared.css",
+      "line": 291,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.3;",
+      "line_content": "50% { opacity: 0.3; }"
+    }
+  ],
+  "apps/web/src/routes/+page.svelte": [
+    {
+      "file": "apps/web/src/routes/+page.svelte",
+      "line": 94,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: var(--global-body-transition)",
+      "line_content": "transition: var(--global-body-transition);"
+    }
+  ],
+  "apps/web/src/lib/bricks/RecycleBinScrollback/core/RecycleBinScrollback.svelte": [
+    {
+      "file": "apps/web/src/lib/bricks/RecycleBinScrollback/core/RecycleBinScrollback.svelte",
+      "line": 23,
+      "pattern": "in:[\\w]+",
+      "match": "in:data",
+      "line_content": "eventBus.subscribe('recyclebin:data', (data: any) => {"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/RecycleBinScrollback/core/RecycleBinScrollback.svelte",
+      "line": 30,
+      "pattern": "in:[\\w]+",
+      "match": "in:request",
+      "line_content": "eventBus.publish('recyclebin:request', {});"
+    }
+  ],
+  "apps/web/src/lib/bricks/ScrollbackBrick/demo/ScrollbackDemo.svelte": [
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/demo/ScrollbackDemo.svelte",
+      "line": 355,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.5;",
+      "line_content": "opacity: 0.5;"
+    }
+  ],
+  "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte": [
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 229,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: opacity 0.2s ease",
+      "line_content": "transition: opacity 0.2s ease;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 295,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "animation: blink 1s infinite",
+      "line_content": "animation: blink 1s infinite;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 299,
+      "pattern": "@keyframes\\s+[\\w-]+\\s*\\{[^}]*\\}",
+      "match": "@keyframes blink {\n    0%, 50% { opacity: 1; }",
+      "line_content": "@keyframes blink {"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 229,
+      "pattern": "ease(?:-in|-out|-in-out)?(?:\\s|;|,|\\))",
+      "match": "ease;",
+      "line_content": "transition: opacity 0.2s ease;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 160,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: {theme?.scrollback?.roleLabel?.textTransform || 'uppercase'",
+      "line_content": "text-transform: {theme?.scrollback?.roleLabel?.textTransform || 'uppercase'};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 233,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.9;",
+      "line_content": "opacity: 0.9;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 252,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.5;",
+      "line_content": "opacity: 0.5;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 296,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.7;",
+      "line_content": "opacity: 0.7;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 300,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 1;",
+      "line_content": "0%, 50% { opacity: 1; }"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 301,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0;",
+      "line_content": "51%, 100% { opacity: 0; }"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 313,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.5;",
+      "line_content": "opacity: 0.5;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/ScrollbackBrick/ui/ScrollbackUI.svelte",
+      "line": 319,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.5;",
+      "line_content": "opacity: 0.5;"
+    }
+  ],
+  "apps/web/src/lib/bricks/RecycleBinBrick/core/RecycleBinBrick.ts": [
+    {
+      "file": "apps/web/src/lib/bricks/RecycleBinBrick/core/RecycleBinBrick.ts",
+      "line": 46,
+      "pattern": "in:[\\w]+",
+      "match": "in:request",
+      "line_content": "this.eventBus.subscribe('recyclebin:request', () => {"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/RecycleBinBrick/core/RecycleBinBrick.ts",
+      "line": 216,
+      "pattern": "in:[\\w]+",
+      "match": "in:data",
+      "line_content": "this.eventBus.publish('recyclebin:data', {"
+    }
+  ],
+  "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte": [
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 664,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: {layout?.animation.inputResize",
+      "line_content": "transition: {layout?.animation.inputResize};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 681,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: {layout?.animation.hoverTransition",
+      "line_content": "transition: {layout?.animation.hoverTransition};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 703,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: {layout?.animation.hoverTransition",
+      "line_content": "transition: {layout?.animation.hoverTransition};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 751,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: {layout?.animation.hoverTransition",
+      "line_content": "transition: {layout?.animation.hoverTransition};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 790,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: {layout?.animation.hoverTransition",
+      "line_content": "transition: {layout?.animation.hoverTransition};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 838,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: {layout?.animation.hoverTransition",
+      "line_content": "transition: {layout?.animation.hoverTransition};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 863,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: {layout?.animation.hoverTransition",
+      "line_content": "transition: {layout?.animation.hoverTransition};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 911,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: {layout?.animation.hoverTransition",
+      "line_content": "transition: {layout?.animation.hoverTransition};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1082,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: var(--effects-transitions-quick)",
+      "line_content": "transition: var(--effects-transitions-quick);"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 723,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "animation: slideUp {layout?.animation.dropdownAnimation",
+      "line_content": "animation: slideUp {layout?.animation.dropdownAnimation} ease;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 810,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "animation: slideUp {layout?.animation.dropdownAnimation",
+      "line_content": "animation: slideUp {layout?.animation.dropdownAnimation} ease;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 883,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "animation: slideUp {layout?.animation.dropdownAnimation",
+      "line_content": "animation: slideUp {layout?.animation.dropdownAnimation} ease;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1125,
+      "pattern": "@keyframes\\s+[\\w-]+\\s*\\{[^}]*\\}",
+      "match": "@keyframes slideUp {\n    from {\n      opacity: 0;\n      transform: translateY(10px);\n    }",
+      "line_content": "@keyframes slideUp {"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 723,
+      "pattern": "ease(?:-in|-out|-in-out)?(?:\\s|;|,|\\))",
+      "match": "ease;",
+      "line_content": "animation: slideUp {layout?.animation.dropdownAnimation} ease;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 810,
+      "pattern": "ease(?:-in|-out|-in-out)?(?:\\s|;|,|\\))",
+      "match": "ease;",
+      "line_content": "animation: slideUp {layout?.animation.dropdownAnimation} ease;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 883,
+      "pattern": "ease(?:-in|-out|-in-out)?(?:\\s|;|,|\\))",
+      "match": "ease;",
+      "line_content": "animation: slideUp {layout?.animation.dropdownAnimation} ease;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 944,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: translateX(-50%)",
+      "line_content": "transform: translateX(-50%);"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1055,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: translateY(-50%)",
+      "line_content": "transform: translateY(-50%);"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1063,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: translateX(-50%)",
+      "line_content": "transform: translateX(-50%);"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1095,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: rotate(45deg)",
+      "line_content": "transform: rotate(45deg);"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1106,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: rotate(45deg)",
+      "line_content": "transform: rotate(45deg);"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1128,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: translateY(10px)",
+      "line_content": "transform: translateY(10px);"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1132,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: translateY(0)",
+      "line_content": "transform: translateY(0);"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1173,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: uppercase",
+      "line_content": "text-transform: uppercase;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 580,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "Opacity : 1}",
+      "line_content": "opacity: {uploadProgress[index] < 100 ? theme?.filePreviewZone.image.uploadingOpacity : 1};"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 765,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0.6;",
+      "line_content": "opacity: 0.6;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1127,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 0;",
+      "line_content": "opacity: 0;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1131,
+      "pattern": "opacity\\s*:\\s*[\\d.]+\\s*[;}\\n]",
+      "match": "opacity: 1;",
+      "line_content": "opacity: 1;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1214,
+      "pattern": "will-change\\s*:\\s*[^;}\\n]+",
+      "match": "will-change: opacity",
+      "line_content": "will-change: opacity;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/InputBarUI.svelte",
+      "line": 1221,
+      "pattern": "will-change\\s*:\\s*[^;}\\n]+",
+      "match": "will-change: opacity",
+      "line_content": "will-change: opacity;"
+    }
+  ],
+  "apps/web/src/lib/bricks/InputBarUI/core/types.ts": [
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/types.ts",
+      "line": 114,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "Transition: string",
+      "line_content": "hoverTransition: string;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/types.ts",
+      "line": 115,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "Transition: string",
+      "line_content": "globalTransition: string;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/types.ts",
+      "line": 278,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: string",
+      "line_content": "transition: string;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/types.ts",
+      "line": 112,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "animation: {",
+      "line_content": "animation: {"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/types.ts",
+      "line": 116,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "Animation: string",
+      "line_content": "dropdownAnimation: string;"
+    },
+    {
+      "file": "apps/web/src/lib/bricks/InputBarUI/core/types.ts",
+      "line": 158,
+      "pattern": "animation\\s*:\\s*[^;}\\n]+",
+      "match": "animation: {",
+      "line_content": "animation: {"
+    }
+  ],
+  "apps/web/src/lib/components/MessageScrollback/MessageScrollback.svelte": [
+    {
+      "file": "apps/web/src/lib/components/MessageScrollback/MessageScrollback.svelte",
+      "line": 246,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: {theme?.scrollback?.roleLabel?.textTransform || 'uppercase'",
+      "line_content": "text-transform: {theme?.scrollback?.roleLabel?.textTransform || 'uppercase'};"
+    }
+  ],
+  "apps/web/src/lib/components/ThemePickerUI/ThemePickerUI.svelte": [
+    {
+      "file": "apps/web/src/lib/components/ThemePickerUI/ThemePickerUI.svelte",
+      "line": 180,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: var(--effects-transitions-quick)",
+      "line_content": "transition: var(--effects-transitions-quick);"
+    },
+    {
+      "file": "apps/web/src/lib/components/ThemePickerUI/ThemePickerUI.svelte",
+      "line": 219,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: var(--effects-transitions-quick)",
+      "line_content": "transition: var(--effects-transitions-quick);"
+    },
+    {
+      "file": "apps/web/src/lib/components/ThemePickerUI/ThemePickerUI.svelte",
+      "line": 255,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: var(--effects-transitions-quick)",
+      "line_content": "transition: var(--effects-transitions-quick);"
+    },
+    {
+      "file": "apps/web/src/lib/components/ThemePickerUI/ThemePickerUI.svelte",
+      "line": 224,
+      "pattern": "transform\\s*:\\s*[^;}\\n]+",
+      "match": "transform: rotate(180deg)",
+      "line_content": "transform: rotate(180deg);"
+    }
+  ],
+  "apps/web/src/routes/recyclebin/+page.svelte": [
+    {
+      "file": "apps/web/src/routes/recyclebin/+page.svelte",
+      "line": 67,
+      "pattern": "transition\\s*:\\s*[^;}\\n]+",
+      "match": "transition: var(--global-body-transition)",
+      "line_content": "transition: var(--global-body-transition);"
+    },
+    {
+      "file": "apps/web/src/routes/recyclebin/+page.svelte",
+      "line": 35,
+      "pattern": "in:[\\w]+",
+      "match": "in:request",
+      "line_content": "eventBus.publish('recyclebin:request', {});"
+    }
+  ]
+}

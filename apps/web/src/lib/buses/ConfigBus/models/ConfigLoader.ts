@@ -24,6 +24,9 @@ export class RuntimeConfigLoader implements ConfigLoader {
         const url = `${this.basePath}/${path}.json`;
         
         try {
+            if (path.includes('theme')) {
+                console.log(`🎨 [RUNTIME] Fetching: ${url}`);
+            }
             const response = await fetch(url);
             
             if (!response.ok) {
@@ -75,6 +78,9 @@ export class BuildTimeConfigLoader implements ConfigLoader {
         try {
             // Dynamic import from aetherVault
             // Vite will bundle these at build time
+            if (path.includes('theme')) {
+                console.log(`🎨 [BUILD-TIME] Importing: ../../../../../aetherVault/config/${path}.json`);
+            }
             const module = await import(`../../../../../aetherVault/config/${path}.json`);
             
             // Handle both default export and direct export

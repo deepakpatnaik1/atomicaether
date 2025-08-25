@@ -65,11 +65,17 @@ export class ConfigBus {
     ): Promise<ConfigValue<K>> {
         // Check cache unless force reload requested
         if (!options.forceReload && this.cache.has(key)) {
+            if (String(key).includes('theme')) {
+                console.log(`🎨 [CONFIG] Theme "${key}" loaded from CACHE`);
+            }
             return this.cache.get(key)!;
         }
         
         try {
             // Load the configuration
+            if (String(key).includes('theme')) {
+                console.log(`🎨 [CONFIG] Reading config: ${key}`);
+            }
             const config = await this.loader.load<ConfigValue<K>>(String(key));
             
             // Cache the result
