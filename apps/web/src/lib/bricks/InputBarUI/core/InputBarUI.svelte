@@ -546,10 +546,10 @@
       style="
         background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
         border-radius: {theme?.filePreviewZone.border.radius || '6px'};
-        padding: {layout?.filePreviewZone.spacing.padding || '12px'};
+        padding: {theme?.filePreviewZone.spacing.padding || '12px'};
         border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
-        gap: {layout?.filePreviewZone.spacing.itemGap || '8px'};
-        margin-bottom: 12px;
+        gap: {theme?.filePreviewZone.spacing.itemGap || '8px'};
+        margin-bottom: {theme?.filePreviewZone.spacing.marginBottom || '12px'};
         backdrop-filter: {theme?.inputBar.background.backdropFilter || 'blur(20px)'};
       "
     >
@@ -559,9 +559,9 @@
           style="
             background: {theme?.filePreviewZone.filePreview.background || 'rgba(0, 0, 0, 0.3)'};
             border-radius: {theme?.filePreviewZone.filePreview.borderRadius || '6px'};
-            padding: {layout?.filePreviewZone.filePreview.padding || '8px'};
-            min-width: {layout?.filePreviewZone.filePreview.minWidth || '80px'};
-            max-width: {layout?.filePreviewZone.filePreview.maxWidth || '120px'};
+            padding: {theme?.filePreviewZone.filePreview.padding || '8px'};
+            min-width: {theme?.filePreviewZone.filePreview.minWidth || '80px'};
+            max-width: {theme?.filePreviewZone.filePreview.maxWidth || '120px'};
             position: relative;
           "
         >
@@ -572,10 +572,10 @@
               style="
                 width: 100%;
                 height: auto;
-                border-radius: 4px;
-                max-height: 80px;
-                opacity: {uploadProgress[index] < 100 ? 0.5 : 1};
-                object-fit: cover;
+                border-radius: {theme?.filePreviewZone.image.borderRadius || '4px'};
+                max-height: {theme?.filePreviewZone.image.maxHeight || '80px'};
+                opacity: {uploadProgress[index] < 100 ? (theme?.filePreviewZone.image.uploadingOpacity || '0.5') : 1};
+                object-fit: {theme?.filePreviewZone.image.objectFit || 'cover'};
               "
             />
           {:else}
@@ -583,14 +583,14 @@
               class="file-icon"
               style="
                 width: 100%;
-                height: 60px;
+                height: {theme?.filePreviewZone.fileIcon.height || '60px'};
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 4px;
-                color: #fff;
-                font-size: 24px;
+                background: {theme?.filePreviewZone.fileIcon.background || 'rgba(255, 255, 255, 0.1)'};
+                border-radius: {theme?.filePreviewZone.fileIcon.borderRadius || '4px'};
+                color: {theme?.filePreviewZone.fileIcon.color || '#fff'};
+                font-size: {theme?.filePreviewZone.fileIcon.fontSize || '24px'};
               "
             >📄</div>
           {/if}
@@ -598,9 +598,9 @@
             class="file-name"
             style="
               display: block;
-              margin-top: 4px;
-              font-size: 10px;
-              color: rgba(255, 255, 255, 0.8);
+              margin-top: {theme?.filePreviewZone.fileName.marginTop || '4px'};
+              font-size: {theme?.filePreviewZone.fileName.fontSize || '10px'};
+              color: {theme?.filePreviewZone.fileName.color || 'rgba(255, 255, 255, 0.8)'};
               text-align: center;
               word-break: break-all;
               line-height: 1.2;
@@ -611,10 +611,10 @@
             onclick={() => removeFile(index)}
             style="
               position: absolute;
-              width: {layout?.filePreviewZone.removeButton.size || '20px'};
-              height: {layout?.filePreviewZone.removeButton.size || '20px'};
-              top: {layout?.filePreviewZone.removeButton.position.top || '-4px'};
-              right: {layout?.filePreviewZone.removeButton.position.right || '-4px'};
+              width: {theme?.filePreviewZone.removeButton.size || '20px'};
+              height: {theme?.filePreviewZone.removeButton.size || '20px'};
+              top: {theme?.filePreviewZone.removeButton.position.top || '-4px'};
+              right: {theme?.filePreviewZone.removeButton.position.right || '-4px'};
               background: {theme?.filePreviewZone.removeButton.background || 'rgba(255, 0, 0, 0.8)'};
             "
           >×</button>
@@ -982,11 +982,11 @@
 
   .remove-file {
     position: absolute;
-    border-radius: 50%;
-    color: white;
+    border-radius: var(--file-preview-zone-remove-button-border-radius);
+    color: var(--file-preview-zone-remove-button-color);
     border: none;
     cursor: pointer;
-    font-size: 12px;
+    font-size: var(--file-preview-zone-remove-button-font-size);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1008,7 +1008,7 @@
   }
 
   .text-input::placeholder {
-    color: rgba(223, 208, 184, 0.6);
+    color: var(--text-input-typography-placeholder-color);
   }
 
   .controls-row {
@@ -1024,8 +1024,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: var(--spacing-micro) var(--spacing-small);
+    border-radius: var(--borders-radius-small);
   }
 
   .plus-button:hover {
@@ -1042,21 +1042,21 @@
   .plus-icon::after {
     content: '';
     position: absolute;
-    background: rgba(223, 208, 184, 0.7);
+    background: var(--controls-row-plus-button-icon-color);
   }
 
   .plus-icon::before {
     top: 50%;
     left: 0;
     width: 100%;
-    height: 1.5px;
+    height: var(--borders-width-subtle);
     transform: translateY(-50%);
   }
 
   .plus-icon::after {
     top: 0;
     left: 50%;
-    width: 1.5px;
+    width: var(--borders-width-subtle);
     height: 100%;
     transform: translateX(-50%);
   }
@@ -1068,16 +1068,16 @@
   .dropdown-trigger {
     background: transparent;
     border: none;
-    color: rgba(223, 208, 184, 0.7);
-    font-size: 12px;
-    font-family: system-ui;
+    color: var(--controls-row-dropdown-trigger-color);
+    font-size: var(--typography-font-size-small);
+    font-family: var(--typography-font-family-system);
     cursor: pointer;
     display: flex;
     align-items: flex-start;
-    gap: 4px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+    gap: var(--spacing-micro);
+    padding: var(--spacing-micro) var(--spacing-small);
+    border-radius: var(--borders-radius-small);
+    transition: var(--effects-transitions-quick);
   }
 
   .dropdown-trigger:hover {
@@ -1085,22 +1085,22 @@
   }
 
   .chevron {
-    width: 8px;
-    height: 8px;
-    border: 1.5px solid transparent;
-    border-right-color: rgba(223, 208, 184, 0.5);
-    border-bottom-color: rgba(223, 208, 184, 0.5);
+    width: var(--spacing-small);
+    height: var(--spacing-small);
+    border: var(--borders-width-subtle) solid transparent;
+    border-right-color: var(--controls-row-dropdown-trigger-chevron-color);
+    border-bottom-color: var(--controls-row-dropdown-trigger-chevron-color);
     transform: rotate(45deg);
-    margin-right: 6px;
+    margin-right: var(--spacing-tiny);
     align-self: flex-start;
     background: transparent;
     box-sizing: border-box;
   }
 
   .chevron.up {
-    border: 1.5px solid transparent;
-    border-left-color: rgba(223, 208, 184, 0.5);
-    border-top-color: rgba(223, 208, 184, 0.5);
+    border: var(--borders-width-subtle) solid transparent;
+    border-left-color: var(--controls-row-dropdown-trigger-chevron-color);
+    border-top-color: var(--controls-row-dropdown-trigger-chevron-color);
     transform: rotate(45deg);
     align-self: flex-end;
     background: transparent;
@@ -1136,7 +1136,7 @@
     width: 100%;
     background: transparent;
     border: none;
-    font-family: system-ui;
+    font-family: var(--typography-font-family-system);
     text-align: left;
     cursor: pointer;
   }
@@ -1151,15 +1151,15 @@
   }
 
   .dropdown-item:first-child {
-    border-radius: 8px 8px 0 0;
+    border-radius: var(--borders-radius-medium) var(--borders-radius-medium) 0 0;
   }
 
   .dropdown-item:last-child {
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 var(--borders-radius-medium) var(--borders-radius-medium);
   }
 
   .dropdown-section {
-    margin-bottom: 8px;
+    margin-bottom: var(--spacing-small);
   }
 
   .dropdown-section:last-child {
@@ -1167,7 +1167,7 @@
   }
 
   .section-header {
-    font-weight: 600;
+    font-weight: var(--typography-font-weight-bold);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -1180,21 +1180,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 12px !important;
+    padding: var(--spacing-small) var(--spacing-compact) !important;
   }
 
   .model-name {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: var(--typography-font-size-small);
+    font-weight: var(--typography-font-weight-medium);
     flex-shrink: 0;
   }
 
   .model-id {
-    font-size: 10px;
-    opacity: 0.6;
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    font-size: var(--typography-font-size-tiny);
+    opacity: var(--effects-opacity-muted);
+    font-family: var(--typography-font-family-mono);
     text-align: right;
-    margin-left: 16px;
+    margin-left: var(--spacing-medium);
     flex-shrink: 1;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -158,51 +158,52 @@
 </div>
 
 <style>
+  /* Use dropdown theme from rainy-night.json */
   .theme-picker {
     position: relative;
     display: inline-block;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: var(--typography-font-family-system);
   }
 
+  /* Trigger button - reuse controlsRow.dropdownTrigger styling */
   .picker-trigger {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    background: var(--surface-background, #f8f9fa);
-    border: 1px solid var(--border-color, #e0e0e0);
-    border-radius: 6px;
-    font-size: 14px;
-    color: var(--text-color, #333);
+    gap: var(--spacing-tiny);
+    padding: var(--spacing-small) var(--spacing-compact);
+    background: var(--app-background);
+    border: var(--borders-style-subtle);
+    border-radius: var(--borders-radius-medium);
+    font-size: var(--typography-font-size-medium);
+    color: var(--controls-row-dropdown-trigger-color);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--effects-transitions-quick);
     min-width: 120px;
     justify-content: space-between;
   }
 
   .picker-trigger:hover:not(:disabled) {
-    background: var(--surface-hover, #f0f1f2);
-    border-color: var(--border-hover, #c0c0c0);
+    background: var(--controls-row-dropdown-trigger-background-hover);
   }
 
   .picker-trigger:focus {
-    outline: 2px solid var(--accent-color, #007acc);
+    outline: 2px solid var(--navigation-link-color);
     outline-offset: 2px;
   }
 
   .picker-trigger:disabled {
-    opacity: 0.6;
+    opacity: var(--effects-opacity-muted);
     cursor: not-allowed;
   }
 
   .compact .picker-trigger {
-    padding: 6px 10px;
-    font-size: 13px;
+    padding: var(--spacing-tiny) var(--spacing-small);
+    font-size: var(--typography-font-size-base);
     min-width: 100px;
   }
 
   .theme-icon {
-    font-size: 16px;
+    font-size: var(--typography-font-size-large);
   }
 
   .theme-name {
@@ -214,93 +215,95 @@
   }
 
   .dropdown-arrow {
-    font-size: 10px;
-    transition: transform 0.2s ease;
-    color: var(--text-secondary, #666);
+    font-size: var(--typography-font-size-tiny);
+    transition: var(--effects-transitions-quick);
+    color: var(--controls-row-dropdown-trigger-chevron-color);
   }
 
   .dropdown-arrow.rotated {
     transform: rotate(180deg);
   }
 
+  /* Dropdown menu - use dropdown.menu styling */
   .dropdown-menu {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--surface-background, white);
-    border: 1px solid var(--border-color, #e0e0e0);
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: var(--dropdown-menu-background);
+    backdrop-filter: var(--dropdown-menu-backdrop-filter);
+    -webkit-backdrop-filter: var(--dropdown-menu-backdrop-filter);
+    border: var(--dropdown-menu-border);
+    border-radius: var(--dropdown-menu-border-radius);
+    box-shadow: var(--dropdown-menu-shadow);
     z-index: 1000;
-    margin-top: 4px;
+    margin-top: var(--spacing-micro);
     max-height: 200px;
     overflow-y: auto;
   }
 
+  /* Theme options - use dropdown.item styling */
   .theme-option {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 10px 12px;
-    background: none;
+    padding: var(--spacing-small) var(--spacing-compact);
+    background: transparent;
     border: none;
     text-align: left;
     cursor: pointer;
-    transition: background-color 0.15s ease;
-    font-size: 14px;
-    color: white;
+    transition: var(--effects-transitions-quick);
+    font-size: var(--typography-font-size-medium);
+    color: var(--dropdown-item-color);
     justify-content: space-between;
   }
 
   .theme-option:hover {
-    background: var(--surface-hover, #f5f5f5);
+    background: var(--dropdown-item-background-hover);
   }
 
   .theme-option:focus {
-    background: var(--surface-hover, #f5f5f5);
+    background: var(--dropdown-item-background-hover);
     outline: none;
   }
 
   .theme-option.selected {
-    background: var(--accent-light, #e6f3ff);
-    color: var(--accent-color, #007acc);
+    background: var(--dropdown-item-background-selected);
+    color: var(--dropdown-item-color-selected);
   }
 
   .clear-option {
-    color: var(--text-secondary, #666);
+    opacity: var(--effects-opacity-subtle);
     font-style: italic;
   }
 
   .selected-indicator {
-    color: var(--accent-color, #007acc);
-    font-weight: bold;
+    color: var(--dropdown-item-color-selected);
+    font-weight: var(--typography-font-weight-bold);
   }
 
+  /* Section separator - use dropdown.sectionHeader */
   .separator {
     height: 1px;
-    background: var(--border-color, #e0e0e0);
-    margin: 4px 0;
+    background: var(--dropdown-section-header-border-bottom);
+    margin: var(--spacing-micro) 0;
   }
 
   .no-themes {
-    padding: 12px;
+    padding: var(--spacing-compact);
     text-align: center;
-    color: var(--text-secondary, #666);
+    color: var(--dropdown-item-color);
+    opacity: var(--effects-opacity-muted);
     font-style: italic;
   }
 
-  /* Dark theme support */
-  @media (prefers-color-scheme: dark) {
-    .picker-trigger {
-      background: var(--surface-background, #2d2d2d);
-      border-color: var(--border-color, #555);
-      color: var(--text-color, #e0e0e0);
-    }
-
-    .dropdown-menu {
-      background: var(--surface-background, #2d2d2d);
-      border-color: var(--border-color, #555);
-    }
+  /* Hide scrollbar for cleaner look */
+  .dropdown-menu::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .dropdown-menu {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 </style>

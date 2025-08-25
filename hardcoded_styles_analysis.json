@@ -82,19 +82,9 @@
         "value": "{theme.controlsRow.dropdownTrigger.chevron.color}"
       },
       {
-        "line": 49,
-        "declaration": "color: white;",
-        "value": "white"
-      },
-      {
         "line": 64,
         "declaration": "background: transparent;",
         "value": "transparent"
-      },
-      {
-        "line": 74,
-        "declaration": "color: rgba(223, 208, 184, 0.6);",
-        "value": "rgba(223, 208, 184, 0.6)"
       },
       {
         "line": 84,
@@ -102,44 +92,14 @@
         "value": "transparent"
       },
       {
-        "line": 108,
-        "declaration": "background: rgba(223, 208, 184, 0.7);",
-        "value": "rgba(223, 208, 184, 0.7)"
-      },
-      {
         "line": 132,
         "declaration": "background: transparent;",
         "value": "transparent"
       },
       {
-        "line": 134,
-        "declaration": "color: rgba(223, 208, 184, 0.7);",
-        "value": "rgba(223, 208, 184, 0.7)"
-      },
-      {
-        "line": 154,
-        "declaration": "color: rgba(223, 208, 184, 0.5);",
-        "value": "rgba(223, 208, 184, 0.5)"
-      },
-      {
-        "line": 155,
-        "declaration": "color: rgba(223, 208, 184, 0.5);",
-        "value": "rgba(223, 208, 184, 0.5)"
-      },
-      {
         "line": 159,
         "declaration": "background: transparent;",
         "value": "transparent"
-      },
-      {
-        "line": 165,
-        "declaration": "color: rgba(223, 208, 184, 0.5);",
-        "value": "rgba(223, 208, 184, 0.5)"
-      },
-      {
-        "line": 166,
-        "declaration": "color: rgba(223, 208, 184, 0.5);",
-        "value": "rgba(223, 208, 184, 0.5)"
       },
       {
         "line": 169,
@@ -157,11 +117,6 @@
         "line": 4,
         "declaration": "left: 50%;",
         "value": "50%"
-      },
-      {
-        "line": 90,
-        "declaration": "padding: 4px 8px;",
-        "value": "4px 8px"
       },
       {
         "line": 112,
@@ -184,21 +139,6 @@
         "value": "50%"
       },
       {
-        "line": 140,
-        "declaration": "gap: 4px;",
-        "value": "4px"
-      },
-      {
-        "line": 141,
-        "declaration": "padding: 4px 8px;",
-        "value": "4px 8px"
-      },
-      {
-        "line": 157,
-        "declaration": "right: 6px;",
-        "value": "6px"
-      },
-      {
         "line": 175,
         "declaration": "bottom: 100%;",
         "value": "100%"
@@ -209,24 +149,9 @@
         "value": "0"
       },
       {
-        "line": 225,
-        "declaration": "bottom: 8px;",
-        "value": "8px"
-      },
-      {
         "line": 229,
         "declaration": "bottom: 0;",
         "value": "0"
-      },
-      {
-        "line": 246,
-        "declaration": "padding: 8px 12px !important;",
-        "value": "8px 12px !important"
-      },
-      {
-        "line": 260,
-        "declaration": "left: 16px;",
-        "value": "16px"
       },
       {
         "line": 269,
@@ -291,29 +216,9 @@
         "value": "100%"
       },
       {
-        "line": 115,
-        "declaration": "height: 1.5px;",
-        "value": "1.5px"
-      },
-      {
-        "line": 122,
-        "declaration": "width: 1.5px;",
-        "value": "1.5px"
-      },
-      {
         "line": 123,
         "declaration": "height: 100%;",
         "value": "100%"
-      },
-      {
-        "line": 151,
-        "declaration": "width: 8px;",
-        "value": "8px"
-      },
-      {
-        "line": 152,
-        "declaration": "height: 8px;",
-        "value": "8px"
       },
       {
         "line": 177,
@@ -338,34 +243,9 @@
         "value": "1.2"
       },
       {
-        "line": 52,
-        "declaration": "font-size: 12px;",
-        "value": "12px"
-      },
-      {
         "line": 56,
         "declaration": "line-height: 1;",
         "value": "1"
-      },
-      {
-        "line": 135,
-        "declaration": "font-size: 12px;",
-        "value": "12px"
-      },
-      {
-        "line": 136,
-        "declaration": "font-family: system-ui;",
-        "value": "system-ui"
-      },
-      {
-        "line": 202,
-        "declaration": "font-family: system-ui;",
-        "value": "system-ui"
-      },
-      {
-        "line": 233,
-        "declaration": "font-weight: 600;",
-        "value": "600"
       },
       {
         "line": 234,
@@ -376,34 +256,9 @@
         "line": 235,
         "declaration": "letter-spacing: 0.5px;",
         "value": "0.5px"
-      },
-      {
-        "line": 250,
-        "declaration": "font-size: 12px;",
-        "value": "12px"
-      },
-      {
-        "line": 251,
-        "declaration": "font-weight: 500;",
-        "value": "500"
-      },
-      {
-        "line": 256,
-        "declaration": "font-size: 10px;",
-        "value": "10px"
-      },
-      {
-        "line": 258,
-        "declaration": "font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;",
-        "value": "'SF Mono', 'Monaco', 'Inconsolata', monospace"
       }
     ],
     "borders": [
-      {
-        "line": 48,
-        "declaration": "border-radius: 50%;",
-        "value": "50%"
-      },
       {
         "line": 50,
         "declaration": "border: none;",
@@ -425,44 +280,14 @@
         "value": "none"
       },
       {
-        "line": 91,
-        "declaration": "border-radius: 4px;",
-        "value": "4px"
-      },
-      {
         "line": 133,
         "declaration": "border: none;",
         "value": "none"
       },
       {
-        "line": 142,
-        "declaration": "border-radius: 4px;",
-        "value": "4px"
-      },
-      {
-        "line": 153,
-        "declaration": "border: 1.5px solid transparent;",
-        "value": "1.5px solid transparent"
-      },
-      {
-        "line": 164,
-        "declaration": "border: 1.5px solid transparent;",
-        "value": "1.5px solid transparent"
-      },
-      {
         "line": 201,
         "declaration": "border: none;",
         "value": "none"
-      },
-      {
-        "line": 217,
-        "declaration": "border-radius: 8px 8px 0 0;",
-        "value": "8px 8px 0 0"
-      },
-      {
-        "line": 221,
-        "declaration": "border-radius: 0 0 8px 8px;",
-        "value": "0 0 8px 8px"
       },
       {
         "line": 268,
@@ -639,11 +464,6 @@
         "value": "translateX(-50%)"
       },
       {
-        "line": 143,
-        "declaration": "transition: background-color 0.2s ease;",
-        "value": "background-color 0.2s ease"
-      },
-      {
         "line": 156,
         "declaration": "transform: rotate(45deg);",
         "value": "rotate(45deg)"
@@ -677,11 +497,6 @@
         "line": 234,
         "declaration": "transform: uppercase;",
         "value": "uppercase"
-      },
-      {
-        "line": 257,
-        "declaration": "opacity: 0.6;",
-        "value": "0.6"
       }
     ]
   },
@@ -761,251 +576,149 @@
   "/Users/d.patnaik/code/atomicaether/apps/web/src/lib/components/ThemePickerUI/ThemePickerUI.svelte": {
     "colors": [
       {
-        "line": 75,
-        "declaration": "box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);",
-        "value": "0 4px 12px rgba(0, 0, 0, 0.15)"
-      },
-      {
-        "line": 87,
-        "declaration": "background: none;",
-        "value": "none"
-      },
-      {
-        "line": 93,
-        "declaration": "color: white;",
-        "value": "white"
+        "line": 92,
+        "declaration": "background: transparent;",
+        "value": "transparent"
       }
     ],
     "spacing": [
       {
-        "line": 11,
-        "declaration": "gap: 6px;",
-        "value": "6px"
-      },
-      {
-        "line": 12,
-        "declaration": "padding: 8px 12px;",
-        "value": "8px 12px"
-      },
-      {
-        "line": 40,
-        "declaration": "padding: 6px 10px;",
-        "value": "6px 10px"
-      },
-      {
-        "line": 69,
+        "line": 71,
         "declaration": "top: 100%;",
         "value": "100%"
       },
       {
-        "line": 70,
+        "line": 72,
         "declaration": "left: 0;",
         "value": "0"
       },
       {
-        "line": 71,
+        "line": 73,
         "declaration": "right: 0;",
         "value": "0"
-      },
-      {
-        "line": 77,
-        "declaration": "top: 4px;",
-        "value": "4px"
-      },
-      {
-        "line": 86,
-        "declaration": "padding: 10px 12px;",
-        "value": "10px 12px"
-      },
-      {
-        "line": 124,
-        "declaration": "margin: 4px 0;",
-        "value": "4px 0"
-      },
-      {
-        "line": 128,
-        "declaration": "padding: 12px;",
-        "value": "12px"
       }
     ],
     "dimensions": [
       {
-        "line": 20,
+        "line": 22,
         "declaration": "min-width: 120px;",
         "value": "120px"
       },
       {
-        "line": 42,
+        "line": 43,
         "declaration": "min-width: 100px;",
         "value": "100px"
       },
       {
-        "line": 78,
+        "line": 82,
         "declaration": "max-height: 200px;",
         "value": "200px"
       },
       {
-        "line": 85,
+        "line": 90,
         "declaration": "width: 100%;",
         "value": "100%"
       },
       {
-        "line": 122,
+        "line": 128,
         "declaration": "height: 1px;",
         "value": "1px"
-      }
-    ],
-    "typography": [
-      {
-        "line": 5,
-        "declaration": "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;",
-        "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
       },
       {
-        "line": 16,
-        "declaration": "font-size: 14px;",
-        "value": "14px"
-      },
-      {
-        "line": 41,
-        "declaration": "font-size: 13px;",
-        "value": "13px"
-      },
-      {
-        "line": 46,
-        "declaration": "font-size: 16px;",
-        "value": "16px"
-      },
-      {
-        "line": 58,
-        "declaration": "font-size: 10px;",
-        "value": "10px"
-      },
-      {
-        "line": 92,
-        "declaration": "font-size: 14px;",
-        "value": "14px"
-      },
-      {
-        "line": 118,
-        "declaration": "font-weight: bold;",
-        "value": "bold"
+        "line": 148,
+        "declaration": "width: none;",
+        "value": "none"
       }
     ],
     "borders": [
       {
-        "line": 15,
-        "declaration": "border-radius: 6px;",
-        "value": "6px"
-      },
-      {
-        "line": 74,
-        "declaration": "border-radius: 6px;",
-        "value": "6px"
-      },
-      {
-        "line": 88,
+        "line": 93,
         "declaration": "border: none;",
         "value": "none"
       },
       {
-        "line": 103,
+        "line": 108,
         "declaration": "outline: none;",
         "value": "none"
       }
     ],
     "layout": [
       {
-        "line": 3,
+        "line": 4,
         "declaration": "position: relative;",
         "value": "relative"
       },
       {
-        "line": 4,
+        "line": 5,
         "declaration": "display: inline-block;",
         "value": "inline-block"
       },
       {
-        "line": 9,
+        "line": 11,
         "declaration": "display: flex;",
         "value": "flex"
       },
       {
-        "line": 10,
+        "line": 12,
         "declaration": "align-items: center;",
         "value": "center"
       },
       {
-        "line": 21,
+        "line": 23,
         "declaration": "justify-content: space-between;",
         "value": "space-between"
       },
       {
-        "line": 50,
+        "line": 51,
         "declaration": "flex: 1;",
         "value": "1"
       },
       {
-        "line": 53,
+        "line": 54,
         "declaration": "overflow: hidden;",
         "value": "hidden"
       },
       {
-        "line": 54,
+        "line": 55,
         "declaration": "overflow: ellipsis;",
         "value": "ellipsis"
       },
       {
-        "line": 68,
+        "line": 70,
         "declaration": "position: absolute;",
         "value": "absolute"
       },
       {
-        "line": 76,
+        "line": 80,
         "declaration": "z-index: 1000;",
         "value": "1000"
       },
       {
-        "line": 83,
+        "line": 88,
         "declaration": "display: flex;",
         "value": "flex"
       },
       {
-        "line": 84,
+        "line": 89,
         "declaration": "align-items: center;",
         "value": "center"
       },
       {
-        "line": 94,
+        "line": 99,
         "declaration": "justify-content: space-between;",
         "value": "space-between"
+      },
+      {
+        "line": 143,
+        "declaration": "display: none;",
+        "value": "none"
       }
     ],
     "effects": [
       {
-        "line": 19,
-        "declaration": "transition: all 0.2s ease;",
-        "value": "all 0.2s ease"
-      },
-      {
-        "line": 35,
-        "declaration": "opacity: 0.6;",
-        "value": "0.6"
-      },
-      {
-        "line": 59,
-        "declaration": "transition: transform 0.2s ease;",
-        "value": "transform 0.2s ease"
-      },
-      {
-        "line": 64,
+        "line": 65,
         "declaration": "transform: rotate(180deg);",
         "value": "rotate(180deg)"
-      },
-      {
-        "line": 91,
-        "declaration": "transition: background-color 0.15s ease;",
-        "value": "background-color 0.15s ease"
       }
     ]
   }
