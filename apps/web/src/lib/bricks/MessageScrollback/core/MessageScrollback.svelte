@@ -405,7 +405,7 @@
 </script>
 
 <div class="scrollback-container" bind:this={scrollContainer} onscroll={handleScroll}>
-  <div class="messages">
+  <div class="messages-area">
     {#each visibleTurns() as turn}
       <div 
         class="message-turn"
@@ -415,7 +415,7 @@
         {#if turn.bossMessage}
           <div class="message">
             <div class="message-header">
-              <span class="role-label boss">Boss</span>
+              <span class="role-label role-label-boss">Boss</span>
             </div>
             <div class="message-content">
               <MarkdownRenderer content={turn.bossMessage.content} speaker="boss" />
@@ -424,9 +424,9 @@
         {/if}
         
         {#if turn.samaraMessage}
-          <div class="message samara-message">
+          <div class="message samara-message position-relative">
             <div class="message-header">
-              <span class="role-label samara">Samara</span>
+              <span class="role-label role-label-samara">Samara</span>
             </div>
             <div class="message-content">
               <MarkdownRenderer content={turn.samaraMessage.content} speaker="samara" />
@@ -434,23 +434,23 @@
             
             <!-- Professional action icons -->
             {#if hoveredTurnId === turn.id}
-              <div class="action-icons">
+              <div class="action-icons-group">
                 <button 
-                  class="action-icon"
+                  class="icon-button"
                   onclick={() => handleCopy(turn.samaraMessage.content)}
                   aria-label="Copy message"
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="5.5" y="5.5" width="8" height="8" rx="1"/>
                     <path d="M10.5 5.5V3.5C10.5 2.94772 10.0523 2.5 9.5 2.5H3.5C2.94772 2.5 2.5 2.94772 2.5 3.5V9.5C2.5 10.0523 2.94772 10.5 3.5 10.5H5.5"/>
                   </svg>
                 </button>
                 <button 
-                  class="action-icon"
+                  class="icon-button"
                   onclick={() => handleDelete(turn.id)}
                   aria-label="Delete message"
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>
                   </svg>
                 </button>
@@ -474,185 +474,19 @@
 </div>
 
 <style>
-  /* Container - from rainy-night.json scrollback.layout.container */
-  .scrollback-container {
-    height: calc(100vh - 114px);
-    width: 650px;
-    max-width: calc(100vw - 40px);
-    margin: 0 auto;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background: transparent;
-  }
+  @import '$lib/../styles/shared.css';
   
-  @media (min-width: 705px) {
-    .scrollback-container {
-      width: 800px;
-    }
-  }
-  
-  /* Messages area - from scrollback.layout.messages */
-  .messages {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-right: 16px;
-    padding-left: 0;
-  }
-  
-  /* Individual message - from scrollback.layout.message */
+  /* Component-specific styles only */
   .message {
-    margin-bottom: 32px;
+    margin-bottom: var(--scrollback-messages-gap);
     padding-right: 3px;
   }
   
-  /* Message header - from scrollback.layout.messageHeader */
   .message-header {
     margin-bottom: 10px;
   }
   
-  /* Message content - from scrollback.layout.messageContent & scrollback.typography */
-  .message-content {
-    margin-left: 19px;
-    color: #DFD0B8;
-    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
-    font-size: 13px;
-    line-height: 1.5;
-    word-break: break-word;
-  }
-  
-  /* Role labels - from scrollback.roleLabel */
-  .role-label {
-    padding: 2px 8px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-radius: 4px;
-    display: inline-block;
-    border: 1px solid;
-  }
-  
-  /* Boss label - from scrollback.roleLabel.user */
-  .role-label.boss {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.2);
-    border-color: rgba(239, 68, 68, 0.3);
-  }
-  
-  /* Samara label - from scrollback.roleLabel.assistant */
-  .role-label.samara {
-    color: #f97316;
-    background: rgba(249, 115, 22, 0.2);
-    border-color: rgba(249, 115, 22, 0.3);
-  }
-  
-  /* Message turn container */
-  .message-turn {
-    position: relative;
-  }
-  
-  /* Samara message - needed for positioning icons */
   .samara-message {
-    position: relative;
-  }
-  
-  /* Professional action icons container */
-  .action-icons {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    display: flex;
-    gap: 4px;
-    padding: 6px 8px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    animation: fadeIn 0.2s ease-out;
-    transform: translateY(4px);
-  }
-  
-  /* Individual action buttons */
-  .action-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 50%;
-    color: rgba(255, 255, 255, 0.6);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    outline: none;
-  }
-  
-  .action-icon:hover {
-    color: rgba(255, 255, 255, 0.95);
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-  }
-  
-  .action-icon:active {
-    transform: scale(0.95);
-  }
-  
-  /* Icon SVGs */
-  .action-icon svg {
-    width: 16px;
-    height: 16px;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  
-  /* Fade in animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(4px);
-    }
-  }
-  
-  /* Empty state */
-  .empty-state {
-    text-align: center;
-    opacity: 0.5;
-    padding: 2rem;
-    color: #DFD0B8;
-    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
-    font-size: 13px;
-  }
-  
-  /* Loading state */
-  .loading-state {
-    text-align: center;
-    opacity: 0.7;
-    padding: 2rem;
-    color: #DFD0B8;
-    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
-    font-size: 13px;
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-  
-  @keyframes pulse {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 0.3; }
-  }
-  
-  /* Hide scrollbar */
-  .scrollback-container::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .scrollback-container {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    margin-bottom: var(--scrollback-messages-gap);
   }
 </style>

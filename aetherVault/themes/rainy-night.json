@@ -358,5 +358,84 @@
       "subtle": "1px solid rgba(255, 255, 255, 0.05)",
       "_styleNote": "Common border patterns"
     }
+  },
+  
+  "markdown": {
+    "_comment": "Markdown content styling",
+    "link": {
+      "color": "#007acc",
+      "_linkNote": "Blue links for visibility"
+    },
+    "code": {
+      "background": "rgba(0, 0, 0, 0.3)",
+      "borderRadius": "4px",
+      "padding": "2px 4px",
+      "fontSize": "0.9em",
+      "color": "#DFD0B8",
+      "_codeNote": "Inline code snippets"
+    },
+    "codeBlock": {
+      "background": "rgba(0, 0, 0, 0.3)",
+      "borderRadius": "6px",
+      "padding": "12px",
+      "fontSize": "13px",
+      "fontFamily": "monospace",
+      "_codeBlockNote": "Code blocks with syntax highlighting"
+    },
+    "heading": {
+      "h1": {
+        "fontSize": "1.5em",
+        "fontWeight": "600",
+        "marginBottom": "12px",
+        "marginTop": "0"
+      },
+      "h2": {
+        "fontSize": "1.3em",
+        "fontWeight": "600",
+        "marginBottom": "12px",
+        "marginTop": "0"
+      },
+      "h3": {
+        "fontSize": "1.1em",
+        "fontWeight": "600",
+        "marginBottom": "12px",
+        "marginTop": "0"
+      },
+      "_headingNote": "Heading hierarchy"
+    },
+    "list": {
+      "paddingLeft": "20px",
+      "marginBottom": "8px",
+      "marginTop": "0",
+      "_listNote": "Bullet and numbered lists"
+    },
+    "paragraph": {
+      "marginBottom": "12px",
+      "marginTop": "0",
+      "_paragraphNote": "Text paragraph spacing"
+    },
+    "blockquote": {
+      "borderLeft": "3px solid rgba(223, 208, 184, 0.3)",
+      "paddingLeft": "12px",
+      "marginLeft": "0",
+      "opacity": "0.9",
+      "_blockquoteNote": "Quote blocks"
+    },
+    "hr": {
+      "border": "none",
+      "borderTop": "1px solid rgba(255, 255, 255, 0.1)",
+      "margin": "16px 0",
+      "_hrNote": "Horizontal rule"
+    },
+    "speaker": {
+      "boss": {
+        "strong": "#ef4444",
+        "_bossNote": "Boss text emphasis color"
+      },
+      "samara": {
+        "strong": "#f97316",
+        "_samaraNote": "Samara text emphasis color"
+      }
+    }
   }
 }
