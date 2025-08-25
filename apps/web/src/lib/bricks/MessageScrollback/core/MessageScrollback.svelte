@@ -105,6 +105,36 @@
     // Load historical messages from SuperJournal
     await loadHistoricalMessages();
     
+    // Listen for restored messages from RecycleBin
+    eventBus.subscribe('message:restored', (message: any) => {
+      console.log('♻️ Restoring message:', message.turnId);
+      
+      // Add to historical turns (at the correct position based on timestamp)
+      const restoredTurn = {
+        id: message.turnId,
+        bossMessage: message.userMessage ? { content: message.userMessage, timestamp: message.timestamp } : null,
+        samaraMessage: message.assistantMessage ? { content: message.assistantMessage, timestamp: message.timestamp } : null
+      };
+      
+      // Insert in chronological order
+      const insertIndex = historicalTurns.findIndex(turn => {
+        const turnTimestamp = turn.bossMessage?.timestamp || turn.samaraMessage?.timestamp || 0;
+        return turnTimestamp > message.timestamp;
+      });
+      
+      if (insertIndex === -1) {
+        historicalTurns.push(restoredTurn);
+      } else {
+        historicalTurns.splice(insertIndex, 0, restoredTurn);
+      }
+      
+      // Trigger re-render
+      historicalTurns = [...historicalTurns];
+      
+      // Also restore to SuperJournal
+      restoreToSuperJournal(message);
+    });
+    
     // Set up polling interval for live updates
     const interval = setInterval(() => {
       updateTrigger++;
@@ -318,6 +348,57 @@
         message: 'Failed to copy',
         type: 'error',
         duration: 2000
+      });
+    }
+  }
+  
+  // Restore message to SuperJournal
+  async function restoreToSuperJournal(message: any) {
+    try {
+      const entry: JournalEntry = {
+        id: message.turnId,
+        type: 'message-turn',
+        timestamp: message.timestamp,
+        data: {
+          turnId: message.turnId,
+          userMessage: message.userMessage,
+          assistantMessage: message.assistantMessage,
+          model: message.model,
+          persona: message.persona
+        }
+      };
+      
+      const response = await fetch('/api/superjournal/write', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entry })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to restore to SuperJournal');
+      }
+      
+      console.log('🧠 SuperJournal: Restored turn:', message.turnId);
+      
+      // Update cache
+      const cacheKey = 'superjournal_cache';
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const { entries, timestamp } = JSON.parse(cached);
+          entries.push(entry);
+          entries.sort((a: any, b: any) => a.timestamp - b.timestamp);
+          localStorage.setItem(cacheKey, JSON.stringify({ entries, timestamp }));
+        } catch (e) {
+          console.error('Failed to update cache:', e);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to restore to SuperJournal:', error);
+      eventBus.publish('notification:show', {
+        message: 'Failed to restore message',
+        type: 'error',
+        duration: 3000
       });
     }
   }
