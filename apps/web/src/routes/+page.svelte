@@ -26,6 +26,15 @@
   let superJournalBrick;
   let selectionPersistenceBrick;
   let recycleBinBrick;
+  let scrollbackRef: HTMLDivElement;
+
+  // Handle wheel events on the main container
+  function handleMainWheel(event: WheelEvent) {
+    // Forward the wheel event to the scrollback container
+    if (scrollbackRef) {
+      scrollbackRef.scrollTop += event.deltaY;
+    }
+  }
 
   onMount(async () => {
     console.log('🚀 AtomicAether Main App Starting...');
@@ -64,7 +73,7 @@
   
 </script>
 
-<main class="app flex-column position-relative">
+<main class="app flex-column position-relative" onwheel={handleMainWheel}>
   <!-- Recycle Bin Icon -->
   <a href="/recyclebin" class="recycle-bin-icon icon-button" title="Recycle Bin" aria-label="Recycle Bin">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -72,7 +81,7 @@
     </svg>
   </a>
   
-  <MessageScrollback />
+  <MessageScrollback bind:scrollContainer={scrollbackRef} />
   <InputBarUI />
 </main>
 
@@ -90,6 +99,7 @@
   
   .app {
     height: var(--app-container-height);
+    width: 100vw;
     overflow: hidden;
   }
   

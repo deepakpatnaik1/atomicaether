@@ -11,6 +11,15 @@
   import { RecycleBinBrick } from '$lib/bricks/RecycleBinBrick';
   
   let recycleBinBrick;
+  let scrollbackRef: HTMLDivElement;
+
+  // Handle wheel events on the main container
+  function handleMainWheel(event: WheelEvent) {
+    // Forward the wheel event to the scrollback container
+    if (scrollbackRef) {
+      scrollbackRef.scrollTop += event.deltaY;
+    }
+  }
 
   onMount(async () => {
     console.log('🗑️ RecycleBin Page Loading...');
@@ -34,7 +43,7 @@
   });
 </script>
 
-<main class="recyclebin-app flex-column position-relative">
+<main class="recyclebin-app flex-column position-relative" onwheel={handleMainWheel}>
   <!-- Header with back button -->
   <div class="recyclebin-header">
     <a href="/" class="back-button icon-button" title="Back to Chat" aria-label="Back to Chat">
@@ -46,7 +55,7 @@
   </div>
   
   <!-- Scrollback for deleted messages -->
-  <RecycleBinScrollback />
+  <RecycleBinScrollback bind:scrollContainer={scrollbackRef} />
 </main>
 
 <style>
@@ -63,6 +72,7 @@
   
   .recyclebin-app {
     height: var(--app-container-height);
+    width: 100vw;
     overflow: hidden;
   }
   

@@ -4,13 +4,17 @@
   import type { DeletedMessage } from '$lib/bricks/RecycleBinBrick';
   import MarkdownRenderer from '$lib/bricks/MessageScrollback/core/MarkdownRenderer.svelte';
   
+  // Props - expose scrollContainer for parent access
+  interface Props {
+    scrollContainer?: HTMLDivElement;
+  }
+  
+  let { scrollContainer = $bindable() }: Props = $props();
+  
   // State - matching MessageScrollback exactly
   let deletedMessages = $state<DeletedMessage[]>([]);
   let hoveredTurnId = $state<string | null>(null);
   let isLoadingHistory = $state(true);
-  
-  // Refs
-  let scrollContainer: HTMLDivElement;
   
   onMount(() => {
     console.log('📜 RecycleBinScrollback: Initializing');

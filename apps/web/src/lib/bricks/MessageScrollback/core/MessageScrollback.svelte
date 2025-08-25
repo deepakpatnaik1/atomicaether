@@ -5,6 +5,13 @@
   import type { JournalEntry } from '$lib/bricks/SuperJournalBrick/core/types';
   import MarkdownRenderer from './MarkdownRenderer.svelte';
   
+  // Props - expose scrollContainer for parent access
+  interface Props {
+    scrollContainer?: HTMLDivElement;
+  }
+  
+  let { scrollContainer = $bindable() }: Props = $props();
+  
   // State
   let historicalTurns = $state<MessageTurn[]>([]);  // From SuperJournal
   let messageTurnState = $state<MessageTurnState | undefined>(undefined);
@@ -23,9 +30,6 @@
   
   // Reactive trigger for polling
   let updateTrigger = $state(0);
-  
-  // Refs
-  let scrollContainer: HTMLDivElement;
   
   // Scroll state management
   let isUserScrolling = $state(false);
