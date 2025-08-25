@@ -1,10 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import { themeInjector } from './build-plugins/theme-injector.js';
 
 export default defineConfig({
 	plugins: [
-		themeInjector(), // Inject build-time theme before SvelteKit processes
+		// Theme injection now handled by inject-theme.js script
+		// to avoid duplicate injections and conflicts
 		sveltekit()
 	],
 	server: {

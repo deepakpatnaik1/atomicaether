@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Build script to inject theme CSS into app.html
- * Prevents FOUC by applying theme colors before any JavaScript loads
+ * Build script to inject theme CSS variables into app.html
+ * This runs at build time to provide immediate theme application
  */
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve, dirname } from 'path';
@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 try {
-  console.log('🎨 Injecting build-time theme into app.html...');
+  console.log('🎨 Injecting theme variables into app.html...');
   
   // Read the theme file
   const themePath = resolve(__dirname, '../static/themes/rainy-night.json');
@@ -21,34 +21,33 @@ try {
   const appHtmlPath = resolve(__dirname, '../src/app.html');
   let appHtml = readFileSync(appHtmlPath, 'utf-8');
   
-  // Generate theme CSS
-  const themeCSS = `\t\t<!-- Build-time theme injection - prevents FOUC -->
-\t\t<style>
-\t\t\tbody {
-\t\t\t\tbackground: ${themeData.globalBody.background} !important;
-\t\t\t\tcolor: ${themeData.globalBody.color} !important;
-\t\t\t\tmargin: 0;
-\t\t\t\tpadding: 0;
-\t\t\t}
-\t\t</style>`;
+  // Generate only essential CSS variables for critical rendering
+  const criticalVars = `
+		<!-- Theme variables injected at build time -->
+		<style id="theme-vars">
+			:root {
+				/* Critical theme variables */
+				--app-background: ${themeData.globalBody.background};
+				--app-color: ${themeData.globalBody.color};
+				--text-color: ${themeData.globalBody.color};
+				--spacing-reset: 0;
+				--spacing-standard: 16px;
+				--app-container-height: 100vh;
+				--global-body-transition: none;
+				--typography-font-family-system: system-ui, -apple-system, sans-serif;
+			}
+		</style>`;
   
-  // Check if theme CSS is already injected and remove it for re-injection
-  if (appHtml.includes('Build-time theme injection')) {
-    console.log('🔄 Updating existing theme injection in app.html');
-    // Remove existing theme injection
-    appHtml = appHtml.replace(/\t\t<!-- Build-time theme injection - prevents FOUC -->[\s\S]*?<\/style>\n/g, '');
-  }
-  
-  // Inject before %sveltekit.head%
+  // Replace the injection point with theme variables
   const updatedHtml = appHtml.replace(
-    /(\s*)%sveltekit\.head%/,
-    `$1${themeCSS}\n$1%sveltekit.head%`
+    '<!-- THEME_INJECTION_POINT -->',
+    criticalVars
   );
   
   // Write updated app.html
   writeFileSync(appHtmlPath, updatedHtml, 'utf-8');
-  console.log('💉 Theme CSS injected into app.html successfully!');
-  console.log('🎯 FOUC prevention: Body background now applies before JS loads');
+  console.log('💉 Theme variables injected successfully!');
+  console.log('🎯 Critical CSS and theme vars ready for immediate render');
   
 } catch (error) {
   console.error('❌ Theme injection failed:', error.message);

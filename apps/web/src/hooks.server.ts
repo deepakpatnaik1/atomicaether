@@ -63,21 +63,18 @@ export const handle: Handle = async ({ event, resolve }) => {
   // Add theme class to html element
   const response = await resolve(event, {
     transformPageChunk: ({ html }) => {
-      // Inject theme CSS
+      // Only inject full theme variables, not duplicate styles
+      // The critical CSS in app.html handles immediate paint
       html = html.replace(
         '</head>',
-        `<style id="theme-variables">${themeCSS}</style>
-        <script>
-          // Mark theme as ready immediately
-          document.documentElement.classList.add('theme-ready');
-        </script>
+        `<style id="ssr-theme-variables">${themeCSS}</style>
         </head>`
       );
       
-      // Add data-theme attribute
+      // Add data-theme attribute for JavaScript access
       html = html.replace(
         '<html',
-        `<html data-theme="${selectedTheme}"`
+        `<html data-theme="${selectedTheme}" class="theme-ready"`
       );
       
       return html;

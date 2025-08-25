@@ -36,10 +36,11 @@ class ThemeApplier {
       rootElement.style.setProperty(cssVar, value);
     });
     
-    // Mark theme as ready after applying variables
-    requestAnimationFrame(() => {
+    // Theme is already marked ready by SSR, no need to add again
+    // Just ensure the class exists for client-side theme changes
+    if (!document.documentElement.classList.contains('theme-ready')) {
       document.documentElement.classList.add('theme-ready');
-    });
+    }
     
     console.log(`ThemeApplier: Applied ${Object.keys(cssVariables).length} CSS variables`);
   }
