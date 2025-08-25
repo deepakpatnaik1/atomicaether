@@ -28,7 +28,6 @@ export const GET: RequestHandler = async () => {
   try {
     // Check if R2 is configured
     if (!s3Client || !R2_SUPERJOURNAL_BUCKET) {
-      console.log('🗑️ RecycleBin: R2 not configured');
       return json({ entries: [] });
     }
     
@@ -36,11 +35,9 @@ export const GET: RequestHandler = async () => {
     const deletedTurnIds = await getDeletedTurns(s3Client, R2_SUPERJOURNAL_BUCKET);
     
     if (deletedTurnIds.length === 0) {
-      console.log('🗑️ RecycleBin: No deleted messages found');
       return json({ entries: [] });
     }
     
-    console.log(`🗑️ RecycleBin: Found ${deletedTurnIds.length} deleted turn IDs`);
     
     // Fetch the actual entries for deleted turns
     const deletedEntries: JournalEntry[] = [];
@@ -56,7 +53,6 @@ export const GET: RequestHandler = async () => {
       }
     }
     
-    console.log(`🗑️ RecycleBin: Returning ${deletedEntries.length} deleted entries`);
     
     return json({ 
       entries: deletedEntries,
@@ -91,7 +87,6 @@ async function getDeletedTurns(
       return manifest.deletedTurns || [];
     }
   } catch (err) {
-    console.log('🗑️ RecycleBin: No deletions manifest found');
   }
   
   return [];

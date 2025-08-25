@@ -14,8 +14,9 @@ try {
   
   // Read the theme file
   const themePath = resolve(__dirname, '../static/themes/rainy-night.json');
+  console.log('🎨 [BUILD] Reading theme file:', themePath);
   const themeData = JSON.parse(readFileSync(themePath, 'utf-8'));
-  console.log('✅ Theme loaded:', themeData.name);
+  console.log('✅ [BUILD] Theme loaded:', themeData.name);
   
   // Read app.html template
   const appHtmlPath = resolve(__dirname, '../src/app.html');
@@ -35,6 +36,10 @@ try {
 				--app-container-height: 100vh;
 				--global-body-transition: none;
 				--typography-font-family-system: system-ui, -apple-system, sans-serif;
+			}
+			body {
+				background: var(--app-background);
+				color: var(--app-color);
 			}
 		</style>`;
   

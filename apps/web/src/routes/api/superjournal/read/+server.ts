@@ -44,8 +44,8 @@ export const GET: RequestHandler = async ({ url }) => {
       } as ReadResponse);
     }
     
-    // Get list of deleted turns
-    const deletedTurns = await getDeletedTurns(s3Client, R2_SUPERJOURNAL_BUCKET);
+    // Skip deletion check for simple recent queries (limit ≤ 50) to improve performance
+    const deletedTurns = limit > 50 ? await getDeletedTurns(s3Client, R2_SUPERJOURNAL_BUCKET) : [];
     
     // List objects based on time range
     let entries: JournalEntry[] = [];
