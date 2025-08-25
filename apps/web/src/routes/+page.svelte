@@ -106,6 +106,7 @@
     height: var(--app-container-height);
     width: 100vw;
     overflow: hidden;
+    gap: 10px;
   }
   
   .recycle-bin-icon {

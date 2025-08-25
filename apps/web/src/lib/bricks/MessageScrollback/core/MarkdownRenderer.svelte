@@ -1,5 +1,6 @@
 <script lang="ts">
   import { marked } from 'marked';
+  import { onMount } from 'svelte';
   
   interface Props {
     content: string;
@@ -7,6 +8,7 @@
   }
   
   let { content, speaker = 'boss' }: Props = $props();
+  let containerRef: HTMLDivElement;
   
   // Configure marked for safe rendering
   marked.setOptions({
@@ -18,9 +20,38 @@
   
   // Parse markdown to HTML
   let htmlContent = $derived(marked(content || ''));
+  
+  // Apply speaker colors to text with colons
+  $effect(() => {
+    if (containerRef && htmlContent) {
+      console.log('🎨 Processing colon coloring for speaker:', speaker);
+      // Wait for DOM update
+      setTimeout(() => {
+        const paragraphs = containerRef.querySelectorAll('p, li, div');
+        console.log('🎨 Found paragraphs:', paragraphs.length);
+        
+        paragraphs.forEach(p => {
+          const text = p.textContent || '';
+          if (text.includes(':') && !p.closest('pre, code')) {
+            console.log('🎨 Processing text with colon:', text.substring(0, 50));
+            
+            // Only add spacing class if NOT in a list item
+            if (p.tagName !== 'LI') {
+              p.classList.add('has-colon-line');
+            }
+            
+            // Use regex to find and replace text before colons + the colon itself
+            p.innerHTML = p.innerHTML.replace(/([^:]+)(:)/g, (match, beforeColon, colon) => {
+              return `<span class="colon-prefix">${beforeColon}${colon}</span>`;
+            });
+          }
+        });
+      }, 0);
+    }
+  });
 </script>
 
-<div class="markdown-content" data-speaker={speaker}>
+<div class="markdown-content" data-speaker={speaker} bind:this={containerRef}>
   {@html htmlContent}
 </div>
 
@@ -37,18 +68,25 @@
     margin-bottom: 0;
   }
   
-  /* Bold text with speaker colors */
+  /* Bold text */
   :global(strong),
   :global(b) {
     font-weight: var(--typography-font-weight-semibold);
   }
   
-  .markdown-content[data-speaker="boss"] :global(strong) {
-    color: var(--markdown-speaker-boss-strong) !important;
+  /* Text before colons should use speaker colors */
+  .markdown-content[data-speaker="boss"] :global(.colon-prefix) {
+    color: var(--scrollback-role-colors-boss-color);
   }
   
-  .markdown-content[data-speaker="samara"] :global(strong) {
-    color: var(--markdown-speaker-samara-strong) !important;
+  .markdown-content[data-speaker="samara"] :global(.colon-prefix) {
+    color: var(--scrollback-role-colors-samara-color);
+  }
+  
+  /* Lines with colons need special spacing: more above, less below */
+  :global(.has-colon-line) {
+    margin-top: 24px !important;
+    margin-bottom: 8px !important;
   }
   
   /* Links */
@@ -88,11 +126,12 @@
   :global(ol) {
     padding-left: var(--markdown-list-padding-left);
     margin-bottom: var(--markdown-list-margin-bottom);
-    margin-top: var(--markdown-list-margin-top);
+    margin-top: var(--markdown-list-margin-bottom);
   }
   
   :global(li) {
     margin-bottom: var(--spacing-micro);
+    margin-top: var(--spacing-micro);
   }
   
   /* Code */

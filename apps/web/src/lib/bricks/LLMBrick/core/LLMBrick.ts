@@ -30,7 +30,7 @@ export class LLMBrick {
   private fireworksService: FireworksService | null = null;
   
   private currentModel: string;
-  private isStreaming = true; // Enable streaming by default
+  private isStreaming = false; // Disable streaming for reliable machine trim
   
   constructor(
     private eventBus: EventBus,

@@ -481,6 +481,7 @@
   @import '$lib/../styles/shared.css';
   
   /* Component-specific styles only */
+  
   .message {
     margin-bottom: var(--scrollback-messages-gap);
     padding-right: 3px;

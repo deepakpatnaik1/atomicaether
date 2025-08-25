@@ -318,25 +318,41 @@ export const POST: RequestHandler = async ({ request }) => {
             
             // Parse machine trim JSON and stream fullResponse
             if (config.enabled && fullContent) {
+              console.log('🔍 Attempting to parse machine trim JSON, content length:', fullContent.length);
+              console.log('🔍 First 100 chars:', fullContent.substring(0, 100));
               try {
                 const parsedResponse = JSON.parse(fullContent);
+                console.log('✅ Successfully parsed machine trim JSON');
                 if (parsedResponse.fullResponse && parsedResponse.trim && parsedResponse.metadata) {
-                  // Stream the fullResponse character by character
+                  console.log('✅ Valid machine trim structure found');
+                  // Send message start event
+                  controller.enqueue(new TextEncoder().encode(`data: {"type":"message_start","message":{"role":"assistant","content":[]}}\n\n`));
+                  
+                  // Send content block start
+                  controller.enqueue(new TextEncoder().encode(`data: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}\n\n`));
+                  
+                  // Stream the fullResponse character by character for smooth effect
                   const responseText = parsedResponse.fullResponse;
                   
-                  // Send start event
-                  controller.enqueue(new TextEncoder().encode(`data: {"type":"response_start"}\n\n`));
-                  
-                  // Stream content in chunks
-                  for (let i = 0; i < responseText.length; i += 10) {
-                    const chunk = responseText.slice(i, i + 10);
-                    controller.enqueue(new TextEncoder().encode(`data: {"type":"content_chunk","chunk":"${chunk.replace(/"/g, '\\"')}"}\n\n`));
-                    // Small delay to simulate streaming
-                    await new Promise(resolve => setTimeout(resolve, 10));
+                  // Stream content in small character chunks
+                  for (let i = 0; i < responseText.length; i += 3) {
+                    const chunk = responseText.slice(i, i + 3);
+                    const eventData = {
+                      type: 'content_block_delta',
+                      index: 0,
+                      delta: {
+                        type: 'text_delta', 
+                        text: chunk
+                      }
+                    };
+                    controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(eventData)}\n\n`));
                   }
                   
-                  // Send completion with machine trim data  
-                  controller.enqueue(new TextEncoder().encode(`data: {"type":"response_complete","machineTrim":${JSON.stringify(parsedResponse)}}\n\n`));
+                  // Send content block stop
+                  controller.enqueue(new TextEncoder().encode(`data: {"type":"content_block_stop","index":0}\n\n`));
+                  
+                  // Send message stop with machine trim data embedded
+                  controller.enqueue(new TextEncoder().encode(`data: {"type":"message_stop","machineTrim":${JSON.stringify(parsedResponse)}}\n\n`));
                   
                 } else {
                   throw new Error('Invalid machine trim JSON structure');

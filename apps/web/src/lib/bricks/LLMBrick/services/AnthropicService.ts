@@ -120,7 +120,8 @@ export class AnthropicService {
                 id: 'final',
                 model: request.model,
                 delta: '',
-                finished: true
+                finished: true,
+                machineTrim: event.machineTrim // Extract machine trim data from message_stop
               };
             }
           } catch (e) {
