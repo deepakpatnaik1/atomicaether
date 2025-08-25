@@ -1,0 +1,121 @@
+{
+  "enabled": true,
+  "outputFormat": "json",
+  "responseSchema": {
+    "fullResponse": "string - detailed conversational response",
+    "trim": "string - compressed version preserving meaning",
+    "metadata": {
+      "hasDecisions": "boolean - contains decisions or conclusions",
+      "isInferable": "boolean - entire response is inferable",
+      "priority": "string - high|medium|low based on content importance"
+    }
+  },
+  "compressionRules": {
+    "preserveSemanticMeaning": true,
+    "removeRedundancy": true,
+    "includeBothSpeakers": true,
+    "format": "Boss: [message]\\n{persona}: [compressed response]"
+  },
+  "inferabilityGuidelines": [
+    "Use [INFERABLE - NOT STORED] for pure acknowledgments with no new information",
+    "Use [INFERABLE] inline for obvious connecting phrases or redundant parts", 
+    "Never mark factual information, insights, or substantive responses as inferable",
+    "Common inferable responses: 'You're welcome', 'Happy to help', 'Sure!', 'Of course'",
+    "When uncertain, err on the side of preserving content"
+  ],
+  "alwaysPreserve": [
+    "Life decisions and personal choices (career, relationships, health, major life direction)",
+    "Important conclusions and determinations (any resolution or decision made)",
+    "Action items and commitments (what will be done or changed)",
+    "Insights and realizations (breakthrough moments or understanding)",
+    "Factual information and substantive content",
+    "Problem-solving steps and reasoning",
+    "Creative ideas and solutions",
+    "Strategic thinking and analysis"
+  ],
+  "priorityHierarchy": [
+    "Life content and personal decisions (highest priority)",
+    "Work and project decisions",
+    "Technical implementation details",
+    "Social pleasantries and acknowledgments (lowest priority)"
+  ],
+  "examples": [
+    {
+      "description": "Simple factual exchange",
+      "input": {
+        "bossMessage": "What is a red dwarf?"
+      },
+      "expectedOutput": {
+        "fullResponse": "A red dwarf is a small, relatively cool star that makes up the vast majority of stars in our galaxy. They burn their fuel slowly and can live for trillions of years, making them the longest-lived stars in the universe.",
+        "trim": "Boss: What is a red dwarf?\\nSamara: red dwarf: small cool star, 70% of galaxy stars, burns slowly, lives trillions years, longest-lived.",
+        "metadata": {
+          "hasDecisions": false,
+          "isInferable": false,
+          "priority": "medium"
+        }
+      }
+    },
+    {
+      "description": "Pure acknowledgment",
+      "input": {
+        "bossMessage": "Thanks!"
+      },
+      "expectedOutput": {
+        "fullResponse": "You're welcome! I'm happy to help with any other astronomy questions you might have.",
+        "trim": "Boss: Thanks!\\nSamara: [INFERABLE - NOT STORED]",
+        "metadata": {
+          "hasDecisions": false,
+          "isInferable": true,
+          "priority": "low"
+        }
+      }
+    },
+    {
+      "description": "Partial inferability with substance",
+      "input": {
+        "bossMessage": "Can you also tell me about their planets?"
+      },
+      "expectedOutput": {
+        "fullResponse": "Yes! Red dwarf planets are fascinating. Many red dwarfs have been found to host rocky planets, often in very close orbits. The habitable zone around a red dwarf is much closer to the star due to its lower temperature. However, planets in this zone face challenges like tidal locking and stellar flares.",
+        "trim": "Boss: Can you also tell me about their planets?\\nSamara: [INFERABLE acknowledgment] red dwarf planets: rocky, close orbits, habitable zone closer. Challenges: tidal locking, stellar flares.",
+        "metadata": {
+          "hasDecisions": false,
+          "isInferable": false,
+          "priority": "medium"
+        }
+      }
+    },
+    {
+      "description": "Life decision content",
+      "input": {
+        "bossMessage": "I'm thinking of switching careers to data science. What do you think?"
+      },
+      "expectedOutput": {
+        "fullResponse": "That's a significant decision! Data science is a growing field with good opportunities, but it requires strong analytical skills and continuous learning. Consider your current background, willingness to learn programming languages like Python and R, and whether you enjoy working with data and statistics. I'd recommend taking an online course first to see if you genuinely enjoy the work before making the full transition.",
+        "trim": "Boss: I'm thinking of switching careers to data science. What do you think?\\nSamara: career change consideration: data science growing field, requires analytical skills + continuous learning. Evaluate: current background, programming willingness (Python/R), enjoyment of data/stats work. Recommend: take online course first to test genuine interest before full transition.",
+        "metadata": {
+          "hasDecisions": true,
+          "isInferable": false,
+          "priority": "high"
+        }
+      }
+    }
+  ],
+  "llmInstructions": {
+    "systemPromptAddition": "You must respond in JSON format with the following structure: {\"fullResponse\": \"your normal conversational response\", \"trim\": \"compressed version following the Boss: [message]\\n{persona}: [response] format\", \"metadata\": {\"hasDecisions\": boolean, \"isInferable\": boolean, \"priority\": \"high|medium|low\"}}. Follow the machine trim rules for compression and inferability marking.",
+    "providerSpecific": {
+      "anthropic": {
+        "useResponsePrefilling": true,
+        "prefillWith": "{"
+      },
+      "openai": {
+        "useJsonMode": true,
+        "jsonSchema": true
+      },
+      "fireworks": {
+        "useJsonMode": true,
+        "grammarMode": false
+      }
+    }
+  }
+}
