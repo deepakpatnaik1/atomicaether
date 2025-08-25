@@ -1,18 +1,8 @@
 import { eventBus } from '$lib/buses';
-import type { CSSPropertyMap } from './types.js';
 
 class ThemeApplier {
   private unsubscribe?: () => void;
   private isInitialized = false;
-
-  // Map theme JSON properties to CSS custom properties
-  private readonly propertyMap: CSSPropertyMap = {
-    'appBackground': '--app-background',
-    'textColor': '--text-color',
-    'surfaceBackground': '--surface-background',
-    'accent': '--accent-color',
-    // Will grow organically as themes expand
-  };
 
   initialize(): void {
     if (this.isInitialized) return;
@@ -32,18 +22,65 @@ class ThemeApplier {
     console.log('ThemeApplier: Initialized and listening for theme changes');
   }
 
+  /**
+   * Recursively flatten theme object and apply as CSS variables
+   */
   applyTheme(theme: any): void {
     if (typeof document === 'undefined') return; // SSR safety
 
     const rootElement = document.documentElement;
+    const cssVariables = this.flattenThemeObject(theme);
+    
+    // Apply each CSS variable
+    Object.entries(cssVariables).forEach(([cssVar, value]) => {
+      rootElement.style.setProperty(cssVar, value);
+    });
+    
+    console.log(`ThemeApplier: Applied ${Object.keys(cssVariables).length} CSS variables`);
+  }
 
-    // Apply each theme property as a CSS custom property
-    Object.entries(this.propertyMap).forEach(([themeKey, cssVar]) => {
-      const value = theme[themeKey];
-      if (value !== undefined) {
-        rootElement.style.setProperty(cssVar, value);
-        console.log(`ThemeApplier: Set ${cssVar} = ${value}`);
+  /**
+   * Flatten nested theme object into CSS variables
+   * e.g., { spacing: { micro: "4px" } } → { "--spacing-micro": "4px" }
+   */
+  private flattenThemeObject(obj: any, prefix = '--', path: string[] = []): Record<string, string> {
+    const result: Record<string, string> = {};
+
+    Object.entries(obj).forEach(([key, value]) => {
+      // Skip private keys (comments and notes)
+      if (key.startsWith('_')) return;
+      
+      // Build the CSS variable name
+      const newPath = [...path, this.kebabCase(key)];
+      
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        // Recursively flatten nested objects
+        Object.assign(result, this.flattenThemeObject(value, prefix, newPath));
+      } else if (typeof value === 'string' || typeof value === 'number') {
+        // Create CSS variable
+        const cssVarName = prefix + newPath.join('-');
+        result[cssVarName] = String(value);
       }
+    });
+
+    // Add special mappings for backward compatibility
+    if (path.length === 0) {
+      // Map globalBody to root-level variables for existing code
+      if (obj.globalBody) {
+        result['--app-background'] = obj.globalBody.background || '#222831';
+        result['--text-color'] = obj.globalBody.color || '#e0e0e0';
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Convert camelCase to kebab-case
+   */
+  private kebabCase(str: string): string {
+    return str.replace(/([A-Z])/g, (match, letter, index) => {
+      return index > 0 ? `-${letter.toLowerCase()}` : letter.toLowerCase();
     });
   }
 
@@ -51,11 +88,15 @@ class ThemeApplier {
     if (typeof document === 'undefined') return; // SSR safety
 
     const rootElement = document.documentElement;
-
-    // Remove all theme CSS custom properties
-    Object.values(this.propertyMap).forEach((cssVar) => {
-      rootElement.style.removeProperty(cssVar);
-    });
+    const styles = rootElement.style;
+    
+    // Remove all CSS variables that start with --
+    for (let i = styles.length - 1; i >= 0; i--) {
+      const prop = styles[i];
+      if (prop && prop.startsWith('--')) {
+        rootElement.style.removeProperty(prop);
+      }
+    }
 
     console.log('ThemeApplier: Cleared all theme properties');
   }

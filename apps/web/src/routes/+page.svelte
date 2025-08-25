@@ -64,10 +64,10 @@
   
 </script>
 
-<main class="app">
+<main class="app flex-column position-relative">
   <!-- Recycle Bin Icon -->
-  <a href="/recyclebin" class="recycle-bin-icon" title="Recycle Bin" aria-label="Recycle Bin">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+  <a href="/recyclebin" class="recycle-bin-icon icon-button" title="Recycle Bin" aria-label="Recycle Bin">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>
     </svg>
   </a>
@@ -77,56 +77,27 @@
 </main>
 
 <style>
+  @import '$lib/../styles/shared.css';
+  
   :global(body) {
-    background: var(--app-background, #222831) !important;
-    color: var(--text-color, #e0e0e0) !important;
-    transition: all 0.3s ease;
-    margin: 0;
-    padding: 0;
-    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--app-background) !important;
+    color: var(--text-color) !important;
+    transition: var(--global-body-transition);
+    margin: var(--spacing-reset);
+    padding: var(--spacing-reset);
+    font-family: var(--typography-font-family-system);
   }
   
   .app {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    height: var(--app-container-height);
     overflow: hidden;
   }
   
   .recycle-bin-icon {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    border-radius: 50%;
-    color: rgba(255, 255, 255, 0.6);
-    text-decoration: none;
-    transition: all 0.2s ease;
+    bottom: var(--spacing-standard);
+    right: var(--spacing-standard);
     z-index: 100;
+    text-decoration: none;
   }
-  
-  .recycle-bin-icon:hover {
-    color: rgba(255, 255, 255, 0.95);
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-  }
-  
-  .recycle-bin-icon:active {
-    transform: scale(0.95);
-  }
-  
-  .recycle-bin-icon svg {
-    width: 16px;
-    height: 16px;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  
 </style>

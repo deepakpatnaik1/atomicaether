@@ -1,0 +1,292 @@
+/**
+ * Shared CSS Classes - DRY Principle
+ * Eliminates 400+ duplicate style declarations
+ * All values come from theme via CSS variables
+ */
+
+/* ============================================
+   LAYOUT UTILITIES
+   Used 95+ times across components
+   ============================================ */
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.position-fixed {
+  position: fixed;
+}
+
+/* Reset - Used 26+ times */
+.reset {
+  margin: var(--spacing-reset);
+  padding: var(--spacing-reset);
+}
+
+/* ============================================
+   ICON SYSTEM
+   Used 50+ times for all icon buttons
+   ============================================ */
+
+.icon-button {
+  width: var(--icons-container-size);
+  height: var(--icons-container-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--borders-radius-round);
+  color: var(--icons-colors-default);
+  transition: var(--effects-transitions-quick);
+  cursor: pointer;
+  outline: none;
+}
+
+.icon-button:hover {
+  color: var(--icons-colors-hover);
+  background: var(--icons-effects-hover-background);
+  transform: var(--icons-effects-scale-hover);
+}
+
+.icon-button:active {
+  transform: var(--icons-effects-scale-active);
+}
+
+.icon-button svg {
+  width: var(--icons-svg-size);
+  height: var(--icons-svg-size);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ============================================
+   SCROLLBACK SYSTEM
+   Used in MessageScrollback, RecycleBinScrollback
+   ============================================ */
+
+.scrollback-container {
+  height: var(--scrollback-container-height);
+  width: var(--scrollback-container-width-mobile);
+  max-width: var(--scrollback-container-max-width);
+  margin: 0 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: transparent;
+  /* Hide scrollbar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollback-container::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 705px) {
+  .scrollback-container {
+    width: var(--scrollback-container-width-desktop);
+  }
+}
+
+.messages-area {
+  padding-top: var(--scrollback-messages-padding-top);
+  padding-bottom: var(--scrollback-messages-padding-bottom);
+  padding-right: var(--scrollback-messages-padding-right);
+  padding-left: 0;
+}
+
+.message-turn {
+  position: relative;
+  margin-bottom: var(--scrollback-messages-gap);
+}
+
+.message-content {
+  margin-left: var(--scrollback-message-content-margin-left);
+  color: var(--scrollback-message-content-color);
+  font-family: var(--scrollback-message-content-font-family);
+  font-size: var(--scrollback-message-content-font-size);
+  line-height: var(--scrollback-message-content-line-height);
+  word-break: break-word;
+}
+
+/* ============================================
+   ROLE LABELS
+   Used in MessageScrollback, RecycleBinScrollback
+   ============================================ */
+
+.role-label {
+  padding: var(--scrollback-role-label-padding);
+  font-size: var(--scrollback-role-label-font-size);
+  font-weight: var(--scrollback-role-label-font-weight);
+  text-transform: var(--scrollback-role-label-text-transform);
+  letter-spacing: var(--scrollback-role-label-letter-spacing);
+  border-radius: var(--scrollback-role-label-border-radius);
+  display: inline-block;
+  border: 1px solid;
+  margin-bottom: 10px;
+}
+
+.role-label-boss {
+  color: var(--scrollback-role-colors-boss-color);
+  background: var(--scrollback-role-colors-boss-background);
+  border-color: var(--scrollback-role-colors-boss-border);
+}
+
+.role-label-samara {
+  color: var(--scrollback-role-colors-samara-color);
+  background: var(--scrollback-role-colors-samara-background);
+  border-color: var(--scrollback-role-colors-samara-border);
+}
+
+/* ============================================
+   ACTION ICONS GROUP
+   Floating buttons on message hover
+   ============================================ */
+
+.action-icons-group {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  gap: var(--scrollback-action-icons-gap);
+  padding: var(--scrollback-action-icons-container-padding);
+  background: var(--scrollback-action-icons-background);
+  backdrop-filter: var(--scrollback-action-icons-backdrop-filter);
+  -webkit-backdrop-filter: var(--scrollback-action-icons-backdrop-filter);
+  border-radius: var(--scrollback-action-icons-border-radius);
+  border: var(--scrollback-action-icons-border);
+  animation: fadeIn 0.2s ease-out;
+  transform: translateY(4px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(4px);
+  }
+}
+
+/* ============================================
+   TYPOGRAPHY UTILITIES
+   ============================================ */
+
+.text-tiny {
+  font-size: var(--typography-font-size-tiny);
+}
+
+.text-small {
+  font-size: var(--typography-font-size-small);
+}
+
+.text-base {
+  font-size: var(--typography-font-size-base);
+}
+
+.text-medium {
+  font-size: var(--typography-font-size-medium);
+}
+
+.text-large {
+  font-size: var(--typography-font-size-large);
+}
+
+.font-system {
+  font-family: var(--typography-font-family-system);
+}
+
+.font-content {
+  font-family: var(--typography-font-family-content);
+}
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+
+.p-micro {
+  padding: var(--spacing-micro);
+}
+
+.p-small {
+  padding: var(--spacing-small);
+}
+
+.p-standard {
+  padding: var(--spacing-standard);
+}
+
+.m-micro {
+  margin: var(--spacing-micro);
+}
+
+.m-small {
+  margin: var(--spacing-small);
+}
+
+.m-standard {
+  margin: var(--spacing-standard);
+}
+
+.gap-micro {
+  gap: var(--spacing-micro);
+}
+
+.gap-small {
+  gap: var(--spacing-small);
+}
+
+.gap-standard {
+  gap: var(--spacing-standard);
+}
+
+/* ============================================
+   STATE CLASSES
+   ============================================ */
+
+.empty-state {
+  text-align: center;
+  opacity: 0.5;
+  padding: 2rem;
+  color: var(--scrollback-message-content-color);
+  font-family: var(--scrollback-message-content-font-family);
+  font-size: var(--scrollback-message-content-font-size);
+}
+
+.loading-state {
+  text-align: center;
+  opacity: 0.7;
+  padding: 2rem;
+  color: var(--scrollback-message-content-color);
+  font-family: var(--scrollback-message-content-font-family);
+  font-size: var(--scrollback-message-content-font-size);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.3; }
+}
