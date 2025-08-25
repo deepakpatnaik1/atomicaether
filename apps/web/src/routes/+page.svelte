@@ -18,12 +18,14 @@
   import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
   import { LLMBrick } from '$lib/bricks/LLMBrick';
   import { SuperJournalBrick } from '$lib/bricks/SuperJournalBrick';
+  import { JournalBrick } from '$lib/bricks/JournalBrick/core/JournalBrick';
   import { SelectionPersistenceBrick } from '$lib/bricks/SelectionPersistenceBrick/core/SelectionPersistenceBrick';
   import { RecycleBinBrick } from '$lib/bricks/RecycleBinBrick';
   
   let messageTurnBrick;
   let llmBrick;
   let superJournalBrick;
+  let journalBrick;
   let selectionPersistenceBrick;
   let recycleBinBrick;
   let scrollbackRef: HTMLDivElement;
@@ -56,6 +58,10 @@
       // Initialize SuperJournal - Deep Memory System
       superJournalBrick = new SuperJournalBrick(eventBus, stateBus, configBus, errorBus);
       console.log('🧠 SuperJournal: Deep memory activated - recording everything forever');
+      
+      // Initialize Journal - Machine-Trimmed Memory System
+      journalBrick = new JournalBrick(eventBus, stateBus, configBus, errorBus);
+      console.log('📰 Journal: Machine-trimmed memory activated - dual-bucket storage ready');
       
       // Initialize RecycleBin - Trash management system
       recycleBinBrick = new RecycleBinBrick(eventBus, stateBus, configBus, errorBus);
