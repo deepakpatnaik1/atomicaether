@@ -26,8 +26,11 @@ export class RecycleBinBrick {
   private async initialize() {
     console.log('🗑️ RecycleBin: Initializing trash management system');
     
-    // Load deleted messages from localStorage
+    // Load deleted messages from localStorage first (for immediate display)
     this.loadDeletedMessages();
+    
+    // Then load from SuperJournal (may have more/different entries)
+    this.loadDeletedMessagesFromSuperJournal();
     
     // Listen for message deletion events
     this.eventBus.subscribe('message:deleted', (data: any) => {
@@ -55,11 +58,69 @@ export class RecycleBinBrick {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
         this.deletedMessages = JSON.parse(stored);
-        console.log(`🗑️ RecycleBin: Loaded ${this.deletedMessages.length} deleted messages`);
+        console.log(`🗑️ RecycleBin: Loaded ${this.deletedMessages.length} deleted messages from localStorage`);
       }
     } catch (error) {
       console.error('Failed to load deleted messages:', error);
       this.deletedMessages = [];
+    }
+  }
+  
+  private async loadDeletedMessagesFromSuperJournal() {
+    try {
+      console.log('🗑️ RecycleBin: Loading deleted messages from SuperJournal...');
+      
+      const response = await fetch('/api/superjournal/deleted');
+      if (!response.ok) {
+        console.error('Failed to fetch deleted messages from SuperJournal');
+        return;
+      }
+      
+      const data = await response.json();
+      const entries = data.entries || [];
+      
+      console.log(`🗑️ RecycleBin: Found ${entries.length} deleted entries in SuperJournal`);
+      
+      // Convert SuperJournal entries to DeletedMessage format
+      const superJournalDeleted: DeletedMessage[] = [];
+      
+      for (const entry of entries) {
+        if (entry.type === 'message-turn' && entry.data) {
+          const deleted: DeletedMessage = {
+            turnId: entry.id,
+            userMessage: entry.data.userMessage || '',
+            assistantMessage: entry.data.assistantMessage || '',
+            timestamp: entry.timestamp,
+            deletedAt: Date.now(), // We don't have exact deletion time
+            model: entry.data.model,
+            persona: entry.data.persona
+          };
+          superJournalDeleted.push(deleted);
+        }
+      }
+      
+      // Merge with existing (avoiding duplicates)
+      const existingIds = new Set(this.deletedMessages.map(m => m.turnId));
+      
+      for (const message of superJournalDeleted) {
+        if (!existingIds.has(message.turnId)) {
+          this.deletedMessages.push(message);
+        }
+      }
+      
+      // Sort by deletion time (most recent first)
+      this.deletedMessages.sort((a, b) => b.deletedAt - a.deletedAt);
+      
+      // Save the merged list
+      this.saveDeletedMessages();
+      
+      // Publish updated list
+      this.publishDeletedMessages();
+      
+      console.log(`🗑️ RecycleBin: Total deleted messages: ${this.deletedMessages.length}`);
+      
+    } catch (error) {
+      console.error('Failed to load deleted messages from SuperJournal:', error);
     }
   }
   
