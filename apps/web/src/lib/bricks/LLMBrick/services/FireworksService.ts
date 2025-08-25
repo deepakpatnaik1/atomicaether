@@ -39,6 +39,7 @@ export class FireworksService {
       id: `fireworks-${Date.now()}`,
       model: data.model || request.model,
       content: data.content,
+      machineTrim: data.machineTrim, // Pass through machine trim data
       usage: {
         promptTokens: 0,
         completionTokens: 0,

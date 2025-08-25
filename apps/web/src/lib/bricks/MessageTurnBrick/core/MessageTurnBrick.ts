@@ -169,9 +169,10 @@ export class MessageTurnBrick {
     this.currentTurn.status = 'completed';
     this.currentTurn.completedAt = Date.now();
     
-    // Publish turn completed event
+    // Publish turn completed event with machine trim data
     this.eventBus.publish('turn:completed', { 
-      turn: this.currentTurn 
+      turn: this.currentTurn,
+      machineTrim: data.machineTrim // Pass through machine trim data
     });
     
     // Clear current turn
