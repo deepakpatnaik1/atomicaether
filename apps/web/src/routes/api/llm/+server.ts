@@ -36,7 +36,7 @@ function generateMachineTrimPrompt(config: any): string {
 
 You must respond in JSON format with this exact structure:
 {
-  "fullResponse": "your detailed conversational response",
+  "fullResponse": "your detailed conversational response with full markdown formatting (use **bold**, *italic*, code blocks, lists, etc. as appropriate)",
   "trim": "compressed version following the format: Boss: [user message]\\nSamara: [your compressed response]",
   "metadata": {
     "hasDecisions": boolean,
@@ -207,7 +207,7 @@ export const POST: RequestHandler = async ({ request }) => {
             let apiResponse;
             
             if (model.includes('claude')) {
-              // Anthropic API streaming
+              // Anthropic API streaming with machine trim
               const formattedMessages = formatAnthropicMessages(enhancedMessages, fileUrls);
               
               const requestBody: any = {
@@ -232,7 +232,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 body: JSON.stringify(requestBody)
               });
             } else if (model.includes('gpt')) {
-              // OpenAI API streaming
+              // OpenAI API streaming with machine trim
               const formattedMessages = formatOpenAIMessages(enhancedMessages, fileUrls);
               
               // GPT-5 requires max_completion_tokens instead of max_tokens
@@ -284,15 +284,74 @@ export const POST: RequestHandler = async ({ request }) => {
               return;
             }
             
-            // Forward the SSE stream
+            // Collect complete response for machine trim parsing
             const decoder = new TextDecoder();
+            let buffer = '';
+            let fullContent = '';
+            
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
               
-              // Forward the raw SSE data
-              controller.enqueue(value);
+              buffer += decoder.decode(value, { stream: true });
+              const lines = buffer.split('\n');
+              buffer = lines.pop() || '';
+              
+              for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                  const data = line.slice(6);
+                  if (data === '[DONE]') continue;
+                  
+                  try {
+                    const event = JSON.parse(data);
+                    
+                    if (event.type === 'content_block_delta') {
+                      const delta = event.delta?.text || '';
+                      fullContent += delta;
+                    }
+                  } catch (e) {
+                    // Continue collecting content
+                  }
+                }
+              }
             }
+            
+            // Parse machine trim JSON and stream fullResponse
+            if (config.enabled && fullContent) {
+              try {
+                const parsedResponse = JSON.parse(fullContent);
+                if (parsedResponse.fullResponse && parsedResponse.trim && parsedResponse.metadata) {
+                  // Stream the fullResponse character by character
+                  const responseText = parsedResponse.fullResponse;
+                  
+                  // Send start event
+                  controller.enqueue(new TextEncoder().encode(`data: {"type":"response_start"}\n\n`));
+                  
+                  // Stream content in chunks
+                  for (let i = 0; i < responseText.length; i += 10) {
+                    const chunk = responseText.slice(i, i + 10);
+                    controller.enqueue(new TextEncoder().encode(`data: {"type":"content_chunk","chunk":"${chunk.replace(/"/g, '\\"')}"}\n\n`));
+                    // Small delay to simulate streaming
+                    await new Promise(resolve => setTimeout(resolve, 10));
+                  }
+                  
+                  // Send completion with machine trim data  
+                  controller.enqueue(new TextEncoder().encode(`data: {"type":"response_complete","machineTrim":${JSON.stringify(parsedResponse)}}\n\n`));
+                  
+                } else {
+                  throw new Error('Invalid machine trim JSON structure');
+                }
+              } catch (error) {
+                // Fallback: stream raw content if JSON parsing fails
+                console.warn('Machine trim JSON parsing failed, streaming raw content:', error);
+                controller.enqueue(new TextEncoder().encode(`data: {"type":"content_chunk","chunk":"${fullContent.replace(/"/g, '\\"')}"}\n\n`));
+              }
+            } else {
+              // Stream raw content if machine trim disabled
+              controller.enqueue(new TextEncoder().encode(`data: {"type":"content_chunk","chunk":"${fullContent.replace(/"/g, '\\"')}"}\n\n`));
+            }
+            
+            controller.enqueue(new TextEncoder().encode(`data: [DONE]\n\n`));
             
             controller.close();
           } catch (error) {

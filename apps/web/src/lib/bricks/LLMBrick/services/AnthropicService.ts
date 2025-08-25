@@ -90,7 +90,25 @@ export class AnthropicService {
           try {
             const event = JSON.parse(data);
             
-            if (event.type === 'content_block_delta') {
+            // Handle new machine trim streaming format
+            if (event.type === 'content_chunk') {
+              yield {
+                id: 'streaming',
+                model: request.model,
+                delta: event.chunk,
+                finished: false
+              };
+            } else if (event.type === 'response_complete') {
+              yield {
+                id: 'final',
+                model: request.model,
+                delta: '',
+                finished: true,
+                machineTrim: event.machineTrim
+              };
+            } 
+            // Handle original Anthropic streaming format (fallback)
+            else if (event.type === 'content_block_delta') {
               yield {
                 id: event.index,
                 model: request.model,

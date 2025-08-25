@@ -292,6 +292,7 @@ export class LLMBrick {
           this.eventBus.publish('llm:response:complete', {
             messageId,
             fullResponse: fullContent,
+            machineTrim: chunk.machineTrim, // Pass through machine trim data from streaming
             model,
             timestamp: Date.now()
           });
