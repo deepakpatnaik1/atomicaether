@@ -66,12 +66,9 @@
 
 <main class="app">
   <!-- Recycle Bin Icon -->
-  <a href="/recyclebin" class="recycle-bin-icon" title="Recycle Bin">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="3 6 5 6 21 6"></polyline>
-      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-      <line x1="10" y1="11" x2="10" y2="17"></line>
-      <line x1="14" y1="11" x2="14" y2="17"></line>
+  <a href="/recyclebin" class="recycle-bin-icon" title="Recycle Bin" aria-label="Recycle Bin">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>
     </svg>
   </a>
   
@@ -99,32 +96,39 @@
   
   .recycle-bin-icon {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: rgba(223, 208, 184, 0.6);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
     transition: all 0.2s ease;
     z-index: 100;
   }
   
   .recycle-bin-icon:hover {
+    color: rgba(255, 255, 255, 0.95);
     background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: rgba(223, 208, 184, 0.9);
     transform: scale(1.05);
   }
   
   .recycle-bin-icon:active {
     transform: scale(0.95);
+  }
+  
+  .recycle-bin-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   
 </style>
