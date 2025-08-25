@@ -101,10 +101,8 @@
                   aria-label="Restore message"
                 >
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M2 8a6 6 0 0 1 10.39-4.1"/>
-                    <polyline points="12 2 12 6 8 6"/>
-                    <path d="M14 8a6 6 0 0 1-10.39 4.1"/>
-                    <polyline points="4 14 4 10 8 10"/>
+                    <path d="M3 7h7c2.2 0 4 1.8 4 4s-1.8 4-4 4H7"/>
+                    <polyline points="6 4 3 7 6 10"/>
                   </svg>
                 </button>
               </div>
@@ -231,8 +229,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     background: transparent;
     border: none;

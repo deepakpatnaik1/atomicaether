@@ -37,12 +37,11 @@
 <main class="recyclebin-app">
   <!-- Header with centered back button -->
   <div class="recyclebin-header">
-    <a href="/" class="back-button" title="Back to Chat">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
+    <a href="/" class="back-button" title="Back to Chat" aria-label="Back to Chat">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="12" y1="8" x2="3" y2="8"></line>
+        <polyline points="8 13 3 8 8 3"></polyline>
       </svg>
-      <span>Back to Chat</span>
     </a>
   </div>
   
@@ -71,30 +70,33 @@
   .recyclebin-header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     height: 60px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-left: 20px;
   }
   
   .back-button {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: rgba(223, 208, 184, 0.8);
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
     transition: all 0.2s ease;
-    font-size: 14px;
   }
   
   .back-button:hover {
+    color: rgba(255, 255, 255, 0.95);
     background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: rgba(223, 208, 184, 1);
-    transform: translateX(-2px);
+    transform: scale(1.05);
+  }
+  
+  .back-button:active {
+    transform: scale(0.95);
   }
 </style>
