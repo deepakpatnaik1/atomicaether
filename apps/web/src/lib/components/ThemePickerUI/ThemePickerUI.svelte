@@ -177,7 +177,6 @@
     font-size: var(--typography-font-size-medium);
     color: var(--controls-row-dropdown-trigger-color);
     cursor: pointer;
-    transition: var(--effects-transitions-quick);
     min-width: 120px;
     justify-content: space-between;
   }
@@ -216,12 +215,10 @@
 
   .dropdown-arrow {
     font-size: var(--typography-font-size-tiny);
-    transition: var(--effects-transitions-quick);
     color: var(--controls-row-dropdown-trigger-chevron-color);
   }
 
   .dropdown-arrow.rotated {
-    transform: rotate(180deg);
   }
 
   /* Dropdown menu - use dropdown.menu styling */
@@ -252,7 +249,6 @@
     border: none;
     text-align: left;
     cursor: pointer;
-    transition: var(--effects-transitions-quick);
     font-size: var(--typography-font-size-medium);
     color: var(--dropdown-item-color);
     justify-content: space-between;

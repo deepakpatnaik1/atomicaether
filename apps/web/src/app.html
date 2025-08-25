@@ -163,21 +163,8 @@
 				--typography-font-size-small: 12px;
 				--typography-font-size-medium: 14px;
 				--effects-opacity-muted: 0.6;
-				--effects-transitions-quick: all 0.2s ease;
 			}
 			
-			/* Prevent FOUC - hide until theme loads */
-			html:not(.theme-ready) {
-				opacity: 0;
-			}
-			
-			html {
-				transition: opacity 0.15s ease-out;
-			}
-			
-			html.theme-ready {
-				opacity: 1;
-			}
 			
 			/* Immediate body styles */
 			body {
@@ -332,7 +319,6 @@
 			body {
 				background: #222831 !important;
 				color: #e0e0e0 !important;
-				transition: undefined;
 				margin: 0;
 				padding: 0;
 			}

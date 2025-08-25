@@ -577,7 +577,6 @@
                 height: auto;
                 border-radius: {theme?.filePreviewZone.image.borderRadius};
                 max-height: {theme?.filePreviewZone.image.maxHeight};
-                opacity: {uploadProgress[index] < 100 ? theme?.filePreviewZone.image.uploadingOpacity : 1};
                 object-fit: {theme?.filePreviewZone.image.objectFit};
               "
             />
@@ -661,7 +660,6 @@
         line-height: {layout?.textInput.autoResize.lineHeight};
         min-height: {layout?.textInput.autoResize.minHeight};
         max-height: {layout?.textInput.autoResize.maxHeight};
-        transition: {layout?.animation.inputResize};
       "
     ></textarea>
     
@@ -678,7 +676,6 @@
         style="
           padding: {layout?.controlsRow.plusButton.padding};
           border-radius: {layout?.controlsRow.plusButton.borderRadius};
-          transition: {layout?.animation.hoverTransition};
         "
       >
         <div 
@@ -700,8 +697,7 @@
             padding: {layout?.controlsRow.dropdownTrigger.padding};
             border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius};
             color: {theme?.controlsRow.dropdownTrigger.color};
-            transition: {layout?.animation.hoverTransition};
-          "
+            "
         >
           <div 
             class="chevron" 
@@ -720,7 +716,6 @@
               border: {theme?.dropdown.menu.border};
               border-radius: {theme?.dropdown.menu.borderRadius};
               box-shadow: {theme?.dropdown.menu.shadow};
-              animation: slideUp {layout?.animation.dropdownAnimation} ease;
             "
           >
             {#if dropdownData}
@@ -748,8 +743,7 @@
                           padding: {layout?.dropdown.item.padding};
                           font-size: {layout?.dropdown.item.fontSize};
                           color: {theme?.dropdown.item.color};
-                          transition: {layout?.animation.hoverTransition};
-                        "
+                                        "
                       >
                         <span 
                           class="model-name"
@@ -762,7 +756,6 @@
                           style="
                             font-size: {layout?.dropdown.modelRow.modelId.fontSize};
                             margin-left: {layout?.dropdown.modelRow.modelId.marginLeft};
-                            opacity: 0.6;
                           "
                         >
                           {model.id}
@@ -787,8 +780,7 @@
             padding: {layout?.controlsRow.dropdownTrigger.padding};
             border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius};
             color: {theme?.controlsRow.dropdownTrigger.color};
-            transition: {layout?.animation.hoverTransition};
-          "
+            "
         >
           <div 
             class="chevron" 
@@ -807,7 +799,6 @@
               border: {theme?.dropdown.menu.border};
               border-radius: {theme?.dropdown.menu.borderRadius};
               box-shadow: {theme?.dropdown.menu.shadow};
-              animation: slideUp {layout?.animation.dropdownAnimation} ease;
             "
           >
             {#if dropdownData}
@@ -835,8 +826,7 @@
                           padding: {layout?.dropdown.item.padding};
                           font-size: {layout?.dropdown.item.fontSize};
                           color: {theme?.dropdown.item.color};
-                          transition: {layout?.animation.hoverTransition};
-                        "
+                                        "
                       >
                         <span class="model-name">{persona.name}</span>
                         <span class="model-id">{persona.id}</span>
@@ -860,8 +850,7 @@
             padding: {layout?.controlsRow.dropdownTrigger.padding};
             border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius};
             color: {theme?.controlsRow.dropdownTrigger.color};
-            transition: {layout?.animation.hoverTransition};
-          "
+            "
         >
           <div 
             class="chevron" 
@@ -880,7 +869,6 @@
               border: {theme?.dropdown.menu.border};
               border-radius: {theme?.dropdown.menu.borderRadius};
               box-shadow: {theme?.dropdown.menu.shadow};
-              animation: slideUp {layout?.animation.dropdownAnimation} ease;
             "
           >
             {#if dropdownData}
@@ -908,8 +896,7 @@
                           padding: {layout?.dropdown.item.padding};
                           font-size: {layout?.dropdown.item.fontSize};
                           color: {theme?.dropdown.item.color};
-                          transition: {layout?.animation.hoverTransition};
-                        "
+                                        "
                       >
                         <span class="model-name">{themeItem.name}</span>
                         <span class="model-id">{themeItem.id}</span>
@@ -1079,7 +1066,6 @@
     gap: var(--spacing-micro);
     padding: var(--spacing-micro) var(--spacing-small);
     border-radius: var(--borders-radius-small);
-    transition: var(--effects-transitions-quick);
   }
 
   .dropdown-trigger:hover {
@@ -1122,16 +1108,6 @@
     max-height: 400px;
   }
 
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 
   .dropdown-item {
     display: block;
@@ -1170,7 +1146,6 @@
 
   .section-header {
     font-weight: var(--typography-font-weight-bold);
-    text-transform: uppercase;
     letter-spacing: 0.5px;
   }
 
@@ -1211,14 +1186,12 @@
   .left-stencil {
     position: fixed;
     left: 0;
-    will-change: opacity;
     backface-visibility: hidden;
   }
 
   .right-stencil {
     position: fixed;
     right: 0;
-    will-change: opacity;
     backface-visibility: hidden;
   }
 </style>

@@ -91,7 +91,6 @@
   :global(body) {
     background: var(--app-background) !important;
     color: var(--text-color) !important;
-    transition: var(--global-body-transition);
     margin: var(--spacing-reset);
     padding: var(--spacing-reset);
     font-family: var(--typography-font-family-system);

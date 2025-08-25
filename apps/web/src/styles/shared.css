@@ -59,7 +59,6 @@
   border: none;
   border-radius: var(--borders-radius-round);
   color: var(--icons-colors-default);
-  transition: var(--effects-transitions-quick);
   cursor: pointer;
   outline: none;
 }
@@ -67,11 +66,9 @@
 .icon-button:hover {
   color: var(--icons-colors-hover);
   background: var(--icons-effects-hover-background);
-  transform: var(--icons-effects-scale-hover);
 }
 
 .icon-button:active {
-  transform: var(--icons-effects-scale-active);
 }
 
 .icon-button svg {
@@ -139,7 +136,6 @@
   padding: var(--scrollback-role-label-padding);
   font-size: var(--scrollback-role-label-font-size);
   font-weight: var(--scrollback-role-label-font-weight);
-  text-transform: var(--scrollback-role-label-text-transform);
   letter-spacing: var(--scrollback-role-label-letter-spacing);
   border-radius: var(--scrollback-role-label-border-radius);
   display: inline-block;
@@ -176,20 +172,8 @@
   -webkit-backdrop-filter: var(--scrollback-action-icons-backdrop-filter);
   border-radius: var(--scrollback-action-icons-border-radius);
   border: var(--scrollback-action-icons-border);
-  animation: fadeIn 0.2s ease-out;
-  transform: translateY(4px);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(4px);
-  }
-}
 
 /* ============================================
    TYPOGRAPHY UTILITIES
@@ -269,7 +253,6 @@
 
 .empty-state {
   text-align: center;
-  opacity: 0.5;
   padding: 2rem;
   color: var(--scrollback-message-content-color);
   font-family: var(--scrollback-message-content-font-family);
@@ -278,15 +261,9 @@
 
 .loading-state {
   text-align: center;
-  opacity: 0.7;
   padding: 2rem;
   color: var(--scrollback-message-content-color);
   font-family: var(--scrollback-message-content-font-family);
   font-size: var(--scrollback-message-content-font-size);
-  animation: pulse 1.5s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 0.3; }
-}

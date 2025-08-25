@@ -48,7 +48,6 @@ export function themeInjector() {
               body {
                 background: ${themeData.globalBody.background} !important;
                 color: ${themeData.globalBody.color} !important;
-                transition: ${themeData.globalBody.transition};
                 margin: 0;
                 padding: 0;
               }

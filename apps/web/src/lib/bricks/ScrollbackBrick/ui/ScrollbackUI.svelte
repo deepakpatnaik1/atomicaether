@@ -157,7 +157,6 @@
                 : theme?.scrollback?.roleLabel?.assistant?.borderColor || 'rgba(249, 115, 22, 0.3)'};
               font-size: {theme?.scrollback?.roleLabel?.fontSize || '11px'};
               font-weight: {theme?.scrollback?.roleLabel?.fontWeight || '600'};
-              text-transform: {theme?.scrollback?.roleLabel?.textTransform || 'uppercase'};
               letter-spacing: {theme?.scrollback?.roleLabel?.letterSpacing || '0.5px'};
               border-radius: {theme?.scrollback?.roleLabel?.borderRadius || '4px'};
               padding: {theme?.scrollback?.layout?.roleLabel?.padding || '2px 8px'};
@@ -226,11 +225,9 @@
     /* Margin and padding now come from inline styles via theme */
     padding: 0;
     cursor: pointer;
-    transition: opacity 0.2s ease;
   }
   
   .message:hover {
-    opacity: 0.9;
   }
 
   .message-header {
@@ -249,7 +246,6 @@
   
   .timestamp {
     font-size: 10px;
-    opacity: 0.5;
   }
 
   .message-content {
@@ -292,14 +288,8 @@
   }
   
   .streaming-cursor {
-    animation: blink 1s infinite;
-    opacity: 0.7;
   }
   
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-  }
   
   .message-metadata {
     margin-top: 4px;
@@ -310,13 +300,11 @@
   
   .metadata-item {
     font-size: 10px;
-    opacity: 0.5;
   }
   
   .empty-state {
     text-align: center;
     padding: 40px;
-    opacity: 0.5;
   }
 
   /* Hide scrollbar */

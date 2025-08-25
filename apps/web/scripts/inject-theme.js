@@ -27,7 +27,6 @@ try {
 \t\t\tbody {
 \t\t\t\tbackground: ${themeData.globalBody.background} !important;
 \t\t\t\tcolor: ${themeData.globalBody.color} !important;
-\t\t\t\ttransition: ${themeData.globalBody.transition};
 \t\t\t\tmargin: 0;
 \t\t\t\tpadding: 0;
 \t\t\t}

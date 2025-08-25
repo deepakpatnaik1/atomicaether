@@ -243,7 +243,6 @@ Robert Langdon is the central protagonist who guides readers through the intrica
                 : theme?.scrollback?.roleLabel?.assistant?.borderColor || 'rgba(249, 115, 22, 0.3)'};
               font-size: {theme?.scrollback?.roleLabel?.fontSize || '11px'};
               font-weight: {theme?.scrollback?.roleLabel?.fontWeight || '600'};
-              text-transform: {theme?.scrollback?.roleLabel?.textTransform || 'uppercase'};
               letter-spacing: {theme?.scrollback?.roleLabel?.letterSpacing || '0.5px'};
               border-radius: {theme?.scrollback?.roleLabel?.borderRadius || '4px'};
               padding: {theme?.scrollback?.layout?.roleLabel?.padding || '2px 8px'};
