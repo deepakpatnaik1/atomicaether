@@ -35,24 +35,15 @@
 </script>
 
 <main class="recyclebin-app">
-  <!-- Back to main app button -->
-  <a href="/" class="back-button" title="Back to Chat">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="19" y1="12" x2="5" y2="12"></line>
-      <polyline points="12 19 5 12 12 5"></polyline>
-    </svg>
-    <span>Back to Chat</span>
-  </a>
-  
-  <!-- Title -->
+  <!-- Header with centered back button -->
   <div class="recyclebin-header">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="3 6 5 6 21 6"></polyline>
-      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-      <line x1="10" y1="11" x2="10" y2="17"></line>
-      <line x1="14" y1="11" x2="14" y2="17"></line>
-    </svg>
-    <h1>Recycle Bin</h1>
+    <a href="/" class="back-button" title="Back to Chat">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Back to Chat</span>
+    </a>
   </div>
   
   <!-- Scrollback for deleted messages -->
@@ -77,10 +68,15 @@
     overflow: hidden;
   }
   
+  .recyclebin-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
   .back-button {
-    position: fixed;
-    top: 20px;
-    left: 20px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -92,7 +88,6 @@
     color: rgba(223, 208, 184, 0.8);
     text-decoration: none;
     transition: all 0.2s ease;
-    z-index: 100;
     font-size: 14px;
   }
   
@@ -101,22 +96,5 @@
     border-color: rgba(255, 255, 255, 0.2);
     color: rgba(223, 208, 184, 1);
     transform: translateX(-2px);
-  }
-  
-  .recyclebin-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 20px;
-    color: rgba(223, 208, 184, 0.6);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  
-  .recyclebin-header h1 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 500;
-    color: rgba(223, 208, 184, 0.8);
   }
 </style>
