@@ -4,7 +4,7 @@
   import type { DeletedMessage } from '$lib/bricks/RecycleBinBrick';
   import MarkdownRenderer from '$lib/bricks/MessageScrollback/core/MarkdownRenderer.svelte';
   
-  // State
+  // State - matching MessageScrollback exactly
   let deletedMessages = $state<DeletedMessage[]>([]);
   let hoveredTurnId = $state<string | null>(null);
   
@@ -37,25 +37,23 @@
     });
   }
   
-  // Format timestamp
+  // Format timestamp - show actual date/time
   function formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
-    return date.toLocaleString();
+    const options: Intl.DateTimeFormatOptions = {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return date.toLocaleString('en-US', options);
   }
   
-  // Format deleted time
-  function formatDeletedTime(deletedAt: number): string {
-    const now = Date.now();
-    const diff = now - deletedAt;
-    
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-    
-    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
-    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-    if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-    return 'Just now';
+  // Get persona name (default to Samara if not specified)
+  function getPersonaName(persona?: string): string {
+    if (!persona) return 'Samara';
+    // Capitalize first letter
+    return persona.charAt(0).toUpperCase() + persona.slice(1);
   }
 </script>
 
@@ -63,12 +61,7 @@
   <div class="messages">
     {#if deletedMessages.length === 0}
       <div class="empty-state">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="3 6 5 6 21 6"></polyline>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-        </svg>
-        <p>Recycle bin is empty</p>
-        <span>Deleted messages will appear here</span>
+        No deleted messages
       </div>
     {:else}
       {#each deletedMessages as message}
@@ -77,19 +70,16 @@
           onmouseenter={() => hoveredTurnId = message.turnId}
           onmouseleave={() => hoveredTurnId = null}
         >
-          <!-- Deletion info -->
-          <div class="deletion-info">
-            <span class="deleted-time">Deleted {formatDeletedTime(message.deletedAt)}</span>
-            {#if message.model}
-              <span class="model-tag">{message.model}</span>
-            {/if}
+          <!-- Show deletion timestamp -->
+          <div style="font-size: 11px; color: rgba(255, 255, 255, 0.3); margin-bottom: 8px;">
+            Deleted: {formatTimestamp(message.timestamp)}
           </div>
           
-          <!-- User message -->
+          <!-- Boss message -->
           {#if message.userMessage}
             <div class="message">
               <div class="message-header">
-                <span class="role-label boss">User</span>
+                <span class="role-label boss">Boss</span>
               </div>
               <div class="message-content">
                 <MarkdownRenderer content={message.userMessage} speaker="boss" />
@@ -97,21 +87,21 @@
             </div>
           {/if}
           
-          <!-- Assistant message -->
+          <!-- Assistant message with persona name -->
           {#if message.assistantMessage}
             <div class="message samara-message">
               <div class="message-header">
-                <span class="role-label samara">Assistant</span>
+                <span class="role-label samara">{getPersonaName(message.persona)}</span>
               </div>
               <div class="message-content">
                 <MarkdownRenderer content={message.assistantMessage} speaker="samara" />
               </div>
               
-              <!-- Restore action icon -->
+              <!-- Restore action icon - matching delete/copy style exactly -->
               {#if hoveredTurnId === message.turnId}
                 <div class="action-icons">
                   <button 
-                    class="action-icon restore-icon"
+                    class="action-icon"
                     onclick={() => handleRestore(message.turnId)}
                     aria-label="Restore message"
                     title="Restore this message"
@@ -134,6 +124,7 @@
 </div>
 
 <style>
+  /* Import exact styles from MessageScrollback */
   .scrollback-container {
     flex: 1;
     overflow-y: auto;
@@ -149,38 +140,6 @@
   .message-turn {
     margin-bottom: 32px;
     position: relative;
-    opacity: 0.9;
-    transition: opacity 0.2s ease;
-  }
-  
-  .message-turn:hover {
-    opacity: 1;
-  }
-  
-  .deletion-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    padding: 4px 8px;
-    background: rgba(255, 0, 0, 0.05);
-    border-left: 2px solid rgba(255, 0, 0, 0.3);
-    border-radius: 4px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
-  }
-  
-  .deleted-time {
-    font-style: italic;
-  }
-  
-  .model-tag {
-    padding: 2px 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
   
   .message {
@@ -226,7 +185,7 @@
     font-size: 14px;
   }
   
-  /* Action icons - matching MessageScrollback style */
+  /* Action icons - exact copy from MessageScrollback */
   .action-icons {
     position: absolute;
     bottom: 0;
@@ -269,11 +228,6 @@
     transform: scale(0.95);
   }
   
-  .restore-icon:hover {
-    color: rgba(100, 255, 100, 0.9);
-    background: rgba(100, 255, 100, 0.1);
-  }
-  
   .action-icon svg {
     width: 16px;
     height: 16px;
@@ -294,28 +248,9 @@
   
   /* Empty state */
   .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
     padding: 80px 20px;
     color: rgba(255, 255, 255, 0.3);
-    text-align: center;
-  }
-  
-  .empty-state svg {
-    margin-bottom: 16px;
-    opacity: 0.5;
-  }
-  
-  .empty-state p {
-    font-size: 16px;
-    margin: 0 0 8px 0;
-    color: rgba(255, 255, 255, 0.5);
-  }
-  
-  .empty-state span {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.3);
   }
 </style>
