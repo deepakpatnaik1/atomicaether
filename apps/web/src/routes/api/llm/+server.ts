@@ -358,6 +358,8 @@ export const POST: RequestHandler = async ({ request }) => {
           if (!parsedResponse.fullResponse || !parsedResponse.trim || !parsedResponse.metadata) {
             throw new Error('Invalid machine trim JSON structure');
           }
+          // Use the fullResponse as the content for the user
+          content = parsedResponse.fullResponse;
         } catch (error) {
           console.warn('Failed to parse machine trim JSON, using raw response:', error);
           // Fallback to raw content if JSON parsing fails
@@ -407,6 +409,8 @@ export const POST: RequestHandler = async ({ request }) => {
           if (!parsedResponse.fullResponse || !parsedResponse.trim || !parsedResponse.metadata) {
             throw new Error('Invalid machine trim JSON structure');
           }
+          // Use the fullResponse as the content for the user
+          content = parsedResponse.fullResponse;
         } catch (error) {
           console.warn('Failed to parse machine trim JSON, using raw response:', error);
         }
@@ -451,6 +455,8 @@ export const POST: RequestHandler = async ({ request }) => {
           if (!parsedResponse.fullResponse || !parsedResponse.trim || !parsedResponse.metadata) {
             throw new Error('Invalid machine trim JSON structure');
           }
+          // Use the fullResponse as the content for the user
+          content = parsedResponse.fullResponse;
         } catch (error) {
           console.warn('Failed to parse machine trim JSON, using raw response:', error);
         }
