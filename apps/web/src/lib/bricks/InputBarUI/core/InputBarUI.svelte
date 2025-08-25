@@ -485,7 +485,7 @@
         --remove-button-hover: {theme.interactiveStates.removeButtonHover};
         --icon-background: {theme.controlsRow.plusButton.icon.color};
         --chevron-color: {theme.controlsRow.dropdownTrigger.chevron.color};
-        --dropdown-z-index: {layout?.dropdown.menu.zIndex || '1000'};
+        --dropdown-z-index: {layout?.dropdown.menu.zIndex};
       }
     </style>
   {/if}
@@ -506,24 +506,24 @@
 <div 
   class="left-stencil"
   style="
-    bottom: {layout?.stencils.positioning.bottom || '81px'};
-    height: {layout?.stencils.positioning.height || '2px'};
-    z-index: {layout?.stencils.positioning.zIndex || '1000'};
-    width: {layout?.stencils.dimensions.defaultWidth || 'calc((100vw - 650px) / 2)'};
-    min-width: {layout?.stencils.dimensions.minWidth || '20px'};
-    background: {theme?.stencils.gradient.left || 'linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5))'};
+    bottom: {layout?.stencils.positioning.bottom};
+    height: {layout?.stencils.positioning.height};
+    z-index: {layout?.stencils.positioning.zIndex};
+    width: {layout?.stencils.dimensions.defaultWidth};
+    min-width: {layout?.stencils.dimensions.minWidth};
+    background: {theme?.stencils.gradient.left};
   "
 ></div>
 
 <div 
   class="right-stencil"
   style="
-    bottom: {layout?.stencils.positioning.bottom || '81px'};
-    height: {layout?.stencils.positioning.height || '2px'};
-    z-index: {layout?.stencils.positioning.zIndex || '1000'};
-    width: {layout?.stencils.dimensions.defaultWidth || 'calc((100vw - 650px) / 2)'};
-    min-width: {layout?.stencils.dimensions.minWidth || '20px'};
-    background: {theme?.stencils.gradient.right || 'linear-gradient(to left, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5))'};
+    bottom: {layout?.stencils.positioning.bottom};
+    height: {layout?.stencils.positioning.height};
+    z-index: {layout?.stencils.positioning.zIndex};
+    width: {layout?.stencils.dimensions.defaultWidth};
+    min-width: {layout?.stencils.dimensions.minWidth};
+    background: {theme?.stencils.gradient.right};
   "
 ></div>
 
@@ -531,10 +531,10 @@
 <div 
   class="input-container"
   style="
-    bottom: {layout?.container.positioning.bottom || '24px'};
-    width: {layout?.container.dimensions.defaultWidth || '650px'};
-    max-width: {layout?.container.dimensions.maxWidth || 'calc(100vw - 40px)'};
-    z-index: {layout?.container.positioning.zIndex || '1000'};
+    bottom: {layout?.container.positioning.bottom};
+    width: {layout?.container.dimensions.defaultWidth};
+    max-width: {layout?.container.dimensions.maxWidth};
+    z-index: {layout?.container.positioning.zIndex};
     opacity: {isReady ? '1' : '0'};
     transition: opacity 0.2s ease;
   "
@@ -544,24 +544,24 @@
     <div 
       class="file-preview-zone external"
       style="
-        background: {theme?.filePreviewZone.background || 'rgba(255, 255, 255, 0.1)'};
-        border-radius: {theme?.filePreviewZone.border.radius || '6px'};
-        padding: {theme?.filePreviewZone.spacing.padding || '12px'};
-        border: 1px solid {theme?.filePreviewZone.border.color || 'rgba(255, 255, 255, 0.2)'};
-        gap: {theme?.filePreviewZone.spacing.itemGap || '8px'};
-        margin-bottom: {theme?.filePreviewZone.spacing.marginBottom || '12px'};
-        backdrop-filter: {theme?.inputBar.background.backdropFilter || 'blur(20px)'};
+        background: {theme?.filePreviewZone.background};
+        border-radius: {theme?.filePreviewZone.border.radius};
+        padding: {theme?.filePreviewZone.spacing.padding};
+        border: 1px solid {theme?.filePreviewZone.border.color};
+        gap: {theme?.filePreviewZone.spacing.itemGap};
+        margin-bottom: {theme?.filePreviewZone.spacing.marginBottom};
+        backdrop-filter: {theme?.inputBar.background.backdropFilter};
       "
     >
       {#each files as file, index}
         <div 
           class="file-preview"
           style="
-            background: {theme?.filePreviewZone.filePreview.background || 'rgba(0, 0, 0, 0.3)'};
-            border-radius: {theme?.filePreviewZone.filePreview.borderRadius || '6px'};
-            padding: {theme?.filePreviewZone.filePreview.padding || '8px'};
-            min-width: {theme?.filePreviewZone.filePreview.minWidth || '80px'};
-            max-width: {theme?.filePreviewZone.filePreview.maxWidth || '120px'};
+            background: {theme?.filePreviewZone.filePreview.background};
+            border-radius: {theme?.filePreviewZone.filePreview.borderRadius};
+            padding: {theme?.filePreviewZone.filePreview.padding};
+            min-width: {theme?.filePreviewZone.filePreview.minWidth};
+            max-width: {theme?.filePreviewZone.filePreview.maxWidth};
             position: relative;
           "
         >
@@ -572,10 +572,10 @@
               style="
                 width: 100%;
                 height: auto;
-                border-radius: {theme?.filePreviewZone.image.borderRadius || '4px'};
-                max-height: {theme?.filePreviewZone.image.maxHeight || '80px'};
-                opacity: {uploadProgress[index] < 100 ? (theme?.filePreviewZone.image.uploadingOpacity || '0.5') : 1};
-                object-fit: {theme?.filePreviewZone.image.objectFit || 'cover'};
+                border-radius: {theme?.filePreviewZone.image.borderRadius};
+                max-height: {theme?.filePreviewZone.image.maxHeight};
+                opacity: {uploadProgress[index] < 100 ? theme?.filePreviewZone.image.uploadingOpacity : 1};
+                object-fit: {theme?.filePreviewZone.image.objectFit};
               "
             />
           {:else}
@@ -583,14 +583,14 @@
               class="file-icon"
               style="
                 width: 100%;
-                height: {theme?.filePreviewZone.fileIcon.height || '60px'};
+                height: {theme?.filePreviewZone.fileIcon.height};
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: {theme?.filePreviewZone.fileIcon.background || 'rgba(255, 255, 255, 0.1)'};
-                border-radius: {theme?.filePreviewZone.fileIcon.borderRadius || '4px'};
-                color: {theme?.filePreviewZone.fileIcon.color || '#fff'};
-                font-size: {theme?.filePreviewZone.fileIcon.fontSize || '24px'};
+                background: {theme?.filePreviewZone.fileIcon.background};
+                border-radius: {theme?.filePreviewZone.fileIcon.borderRadius};
+                color: {theme?.filePreviewZone.fileIcon.color};
+                font-size: {theme?.filePreviewZone.fileIcon.fontSize};
               "
             >📄</div>
           {/if}
@@ -598,9 +598,9 @@
             class="file-name"
             style="
               display: block;
-              margin-top: {theme?.filePreviewZone.fileName.marginTop || '4px'};
-              font-size: {theme?.filePreviewZone.fileName.fontSize || '10px'};
-              color: {theme?.filePreviewZone.fileName.color || 'rgba(255, 255, 255, 0.8)'};
+              margin-top: {theme?.filePreviewZone.fileName.marginTop};
+              font-size: {theme?.filePreviewZone.fileName.fontSize};
+              color: {theme?.filePreviewZone.fileName.color};
               text-align: center;
               word-break: break-all;
               line-height: 1.2;
@@ -611,11 +611,11 @@
             onclick={() => removeFile(index)}
             style="
               position: absolute;
-              width: {theme?.filePreviewZone.removeButton.size || '20px'};
-              height: {theme?.filePreviewZone.removeButton.size || '20px'};
-              top: {theme?.filePreviewZone.removeButton.position.top || '-4px'};
-              right: {theme?.filePreviewZone.removeButton.position.right || '-4px'};
-              background: {theme?.filePreviewZone.removeButton.background || 'rgba(255, 0, 0, 0.8)'};
+              width: {theme?.filePreviewZone.removeButton.size};
+              height: {theme?.filePreviewZone.removeButton.size};
+              top: {theme?.filePreviewZone.removeButton.position.top};
+              right: {theme?.filePreviewZone.removeButton.position.right};
+              background: {theme?.filePreviewZone.removeButton.background};
             "
           >×</button>
         </div>
@@ -630,16 +630,16 @@
     role="region"
     aria-label="File drop zone"
     style="
-      min-height: {layout?.container.dimensions.minHeight || '80px'};
-      background: {theme?.inputBar.background.color || 'rgba(0, 0, 0, 0.85)'};
-      backdrop-filter: {theme?.inputBar.background.backdropFilter || 'blur(20px)'};
-      border: {theme?.inputBar.border.width || '2px'} {theme?.inputBar.border.style || 'solid'};
-      border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop || 'rgba(255, 255, 255, 0.3)'}, {theme?.inputBar.border.gradientBottom || 'rgba(255, 255, 255, 0.1)'}) 1;
-      border-radius: {theme?.inputBar.border.radius || '9px'};
-      box-shadow: {theme?.inputBar.shadow.outer || '0 4px 12px rgba(0, 0, 0, 0.4)'}, {theme?.inputBar.shadow.inner || 'inset 0 -2px 8px rgba(255, 255, 255, 0.08)'};
-      padding: {layout?.container.spacing.padding || '16px'};
-      gap: {layout?.container.spacing.gridGap || '12px'};
-      transition: {layout?.animation.globalTransition || 'all 0.3s ease'};
+      min-height: {layout?.container.dimensions.minHeight};
+      background: {theme?.inputBar.background.color};
+      backdrop-filter: {theme?.inputBar.background.backdropFilter};
+      border: {theme?.inputBar.border.width} {theme?.inputBar.border.style};
+      border-image: linear-gradient(to bottom, {theme?.inputBar.border.gradientTop}, {theme?.inputBar.border.gradientBottom}) 1;
+      border-radius: {theme?.inputBar.border.radius};
+      box-shadow: {theme?.inputBar.shadow.outer}, {theme?.inputBar.shadow.inner};
+      padding: {layout?.container.spacing.padding};
+      gap: {layout?.container.spacing.gridGap};
+      transition: {layout?.animation.globalTransition};
     "
   >
     
@@ -653,20 +653,20 @@
       onkeydown={handleTextareaKeydown}
       rows="1"
       style="
-        color: {theme?.textInput.typography.color || '#DFD0B8'};
-        font-size: {layout?.textInput.typography.fontSize || '14px'};
-        font-family: {layout?.textInput.typography.fontFamily || 'system-ui'};
-        line-height: {layout?.textInput.autoResize.lineHeight || '20px'};
-        min-height: {layout?.textInput.autoResize.minHeight || '20px'};
-        max-height: {layout?.textInput.autoResize.maxHeight || '240px'};
-        transition: {layout?.animation.inputResize || 'height 0.2s ease'};
+        color: {theme?.textInput.typography.color};
+        font-size: {layout?.textInput.typography.fontSize};
+        font-family: {layout?.textInput.typography.fontFamily};
+        line-height: {layout?.textInput.autoResize.lineHeight};
+        min-height: {layout?.textInput.autoResize.minHeight};
+        max-height: {layout?.textInput.autoResize.maxHeight};
+        transition: {layout?.animation.inputResize};
       "
     ></textarea>
     
     <!-- Controls Row -->
     <div 
       class="controls-row"
-      style="gap: {layout?.controlsRow.layout.gap || '12px'};"
+      style="gap: {layout?.controlsRow.layout.gap};"
     >
       <!-- Plus Button -->
       <button 
@@ -674,16 +674,16 @@
         onclick={handleFileSelect}
         aria-label="Attach files"
         style="
-          padding: {layout?.controlsRow.plusButton.padding || '4px 8px'};
-          border-radius: {layout?.controlsRow.plusButton.borderRadius || '4px'};
-          transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+          padding: {layout?.controlsRow.plusButton.padding};
+          border-radius: {layout?.controlsRow.plusButton.borderRadius};
+          transition: {layout?.animation.hoverTransition};
         "
       >
         <div 
           class="plus-icon"
           style="
-            width: {layout?.controlsRow.plusButton.icon.size || '10px'};
-            height: {layout?.controlsRow.plusButton.icon.size || '10px'};
+            width: {layout?.controlsRow.plusButton.icon.size};
+            height: {layout?.controlsRow.plusButton.icon.size};
           "
         ></div>
       </button>
@@ -694,11 +694,11 @@
           class="dropdown-trigger" 
           onclick={toggleModelDropdown}
           style="
-            font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
-            padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
-            border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius || '4px'};
-            color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
-            transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+            font-size: {layout?.controlsRow.dropdownTrigger.fontSize};
+            padding: {layout?.controlsRow.dropdownTrigger.padding};
+            border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius};
+            color: {theme?.controlsRow.dropdownTrigger.color};
+            transition: {layout?.animation.hoverTransition};
           "
         >
           <div 
@@ -711,14 +711,14 @@
           <div 
             class="dropdown-menu"
             style="
-              width: {layout?.dropdown.menu.width || '280px'};
-              margin-bottom: {layout?.dropdown.menu.marginBottom || '8px'};
-              background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
-              backdrop-filter: {theme?.dropdown.menu.backdropFilter || 'blur(20px)'};
-              border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
-              border-radius: {theme?.dropdown.menu.borderRadius || '8px'};
-              box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
-              animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
+              width: {layout?.dropdown.menu.width};
+              margin-bottom: {layout?.dropdown.menu.marginBottom};
+              background: {theme?.dropdown.menu.background};
+              backdrop-filter: {theme?.dropdown.menu.backdropFilter};
+              border: {theme?.dropdown.menu.border};
+              border-radius: {theme?.dropdown.menu.borderRadius};
+              box-shadow: {theme?.dropdown.menu.shadow};
+              animation: slideUp {layout?.animation.dropdownAnimation} ease;
             "
           >
             {#if dropdownData}
@@ -727,11 +727,11 @@
                   <div 
                     class="section-header"
                     style="
-                      color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
-                      font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
-                      padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
-                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
-                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
+                      color: {theme?.dropdown.sectionHeader.color};
+                      font-size: {layout?.dropdown.sectionHeader.fontSize};
+                      padding: {layout?.dropdown.sectionHeader.padding};
+                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom};
+                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom};
                     "
                   >
                     {category}
@@ -743,23 +743,23 @@
                         class:selected={model.id === selectedModel}
                         onclick={() => selectModel(model.id)}
                         style="
-                          padding: {layout?.dropdown.item.padding || '8px 12px'};
-                          font-size: {layout?.dropdown.item.fontSize || '12px'};
-                          color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
-                          transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+                          padding: {layout?.dropdown.item.padding};
+                          font-size: {layout?.dropdown.item.fontSize};
+                          color: {theme?.dropdown.item.color};
+                          transition: {layout?.animation.hoverTransition};
                         "
                       >
                         <span 
                           class="model-name"
-                          style="font-size: {layout?.dropdown.modelRow.modelName.fontSize || '12px'};"
+                          style="font-size: {layout?.dropdown.modelRow.modelName.fontSize};"
                         >
                           {model.name}
                         </span>
                         <span 
                           class="model-id"
                           style="
-                            font-size: {layout?.dropdown.modelRow.modelId.fontSize || '10px'};
-                            margin-left: {layout?.dropdown.modelRow.modelId.marginLeft || '16px'};
+                            font-size: {layout?.dropdown.modelRow.modelId.fontSize};
+                            margin-left: {layout?.dropdown.modelRow.modelId.marginLeft};
                             opacity: 0.6;
                           "
                         >
@@ -781,11 +781,11 @@
           class="dropdown-trigger" 
           onclick={togglePersonaDropdown}
           style="
-            font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
-            padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
-            border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius || '4px'};
-            color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
-            transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+            font-size: {layout?.controlsRow.dropdownTrigger.fontSize};
+            padding: {layout?.controlsRow.dropdownTrigger.padding};
+            border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius};
+            color: {theme?.controlsRow.dropdownTrigger.color};
+            transition: {layout?.animation.hoverTransition};
           "
         >
           <div 
@@ -798,14 +798,14 @@
           <div 
             class="dropdown-menu persona-menu"
             style="
-              width: {layout?.dropdown.menu.width || '280px'};
-              margin-bottom: {layout?.dropdown.menu.marginBottom || '8px'};
-              background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
-              backdrop-filter: {theme?.dropdown.menu.backdropFilter || 'blur(20px)'};
-              border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
-              border-radius: {theme?.dropdown.menu.borderRadius || '8px'};
-              box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
-              animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
+              width: {layout?.dropdown.menu.width};
+              margin-bottom: {layout?.dropdown.menu.marginBottom};
+              background: {theme?.dropdown.menu.background};
+              backdrop-filter: {theme?.dropdown.menu.backdropFilter};
+              border: {theme?.dropdown.menu.border};
+              border-radius: {theme?.dropdown.menu.borderRadius};
+              box-shadow: {theme?.dropdown.menu.shadow};
+              animation: slideUp {layout?.animation.dropdownAnimation} ease;
             "
           >
             {#if dropdownData}
@@ -814,11 +814,11 @@
                   <div 
                     class="section-header"
                     style="
-                      color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
-                      font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
-                      padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
-                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
-                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
+                      color: {theme?.dropdown.sectionHeader.color};
+                      font-size: {layout?.dropdown.sectionHeader.fontSize};
+                      padding: {layout?.dropdown.sectionHeader.padding};
+                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom};
+                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom};
                     "
                   >
                     {category}
@@ -830,10 +830,10 @@
                         class:selected={persona.id === selectedPersona}
                         onclick={() => selectPersona(persona.id)}
                         style="
-                          padding: {layout?.dropdown.item.padding || '8px 12px'};
-                          font-size: {layout?.dropdown.item.fontSize || '12px'};
-                          color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
-                          transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+                          padding: {layout?.dropdown.item.padding};
+                          font-size: {layout?.dropdown.item.fontSize};
+                          color: {theme?.dropdown.item.color};
+                          transition: {layout?.animation.hoverTransition};
                         "
                       >
                         <span class="model-name">{persona.name}</span>
@@ -854,11 +854,11 @@
           class="dropdown-trigger" 
           onclick={toggleThemeDropdown}
           style="
-            font-size: {layout?.controlsRow.dropdownTrigger.fontSize || '12px'};
-            padding: {layout?.controlsRow.dropdownTrigger.padding || '4px 8px'};
-            border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius || '4px'};
-            color: {theme?.controlsRow.dropdownTrigger.color || 'rgba(223, 208, 184, 0.7)'};
-            transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+            font-size: {layout?.controlsRow.dropdownTrigger.fontSize};
+            padding: {layout?.controlsRow.dropdownTrigger.padding};
+            border-radius: {layout?.controlsRow.dropdownTrigger.borderRadius};
+            color: {theme?.controlsRow.dropdownTrigger.color};
+            transition: {layout?.animation.hoverTransition};
           "
         >
           <div 
@@ -871,14 +871,14 @@
           <div 
             class="dropdown-menu"
             style="
-              width: {layout?.dropdown.menu.width || '280px'};
-              margin-bottom: {layout?.dropdown.menu.marginBottom || '8px'};
-              background: {theme?.dropdown.menu.background || 'rgba(0, 0, 0, 0.9)'};
-              backdrop-filter: {theme?.dropdown.menu.backdropFilter || 'blur(20px)'};
-              border: {theme?.dropdown.menu.border || '1px solid rgba(255, 255, 255, 0.2)'};
-              border-radius: {theme?.dropdown.menu.borderRadius || '8px'};
-              box-shadow: {theme?.dropdown.menu.shadow || '0 8px 32px rgba(0, 0, 0, 0.4)'};
-              animation: slideUp {layout?.animation.dropdownAnimation || '0.2s'} ease;
+              width: {layout?.dropdown.menu.width};
+              margin-bottom: {layout?.dropdown.menu.marginBottom};
+              background: {theme?.dropdown.menu.background};
+              backdrop-filter: {theme?.dropdown.menu.backdropFilter};
+              border: {theme?.dropdown.menu.border};
+              border-radius: {theme?.dropdown.menu.borderRadius};
+              box-shadow: {theme?.dropdown.menu.shadow};
+              animation: slideUp {layout?.animation.dropdownAnimation} ease;
             "
           >
             {#if dropdownData}
@@ -887,11 +887,11 @@
                   <div 
                     class="section-header"
                     style="
-                      color: {theme?.dropdown.sectionHeader.color || 'rgba(255, 255, 255, 0.9)'};
-                      font-size: {layout?.dropdown.sectionHeader.fontSize || '11px'};
-                      padding: {layout?.dropdown.sectionHeader.padding || '8px 12px 4px 12px'};
-                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom || '1px solid rgba(255, 255, 255, 0.1)'};
-                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom || '4px'};
+                      color: {theme?.dropdown.sectionHeader.color};
+                      font-size: {layout?.dropdown.sectionHeader.fontSize};
+                      padding: {layout?.dropdown.sectionHeader.padding};
+                      border-bottom: {theme?.dropdown.sectionHeader.borderBottom};
+                      margin-bottom: {layout?.dropdown.sectionHeader.marginBottom};
                     "
                   >
                     {category}
@@ -903,10 +903,10 @@
                         class:selected={themeItem.id === selectedTheme}
                         onclick={() => selectTheme(themeItem.id)}
                         style="
-                          padding: {layout?.dropdown.item.padding || '8px 12px'};
-                          font-size: {layout?.dropdown.item.fontSize || '12px'};
-                          color: {theme?.dropdown.item.color || 'rgba(223, 208, 184, 0.8)'};
-                          transition: {layout?.animation.hoverTransition || 'background-color 0.2s ease'};
+                          padding: {layout?.dropdown.item.padding};
+                          font-size: {layout?.dropdown.item.fontSize};
+                          color: {theme?.dropdown.item.color};
+                          transition: {layout?.animation.hoverTransition};
                         "
                       >
                         <span class="model-name">{themeItem.name}</span>
@@ -925,10 +925,10 @@
       <div 
         class="green-indicator"
         style="
-          width: {layout?.controlsRow.statusIndicator.size || '8px'};
-          height: {layout?.controlsRow.statusIndicator.size || '8px'};
-          background: {theme?.controlsRow.statusIndicator.color || '#00ff00'};
-          box-shadow: {theme?.controlsRow.statusIndicator.shadow || '0 0 4px #00ff00, 0 0 8px rgba(0, 255, 0, 0.5)'};
+          width: {layout?.controlsRow.statusIndicator.size};
+          height: {layout?.controlsRow.statusIndicator.size};
+          background: {theme?.controlsRow.statusIndicator.color};
+          box-shadow: {theme?.controlsRow.statusIndicator.shadow};
         "
       ></div>
     </div>
