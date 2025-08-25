@@ -22,6 +22,15 @@
           "outputTokens": 4096,
           "tier": "balanced",
           "capabilities": ["text", "vision", "streaming"]
+        },
+        {
+          "id": "claude-3-5-sonnet-20241022",
+          "name": "Claude 3.5 Sonnet",
+          "description": "Latest Claude 3.5 model (working)",
+          "contextWindow": 200000,
+          "outputTokens": 4096,
+          "tier": "balanced",
+          "capabilities": ["text", "vision", "streaming"]
         }
       ]
     },
@@ -94,7 +103,7 @@
       ]
     }
   },
-  "defaultModel": "claude-opus-4-1-20250805",
+  "defaultModel": "claude-3-5-sonnet-20241022",
   "modelGroups": {
     "flagship": {
       "name": "🚀 Flagship",
@@ -111,6 +120,7 @@
       "description": "Good performance and cost",
       "models": [
         "claude-sonnet-4-20250514",
+        "claude-3-5-sonnet-20241022",
         "gpt-4o-2024-08-06",
         "accounts/fireworks/models/llama-v3p3-70b-instruct"
       ]
