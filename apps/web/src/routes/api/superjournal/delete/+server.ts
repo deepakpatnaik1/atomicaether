@@ -1,12 +1,12 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import type { JournalEntry } from '$lib/bricks/SuperJournalBrick/core/types';
 
 /**
  * SuperJournal Delete Endpoint
- * Since SuperJournal is immutable, we implement soft delete by:
- * 1. Adding a deletion marker file
- * 2. Updating manifests to exclude deleted entries
+ * Implements soft delete by updating the original entry with deletedAt timestamp
+ * This preserves immutability while allowing logical deletion
  */
 
 // Import R2 credentials from environment
@@ -44,36 +44,54 @@ export const POST: RequestHandler = async ({ request }) => {
       }, { status: 500 });
     }
     
-    // Create a deletion marker
-    const deletionKey = `deletions/${turnId}.json`;
-    const deletionMarker = {
-      turnId,
+    // Find the original entry
+    const originalEntry = await findEntryByTurnId(s3Client, R2_SUPERJOURNAL_BUCKET, turnId);
+    
+    if (!originalEntry) {
+      return json({
+        success: false,
+        error: 'Entry not found'
+      }, { status: 404 });
+    }
+    
+    // Create updated entry with deletedAt timestamp
+    const updatedEntry: JournalEntry = {
+      ...originalEntry,
       deletedAt: Date.now(),
-      reason: 'User requested deletion'
+      status: 'deleted'
     };
     
+    // Generate new R2 key for the updated entry (versioned)
+    const date = new Date(originalEntry.timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const updatedKey = `entries/${year}/${month}/${day}/${originalEntry.id}-${originalEntry.timestamp}-deleted-${Date.now()}.json`;
+    
+    // Write the updated entry
     const putCommand = new PutObjectCommand({
       Bucket: R2_SUPERJOURNAL_BUCKET,
-      Key: deletionKey,
-      Body: JSON.stringify(deletionMarker, null, 2),
+      Key: updatedKey,
+      Body: JSON.stringify(updatedEntry, null, 2),
       ContentType: 'application/json',
+      CacheControl: 'public, max-age=31536000, immutable',
       Metadata: {
-        turnId,
-        deletedAt: String(Date.now())
+        originalId: originalEntry.id,
+        turnNumber: String(originalEntry.turnNumber),
+        deletedAt: String(Date.now()),
+        status: 'deleted'
       }
     });
     
     await s3Client.send(putCommand);
     
-    console.log('🧠 SuperJournal: Created deletion marker for:', turnId);
-    
-    // Also update the deletions manifest for quick lookup
-    await updateDeletionsManifest(s3Client, R2_SUPERJOURNAL_BUCKET, turnId);
+    console.log('🧠 SuperJournal: Soft deleted entry:', turnId);
     
     return json({
       success: true,
       turnId,
-      message: 'Entry marked as deleted'
+      message: 'Entry soft deleted',
+      updatedKey
     });
     
   } catch (error) {
@@ -86,46 +104,66 @@ export const POST: RequestHandler = async ({ request }) => {
   }
 };
 
-async function updateDeletionsManifest(
+/**
+ * Find an entry by turnId by scanning all entries
+ * This is expensive but necessary for accurate deletion
+ */
+async function findEntryByTurnId(
   s3Client: S3Client,
   bucket: string,
   turnId: string
-): Promise<void> {
-  const manifestKey = 'manifests/deletions.json';
-  
-  let manifest;
+): Promise<JournalEntry | null> {
   try {
-    const getCommand = new GetObjectCommand({
-      Bucket: bucket,
-      Key: manifestKey
-    });
-    const existing = await s3Client.send(getCommand);
-    const bodyString = await existing.Body?.transformToString();
-    manifest = bodyString ? JSON.parse(bodyString) : null;
-  } catch (err) {
-    // Manifest doesn't exist yet
-    manifest = null;
-  }
-  
-  if (!manifest) {
-    manifest = {
-      deletedTurns: [],
-      lastUpdated: Date.now()
-    };
-  }
-  
-  // Add to deleted turns if not already there
-  if (!manifest.deletedTurns.includes(turnId)) {
-    manifest.deletedTurns.push(turnId);
-    manifest.lastUpdated = Date.now();
+    // Start from today and work backwards to find the entry
+    const today = new Date();
+    let daysScanned = 0;
+    const maxDays = 90; // Scan up to 90 days back
     
-    // Write updated manifest
-    const putCommand = new PutObjectCommand({
-      Bucket: bucket,
-      Key: manifestKey,
-      Body: JSON.stringify(manifest, null, 2),
-      ContentType: 'application/json'
-    });
-    await s3Client.send(putCommand);
+    while (daysScanned < maxDays) {
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      const prefix = `entries/${year}/${month}/${day}/`;
+      
+      // List objects for this day
+      const listCommand = new ListObjectsV2Command({
+        Bucket: bucket,
+        Prefix: prefix,
+        MaxKeys: 1000
+      });
+      
+      const listed = await s3Client.send(listCommand);
+      
+      if (listed.Contents) {
+        for (const object of listed.Contents) {
+          if (object.Key && object.Key.includes(turnId)) {
+            // Get the object
+            const getCommand = new GetObjectCommand({
+              Bucket: bucket,
+              Key: object.Key
+            });
+            
+            const result = await s3Client.send(getCommand);
+            const bodyString = await result.Body?.transformToString();
+            
+            if (bodyString) {
+              const entry = JSON.parse(bodyString) as JournalEntry;
+              if (entry.id === turnId) {
+                return entry;
+              }
+            }
+          }
+        }
+      }
+      
+      // Move to previous day
+      today.setDate(today.getDate() - 1);
+      daysScanned++;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error finding entry by turnId:', error);
+    return null;
   }
 }

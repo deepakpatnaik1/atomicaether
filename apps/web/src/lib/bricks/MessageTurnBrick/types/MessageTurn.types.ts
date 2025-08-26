@@ -36,3 +36,43 @@ export interface MessageTurnState {
   currentTurnId: string | null;
   totalTurns: number;
 }
+
+// Machine Trim Types
+export interface MachineTrimMetadata {
+  hasDecisions: boolean;
+  isInferable: boolean;
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface MachineTrimmedMessage {
+  id: string;
+  originalId: string; // References the original message ID
+  trimmedContent: string;
+  metadata: MachineTrimMetadata;
+  timestamp: number;
+}
+
+export interface MessagePairSet {
+  id: string; // Unique identifier for the pair set
+  turnId: string; // Reference to MessageTurn.id
+  
+  // Original messages (full conversational content)
+  original: {
+    bossMessage: BossMessage;
+    samaraMessage: SamaraMessage;
+  };
+  
+  // Machine-trimmed messages (compressed for storage)
+  trimmed: {
+    bossMessage: MachineTrimmedMessage;
+    samaraMessage: MachineTrimmedMessage;
+  };
+  
+  // Lifecycle timestamps
+  createdAt: number;
+  updatedAt?: number;
+  deletedAt?: number; // Soft delete timestamp
+  
+  // Status tracking
+  status: 'active' | 'deleted' | 'archived';
+}

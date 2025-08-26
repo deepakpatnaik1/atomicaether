@@ -1,4 +1,5 @@
 import type { EventBus, StateBus, ConfigBus, ErrorBus } from '../../../buses/types';
+import type { MessagePairSet } from '../../MessageTurnBrick/types/MessageTurn.types';
 
 export interface DeletedMessage {
   turnId: string;
@@ -10,9 +11,16 @@ export interface DeletedMessage {
   persona?: string;
 }
 
+export interface DeletedMessagePairSet extends MessagePairSet {
+  // MessagePairSet already has deletedAt and status fields
+  // This interface exists for type clarity in RecycleBin operations
+}
+
 export class RecycleBinBrick {
   private deletedMessages: DeletedMessage[] = [];
+  private deletedPairSets: DeletedMessagePairSet[] = [];
   private readonly STORAGE_KEY = 'atomicaether:recycle-bin';
+  private readonly PAIRSET_STORAGE_KEY = 'atomicaether:recycle-bin-pairsets';
   
   constructor(
     private eventBus: EventBus,
@@ -28,6 +36,7 @@ export class RecycleBinBrick {
     
     // Load deleted messages from localStorage first (for immediate display)
     this.loadDeletedMessages();
+    this.loadPairSets();
     
     // Then load from SuperJournal (may have more/different entries)
     this.loadDeletedMessagesFromSuperJournal();
@@ -50,6 +59,16 @@ export class RecycleBinBrick {
     // Listen for permanent delete requests
     this.eventBus.subscribe('message:delete-permanent', (data: any) => {
       this.handlePermanentDelete(data);
+    });
+    
+    // NEW: Listen for MessagePairSet deletion events
+    this.eventBus.subscribe('messagePairSet:deleted', (data: any) => {
+      this.handlePairSetDeleted(data);
+    });
+    
+    // NEW: Listen for MessagePairSet restore requests
+    this.eventBus.subscribe('messagePairSet:restore', (data: any) => {
+      this.handlePairSetRestore(data);
     });
   }
   
@@ -217,5 +236,91 @@ export class RecycleBinBrick {
       messages: this.deletedMessages,
       count: this.deletedMessages.length
     });
+  }
+  
+  // NEW: MessagePairSet Methods
+  
+  /**
+   * Handle deletion of a MessagePairSet (both original and trimmed versions)
+   * This ensures synchronized lifecycle management
+   */
+  private async handlePairSetDeleted(data: { messagePairSet: MessagePairSet }) {
+    const { messagePairSet } = data;
+    
+    // Mark the MessagePairSet as deleted
+    const deletedPairSet: DeletedMessagePairSet = {
+      ...messagePairSet,
+      deletedAt: Date.now(),
+      status: 'deleted'
+    };
+    
+    // Add to deleted pair sets
+    this.deletedPairSets.unshift(deletedPairSet);
+    this.savePairSets();
+    
+    console.log(`🗑️ RecycleBin: MessagePairSet ${messagePairSet.id} moved to trash (original + trimmed)`);
+    
+    // Update recycle bin view
+    this.publishDeletedMessages();
+  }
+  
+  /**
+   * Handle restoration of a MessagePairSet (both original and trimmed versions)
+   */
+  private async handlePairSetRestore(data: { pairSetId: string }) {
+    const { pairSetId } = data;
+    
+    const pairSetIndex = this.deletedPairSets.findIndex(ps => ps.id === pairSetId);
+    if (pairSetIndex !== -1) {
+      const pairSetToRestore = this.deletedPairSets[pairSetIndex];
+      
+      // Remove from recycle bin
+      this.deletedPairSets.splice(pairSetIndex, 1);
+      this.savePairSets();
+      
+      // Restore to active status
+      const restoredPairSet: MessagePairSet = {
+        ...pairSetToRestore,
+        status: 'active',
+        updatedAt: Date.now()
+      };
+      delete restoredPairSet.deletedAt;
+      
+      // Publish restore event
+      this.eventBus.publish('messagePairSet:restored', { messagePairSet: restoredPairSet });
+      
+      console.log(`♻️ RecycleBin: MessagePairSet ${pairSetId} restored (original + trimmed)`);
+      
+      // Update recycle bin view
+      this.publishDeletedMessages();
+    }
+  }
+  
+  /**
+   * Save deleted MessagePairSets to localStorage
+   */
+  private savePairSets() {
+    try {
+      localStorage.setItem(this.PAIRSET_STORAGE_KEY, JSON.stringify(this.deletedPairSets));
+    } catch (error) {
+      console.error('Failed to save deleted MessagePairSets:', error);
+      this.errorBus.report(error as Error, 'RecycleBinBrick');
+    }
+  }
+  
+  /**
+   * Load deleted MessagePairSets from localStorage
+   */
+  private loadPairSets() {
+    try {
+      const stored = localStorage.getItem(this.PAIRSET_STORAGE_KEY);
+      if (stored) {
+        this.deletedPairSets = JSON.parse(stored);
+        console.log(`🗑️ RecycleBin: Loaded ${this.deletedPairSets.length} deleted MessagePairSets from localStorage`);
+      }
+    } catch (error) {
+      console.error('Failed to load deleted MessagePairSets:', error);
+      this.deletedPairSets = [];
+    }
   }
 }

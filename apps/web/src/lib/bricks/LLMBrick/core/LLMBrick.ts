@@ -22,15 +22,19 @@ import type {
 import { AnthropicService } from '../services/AnthropicService';
 import { OpenAIService } from '../services/OpenAIService';
 import { FireworksService } from '../services/FireworksService';
+import { MachineTrimService } from '../../../services/MachineTrimService';
 
 export class LLMBrick {
   private config: LLMConfig | null = null;
   private anthropicService: AnthropicService | null = null;
   private openaiService: OpenAIService | null = null;
   private fireworksService: FireworksService | null = null;
+  private machineTrimService: MachineTrimService;
   
   private currentModel: string;
   private isStreaming = true; // Enable streaming by default
+  private currentUserMessage: string = '';
+  private currentPersona: string = '';
   
   constructor(
     private eventBus: EventBus,
@@ -39,6 +43,7 @@ export class LLMBrick {
     private errorBus: ErrorBus
   ) {
     this.currentModel = '';
+    this.machineTrimService = new MachineTrimService();
     this.init();
   }
 
@@ -239,6 +244,10 @@ export class LLMBrick {
   private async handleUserMessage(content: string) {
     if (!this.currentModel || !content.trim()) return;
     
+    // Store current conversation context for machine trimming
+    this.currentUserMessage = content;
+    this.currentPersona = 'Samara'; // Default persona, could be dynamic
+    
     // Publish user message event
     this.eventBus.publish('message:sent', {
       content,
@@ -288,13 +297,8 @@ export class LLMBrick {
       
       for await (const chunk of service.stream(request)) {
         if (chunk.finished) {
-          // Broadcast completion to the void
-          this.eventBus.publish('llm:response:complete', {
-            messageId,
-            fullResponse: fullContent,
-            model,
-            timestamp: Date.now()
-          });
+          // Generate machine-trimmed version
+          await this.handleResponseComplete(messageId, fullContent, model);
         } else {
           fullContent += chunk.delta;
           // Broadcast chunk to the void
@@ -321,13 +325,8 @@ export class LLMBrick {
     try {
       const response = await service.complete(request);
       
-      // Broadcast complete response to the void
-      this.eventBus.publish('llm:response:complete', {
-        messageId,
-        fullResponse: response.content,
-        model,
-        timestamp: Date.now()
-      });
+      // Generate machine-trimmed version
+      await this.handleResponseComplete(messageId, response.content, model);
     } catch (error) {
       console.error('Regular response failed:', error);
       // Broadcast error to the void
@@ -417,5 +416,92 @@ export class LLMBrick {
 
   public destroy() {
     // Cleanup if needed
+  }
+  
+  /**
+   * Handle response completion - generate machine-trimmed version and publish events
+   */
+  private async handleResponseComplete(messageId: string, fullResponse: string, model: string) {
+    const timestamp = Date.now();
+    
+    try {
+      // First, broadcast the standard completion event for existing UI
+      this.eventBus.publish('llm:response:complete', {
+        messageId,
+        fullResponse,
+        model,
+        timestamp
+      });
+      
+      // Generate machine-trimmed version
+      if (this.currentUserMessage && fullResponse) {
+        const trimResult = await this.machineTrimService.trim({
+          bossMessage: this.currentUserMessage,
+          assistantMessage: fullResponse,
+          model,
+          persona: this.currentPersona
+        });
+        
+        // Create MessagePairSet with both original and trimmed versions
+        const messagePairSet = {
+          id: `pair-${messageId}`,
+          turnId: messageId,
+          
+          // Original messages (full conversational content)
+          original: {
+            bossMessage: {
+              id: `boss-${messageId}`,
+              content: this.currentUserMessage,
+              persona: 'Boss',
+              model,
+              timestamp,
+              fileUrls: [], // TODO: Include file URLs if available
+            },
+            samaraMessage: {
+              id: `samara-${messageId}`,
+              content: fullResponse,
+              model,
+              timestamp,
+              processingTime: 0 // TODO: Calculate actual processing time
+            }
+          },
+          
+          // Machine-trimmed messages (compressed for storage)
+          trimmed: {
+            bossMessage: {
+              id: `boss-trimmed-${messageId}`,
+              originalId: `boss-${messageId}`,
+              trimmedContent: trimResult.trimmedBoss,
+              metadata: trimResult.metadata,
+              timestamp
+            },
+            samaraMessage: {
+              id: `samara-trimmed-${messageId}`,
+              originalId: `samara-${messageId}`,
+              trimmedContent: trimResult.trimmedAssistant,
+              metadata: trimResult.metadata,
+              timestamp
+            }
+          },
+          
+          // Lifecycle timestamps
+          createdAt: timestamp,
+          status: 'active' as const
+        };
+        
+        // Publish MessagePairSet creation event
+        this.eventBus.publish('messagePairSet:created', { messagePairSet });
+        
+        console.log(`🤖 LLMBrick: Created MessagePairSet with machine-trimmed versions (${trimResult.metadata.priority} priority)`);
+      }
+      
+    } catch (error) {
+      console.error('🤖 LLMBrick: Error generating machine-trimmed version:', error);
+      // Continue with original response even if trimming fails
+    }
+    
+    // Clear current context
+    this.currentUserMessage = '';
+    this.currentPersona = '';
   }
 }

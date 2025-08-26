@@ -3,6 +3,8 @@
  * Immutable record of all conversations from the beginning of time
  */
 
+import type { MessagePairSet } from '../../MessageTurnBrick/types/MessageTurn.types';
+
 export interface JournalEntry {
   id: string;                // UUID v4
   timestamp: number;         // Unix timestamp (ms)
@@ -11,6 +13,27 @@ export interface JournalEntry {
   samaraMessage: string;     // Assistant response  
   checksum: string;          // SHA-256 hash for integrity
   metadata: JournalMetadata;
+  
+  // Machine-trimmed versions for storage efficiency
+  trimmedData?: {
+    bossMessage: string;
+    samaraMessage: string;
+    metadata: {
+      hasDecisions: boolean;
+      isInferable: boolean;
+      priority: 'high' | 'medium' | 'low';
+    };
+  };
+  
+  // Lifecycle management
+  createdAt: number;         // When originally created
+  deletedAt?: number;        // Soft delete timestamp
+  status: 'active' | 'deleted' | 'archived';
+}
+
+// New MessagePairSet-based entry for future compatibility
+export interface MessagePairSetEntry extends Omit<JournalEntry, 'bossMessage' | 'samaraMessage' | 'trimmedData'> {
+  messagePairSet: MessagePairSet;
 }
 
 export interface JournalMetadata {

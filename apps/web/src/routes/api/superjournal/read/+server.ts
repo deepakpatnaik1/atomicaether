@@ -44,9 +44,6 @@ export const GET: RequestHandler = async ({ url }) => {
       } as ReadResponse);
     }
     
-    // Skip deletion check for simple recent queries (limit ≤ 50) to improve performance
-    const deletedTurns = limit > 50 ? await getDeletedTurns(s3Client, R2_SUPERJOURNAL_BUCKET) : [];
-    
     // List objects based on time range
     let entries: JournalEntry[] = [];
     
@@ -63,8 +60,11 @@ export const GET: RequestHandler = async ({ url }) => {
       entries = entries.filter(e => e.metadata.sessionId === sessionId);
     }
     
-    // Filter out deleted entries
-    entries = entries.filter(e => !deletedTurns.includes(e.id));
+    // Filter out soft-deleted entries (those with deletedAt timestamp)
+    entries = entries.filter(e => !e.deletedAt);
+    
+    // Sort by createdAt ascending (conversation chronology)
+    entries.sort((a, b) => (a.createdAt || a.timestamp) - (b.createdAt || b.timestamp));
     
     return json({
       entries: entries,

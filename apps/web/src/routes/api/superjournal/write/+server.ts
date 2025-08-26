@@ -41,6 +41,14 @@ export const POST: RequestHandler = async ({ request }) => {
       } as WriteResponse, { status: 400 });
     }
     
+    // Ensure lifecycle timestamps are set
+    if (!entry.createdAt) {
+      entry.createdAt = entry.timestamp;
+    }
+    if (!entry.status) {
+      entry.status = 'active';
+    }
+    
     // Check if R2 is configured
     if (!s3Client || !R2_SUPERJOURNAL_BUCKET) {
       console.error('🧠 SuperJournal: R2 not configured');
