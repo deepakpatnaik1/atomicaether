@@ -20,6 +20,8 @@
     "concurrently": "^9.2.0"
   },
   "dependencies": {
-    "marked": "^15.0.12"
+    "@aws-sdk/client-s3": "^3.873.0",
+    "marked": "^15.0.12",
+    "node-fetch": "^3.3.2"
   }
 }
