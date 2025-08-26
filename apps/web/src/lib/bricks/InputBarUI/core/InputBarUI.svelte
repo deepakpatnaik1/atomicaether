@@ -66,9 +66,12 @@
     }
     
     // Request persisted values (will override defaults if they exist)
-    eventBus.publish('selection:model:request', {});
-    eventBus.publish('selection:persona:request', {});
-    eventBus.publish('selection:theme:request', {});
+    // Small delay to ensure SelectionPersistenceBrick is initialized
+    setTimeout(() => {
+      eventBus.publish('selection:model:request', {});
+      eventBus.publish('selection:persona:request', {});
+      eventBus.publish('selection:theme:request', {});
+    }, 10);
     
     // Listen for responses with persisted values
     eventBus.subscribe('selection:model:current', (data: any) => {

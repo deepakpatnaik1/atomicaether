@@ -52,20 +52,24 @@ export class StateBus {
     ]);
     
     constructor() {
+        console.log('🚀 StateBus: Initializing with persisted keys:', Array.from(this.persistedKeys));
         // Load persisted values from localStorage on initialization
         if (typeof window !== 'undefined' && window.localStorage) {
             this.persistedKeys.forEach(key => {
                 const storageKey = `stateBus:${key}`;
                 const persisted = localStorage.getItem(storageKey);
+                console.log(`💾 StateBus: Loading ${storageKey}:`, persisted);
                 if (persisted !== null) {
                     try {
                         const value = JSON.parse(persisted);
                         const entry = new StateEntry(value);
                         this.states.set(key, entry);
+                        console.log(`✅ StateBus: Restored ${key} =`, value);
                     } catch (e) {
                         // If JSON parse fails, treat as string
                         const entry = new StateEntry(persisted);
                         this.states.set(key, entry);
+                        console.log(`✅ StateBus: Restored ${key} = "${persisted}" (as string)`);
                     }
                 }
             });
@@ -117,6 +121,7 @@ export class StateBus {
             try {
                 const serialized = typeof value === 'string' ? value : JSON.stringify(value);
                 localStorage.setItem(storageKey, serialized);
+                console.log(`💾 StateBus: Persisted ${key} = "${serialized}"`);
             } catch (e) {
                 console.warn(`Failed to persist state for key ${key}:`, e);
             }

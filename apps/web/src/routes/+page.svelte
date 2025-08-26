@@ -40,12 +40,12 @@
     console.log('🚀 AtomicAether Main App Starting...');
     
     try {
+      // Initialize SelectionPersistenceBrick FIRST - must be ready before UI components mount
+      selectionPersistenceBrick = new SelectionPersistenceBrick();
+      
       // Initialize theme system
       await themeApplier.initialize();
       await themeSelector.selectTheme('rainy-night');
-      
-      // Initialize SelectionPersistenceBrick - handles persisting user selections
-      selectionPersistenceBrick = new SelectionPersistenceBrick();
       
       // Initialize MessageTurnBrick - orchestrates conversation turns
       messageTurnBrick = new MessageTurnBrick(eventBus, stateBus, configBus, errorBus);
