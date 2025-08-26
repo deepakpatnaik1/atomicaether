@@ -7,7 +7,6 @@
   }
   
   let { content, speaker = 'boss' }: Props = $props();
-  let containerRef: HTMLDivElement;
   
   // Configure marked for safe rendering
   marked.setOptions({
@@ -17,37 +16,36 @@
     mangle: false
   });
   
-  // Parse markdown to HTML
-  let htmlContent = $derived(marked(content || ''));
-  
-  // Apply speaker colors to text with colons
-  $effect(() => {
-    if (containerRef && htmlContent) {
-      // Wait for DOM update
-      setTimeout(() => {
-        const paragraphs = containerRef.querySelectorAll('p, li, div');
-        
-        paragraphs.forEach(p => {
-          const text = p.textContent || '';
-          if (text.includes(':') && !p.closest('pre, code')) {
-            // Only add spacing class if NOT in a list item
-            if (p.tagName !== 'LI') {
-              p.classList.add('has-colon-line');
-            }
-            
-            // Use regex to find and replace text before colons + the colon itself
-            p.innerHTML = p.innerHTML.replace(/([^:]+)(:)/g, (match, beforeColon, colon) => {
-              return `<span class="colon-prefix">${beforeColon}${colon}</span>`;
-            });
-          }
-        });
-      }, 0);
-    }
+  // Parse markdown to HTML and process reactively
+  let processedContent = $derived(() => {
+    if (!content) return '';
+    
+    let htmlContent = marked(content);
+    
+    // Process HTML string to add colon coloring and spacing classes
+    // Add has-colon-line class to paragraphs containing colons (not list items)
+    htmlContent = htmlContent.replace(/<p([^>]*)>([^<]*:[^<]*)<\/p>/g, (match, attrs, content) => {
+      // Wrap text before colons in spans and add spacing class
+      const processedContent = content.replace(/([^:]+)(:)/g, (match, beforeColon, colon) => {
+        return `<span class="colon-prefix">${beforeColon}${colon}</span>`;
+      });
+      return `<p${attrs} class="has-colon-line">${processedContent}</p>`;
+    });
+    
+    // Handle colons in other elements (but don't add spacing class to lists)
+    htmlContent = htmlContent.replace(/<((?!li|pre|code)[^>]+)>([^<]*:[^<]*)<\/\1>/g, (match, tag, content) => {
+      const processedContent = content.replace(/([^:]+)(:)/g, (match, beforeColon, colon) => {
+        return `<span class="colon-prefix">${beforeColon}${colon}</span>`;
+      });
+      return `<${tag}>${processedContent}</${tag}>`;
+    });
+    
+    return htmlContent;
   });
 </script>
 
-<div class="markdown-content" data-speaker={speaker} bind:this={containerRef}>
-  {@html htmlContent}
+<div class="markdown-content" data-speaker={speaker}>
+  {@html processedContent}
 </div>
 
 <style>
