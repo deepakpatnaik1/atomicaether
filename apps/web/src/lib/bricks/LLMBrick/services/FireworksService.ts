@@ -4,6 +4,7 @@
  */
 
 import type { LLMRequest, LLMResponse, LLMStreamChunk } from '../models/LLMModels';
+import { parseSSEStream } from '../../../utils/sseParser';
 
 export class FireworksService {
   private apiKey: string;
@@ -66,50 +67,7 @@ export class FireworksService {
       throw new Error(`Fireworks API error: ${response.statusText}`);
     }
 
-    const reader = response.body?.getReader();
-    if (!reader) throw new Error('No response body');
-
-    const decoder = new TextDecoder();
-    let buffer = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-          if (data === '[DONE]') {
-            yield {
-              id: 'final',
-              model: request.model,
-              delta: '',
-              finished: true
-            };
-            continue;
-          }
-          
-          try {
-            const event = JSON.parse(data);
-            const delta = event.choices[0]?.delta?.content;
-            
-            if (delta) {
-              yield {
-                id: event.id,
-                model: event.model,
-                delta: delta,
-                finished: false
-              };
-            }
-          } catch (e) {
-            console.warn('Failed to parse SSE event:', e);
-          }
-        }
-      }
-    }
+    // Use shared SSE parser
+    yield* parseSSEStream(response, 'fireworks');
   }
 }

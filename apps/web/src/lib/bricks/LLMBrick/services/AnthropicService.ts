@@ -4,6 +4,7 @@
  */
 
 import type { LLMRequest, LLMResponse, LLMStreamChunk } from '../models/LLMModels';
+import { parseSSEStream } from '../../../utils/sseParser';
 
 export class AnthropicService {
   private apiKey: string;
@@ -67,48 +68,7 @@ export class AnthropicService {
       throw new Error(`Anthropic API error: ${response.statusText}`);
     }
 
-    const reader = response.body?.getReader();
-    if (!reader) throw new Error('No response body');
-
-    const decoder = new TextDecoder();
-    let buffer = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-          if (data === '[DONE]') continue;
-          
-          try {
-            const event = JSON.parse(data);
-            
-            if (event.type === 'content_block_delta') {
-              yield {
-                id: event.index,
-                model: request.model,
-                delta: event.delta.text,
-                finished: false
-              };
-            } else if (event.type === 'message_stop') {
-              yield {
-                id: 'final',
-                model: request.model,
-                delta: '',
-                finished: true
-              };
-            }
-          } catch (e) {
-            console.warn('Failed to parse SSE event:', e);
-          }
-        }
-      }
-    }
+    // Use shared SSE parser
+    yield* parseSSEStream(response, 'anthropic');
   }
 }

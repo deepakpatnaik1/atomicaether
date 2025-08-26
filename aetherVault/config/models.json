@@ -15,7 +15,7 @@
           "capabilities": ["text", "vision", "streaming"]
         },
         {
-          "id": "claude-sonnet-4-20250522",
+          "id": "claude-sonnet-4-20250514",
           "name": "Claude Sonnet 4",
           "description": "Balanced performance and speed",
           "contextWindow": 200000,
@@ -40,7 +40,7 @@
           "capabilities": ["text", "vision", "streaming", "function-calling"]
         },
         {
-          "id": "gpt-4-1",
+          "id": "gpt-4.1",
           "name": "GPT-4.1",
           "description": "Enhanced GPT-4 with improved capabilities",
           "contextWindow": 1000000,
@@ -49,7 +49,7 @@
           "capabilities": ["text", "vision", "streaming", "function-calling"]
         },
         {
-          "id": "gpt-4-1-mini",
+          "id": "gpt-4.1-mini",
           "name": "GPT-4.1 Mini",
           "description": "Fast and cost-efficient",
           "contextWindow": 128000,
@@ -74,7 +74,7 @@
       "baseUrl": "https://api.fireworks.ai/inference/v1",
       "models": [
         {
-          "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+          "id": "accounts/fireworks/models/llama4-maverick-instruct-basic",
           "name": "Llama 4 Maverick 17B",
           "description": "Latest Llama 4 with enhanced capabilities",
           "contextWindow": 128000,
@@ -102,15 +102,15 @@
       "models": [
         "claude-opus-4-1-20250805",
         "gpt-5",
-        "gpt-4-1",
-        "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"
+        "gpt-4.1",
+        "accounts/fireworks/models/llama4-maverick-instruct-basic"
       ]
     },
     "balanced": {
       "name": "⚖️ Balanced",
       "description": "Good performance and cost",
       "models": [
-        "claude-sonnet-4-20250522",
+        "claude-sonnet-4-20250514",
         "gpt-4o-2024-08-06",
         "accounts/fireworks/models/llama-v3p3-70b-instruct"
       ]
@@ -119,7 +119,7 @@
       "name": "⚡ Efficient",
       "description": "Fast and affordable",
       "models": [
-        "gpt-4-1-mini"
+        "gpt-4.1-mini"
       ]
     }
   }

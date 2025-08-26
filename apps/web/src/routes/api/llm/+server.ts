@@ -148,7 +148,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 body: JSON.stringify({
                   model,
                   messages: formattedMessages,
-                  max_tokens: 4096,
+                  max_completion_tokens: 4096,
                   stream: true
                 })
               });
@@ -171,7 +171,15 @@ export const POST: RequestHandler = async ({ request }) => {
             
             if (!apiResponse.ok) {
               const error = await apiResponse.text();
-              controller.enqueue(new TextEncoder().encode(`data: {"error": "${error}"}\n\n`));
+              // Parse error properly to avoid double-encoding
+              let errorMessage;
+              try {
+                const parsedError = JSON.parse(error);
+                errorMessage = parsedError.error?.message || parsedError.message || error;
+              } catch {
+                errorMessage = error;
+              }
+              controller.enqueue(new TextEncoder().encode(`data: {"error": "${errorMessage}"}\n\n`));
               controller.close();
               return;
             }
@@ -183,14 +191,32 @@ export const POST: RequestHandler = async ({ request }) => {
               return;
             }
             
-            // Forward the SSE stream
+            // Forward the SSE stream with proper formatting
             const decoder = new TextDecoder();
+            let buffer = '';
+            
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
               
-              // Forward the raw SSE data
-              controller.enqueue(value);
+              // Decode and buffer the incoming data
+              buffer += decoder.decode(value, { stream: true });
+              const lines = buffer.split('\n');
+              buffer = lines.pop() || ''; // Keep incomplete line
+              
+              // Process complete lines and re-encode properly
+              for (const line of lines) {
+                if (line.trim()) {
+                  // Ensure proper SSE formatting
+                  const formattedLine = line + '\n';
+                  controller.enqueue(new TextEncoder().encode(formattedLine));
+                }
+              }
+            }
+            
+            // Process any remaining buffer
+            if (buffer.trim()) {
+              controller.enqueue(new TextEncoder().encode(buffer + '\n'));
             }
             
             controller.close();
@@ -257,7 +283,7 @@ export const POST: RequestHandler = async ({ request }) => {
         body: JSON.stringify({
           model,
           messages: formattedMessages,
-          max_tokens: 4096,
+          max_completion_tokens: 4096,
           stream: false
         })
       });
