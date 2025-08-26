@@ -1,0 +1,19 @@
+{
+  "hardDelete": {
+    "enabled": true,
+    "requireConfirmation": false,
+    "successMessage": null,
+    "errorMessage": "Failed to permanently delete message",
+    "icon": "skull",
+    "position": "right"
+  },
+  "restore": {
+    "enabled": true,
+    "successMessage": "Message restored",
+    "errorMessage": "Failed to restore message"
+  },
+  "api": {
+    "permanentDeleteEndpoint": "/api/superjournal/permanent-delete",
+    "timeout": 10000
+  }
+}

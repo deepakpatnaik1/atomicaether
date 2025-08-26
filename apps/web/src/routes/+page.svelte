@@ -17,9 +17,11 @@
   import { MessageScrollback } from '$lib/bricks/MessageScrollback';
   import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
   import { LLMBrick } from '$lib/bricks/LLMBrick';
+  import { ModelSelectionBrick } from '$lib/bricks/ModelSelectionBrick/core/ModelSelectionBrick';
   
   let messageTurnBrick;
   let llmBrick;
+  let modelSelectionBrick;
 
   onMount(async () => {
     console.log('🚀 AtomicAether Main App Starting...');
@@ -28,6 +30,9 @@
       // Initialize theme system
       await themeApplier.initialize();
       await themeSelector.selectTheme('rainy-night');
+      
+      // Initialize ModelSelectionBrick - handles model persistence
+      modelSelectionBrick = new ModelSelectionBrick(eventBus, configBus, stateBus, errorBus);
       
       // Initialize MessageTurnBrick - orchestrates conversation turns
       messageTurnBrick = new MessageTurnBrick(eventBus, stateBus, configBus, errorBus);

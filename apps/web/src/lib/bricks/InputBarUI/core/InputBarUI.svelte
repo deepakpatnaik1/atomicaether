@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { configBus, eventBus } from '../../../buses';
+  import { configBus, eventBus, stateBus } from '../../../buses';
   import { InputBarService } from './InputBarService.js';
   import { fileUploadService } from '../../../services/FileUploadService.js';
   import type { InputBarConfig, InputBarBehavior, DropdownData, RainyNightTheme, BTTConfig, FallbackMappings } from './types.js';
@@ -40,15 +40,10 @@
   let service: InputBarService;
 
   onMount(async () => {
-    // Small delay to ensure styles are loaded
-    await new Promise(resolve => setTimeout(resolve, 10));
-    
     // Set text content to prevent flicker
     placeholderText = 'Type a message...';
-    selectedModel = 'claude-sonnet-4-20250514';
     selectedPersona = 'user';
     selectedTheme = 'rainy-night';
-    isReady = true;
     
     // Load all configs
     layout = await configBus.load('inputBarLayout');
@@ -61,12 +56,25 @@
     // Initialize service
     service = new InputBarService(behavior, bttConfig);
     
-    // Set defaults
+    // Set defaults for persona and theme
     if (dropdownData) {
-      selectedModel = dropdownData.defaults.selectedModel;
       selectedPersona = dropdownData.defaults.selectedPersona;
       selectedTheme = dropdownData.defaults.selectedTheme;
     }
+    
+    // Listen for model selection from ModelSelectionBrick
+    eventBus.subscribe('model:selected', (data: any) => {
+      selectedModel = data.model;
+    });
+    
+    // Get initial model from StateBus if ModelSelectionBrick has already initialized
+    const initialModel = stateBus.get('selectedModel');
+    if (initialModel) {
+      selectedModel = initialModel;
+    }
+    
+    // Now fully ready - show the InputBar
+    isReady = true;
     
     // Initialize textarea height
     if (textarea && behavior) {
@@ -281,7 +289,8 @@
   }
   
   function selectModel(model: string) {
-    selectedModel = model;
+    // Publish selection event - ModelSelectionBrick will handle persistence
+    eventBus.publish('model:select', { model });
     showModelDropdown = false;
     // Restore focus to input after dropdown interaction
     focusInputBar();
