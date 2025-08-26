@@ -267,72 +267,158 @@
     }
   }
   
-  // Handle delete action
-  async function handleDelete(turnId: string) {
-    // First, delete from SuperJournal (permanent storage)
-    try {
-      const response = await fetch('/api/superjournal/delete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ turnId })
-      });
-      
-      if (!response.ok) {
-        console.error('Failed to delete from SuperJournal');
-        eventBus.publish('notification:show', {
-          message: 'Failed to delete message',
-          type: 'error',
-          duration: 3000
-        });
-        return;
-      }
-      
-      console.log('🧠 SuperJournal: Deleted turn:', turnId);
-    } catch (error) {
-      console.error('Error deleting from SuperJournal:', error);
+  // BOSS REQUIREMENT: Handle soft-delete action (move to RecycleBin, not permanent deletion)
+  async function handleSoftDelete(turnId: string) {
+    console.log(`🗑️ MessageScrollback: Starting soft-delete for turn ${turnId}`);
+    
+    // SAFETY CHECK: Ensure turnId exists and is valid
+    if (!turnId || typeof turnId !== 'string') {
+      console.error('❌ Invalid turnId for soft-delete:', turnId);
       eventBus.publish('notification:show', {
-        message: 'Failed to delete message',
+        message: 'Cannot delete message - invalid ID',
         type: 'error',
         duration: 3000
       });
       return;
     }
     
-    // Remove from historical turns
-    historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
+    // DETERMINE IF THIS IS A LIVE TURN OR HISTORICAL TURN
+    const isLiveTurn = liveTurns.some(turn => turn.id === turnId);
+    const isHistoricalTurn = historicalTurns.some(turn => turn.id === turnId);
     
-    // Also remove from live turns if present
-    if (messageTurnState) {
-      const updatedTurns = messageTurnState.turns.filter(turn => turn.id !== turnId);
-      stateBus.set('messageTurn', {
-        ...messageTurnState,
-        turns: updatedTurns
+    console.log(`🔍 Turn ${turnId} - Live: ${isLiveTurn}, Historical: ${isHistoricalTurn}`);
+    
+    try {
+      let deletedAt = Date.now();
+      
+      if (isHistoricalTurn) {
+        // STEP 1A: Handle historical turns - call SuperJournal soft-delete API
+        console.log('📜 Processing historical turn via SuperJournal API...');
+        const response = await fetch('/api/superjournal/soft-delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ turnId })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('❌ Failed to soft-delete from SuperJournal:', errorData.error);
+          eventBus.publish('notification:show', {
+            message: `Failed to move message to recycle bin: ${errorData.error}`,
+            type: 'error',
+            duration: 3000
+          });
+          return;
+        }
+        
+        const result = await response.json();
+        deletedAt = result.deletedAt;
+        console.log(`✅ SuperJournal: Soft-deleted historical turn ${turnId} at ${deletedAt}`);
+        
+      } else if (isLiveTurn) {
+        // STEP 1B: Handle live turns - mark in StateBus and add to RecycleBin directly
+        console.log('🔄 Processing live turn via StateBus...');
+        
+        // Find the live turn
+        const liveTurn = liveTurns.find(turn => turn.id === turnId);
+        if (!liveTurn) {
+          console.error('❌ Live turn not found in StateBus');
+          return;
+        }
+        
+        // Create deleted message entry for RecycleBin
+        const deletedMessage = {
+          turnId: liveTurn.id,
+          userMessage: liveTurn.bossMessage?.content || '',
+          assistantMessage: liveTurn.samaraMessage?.content || '',
+          timestamp: liveTurn.startedAt || Date.now(),
+          deletedAt,
+          model: liveTurn.samaraMessage?.model || 'unknown',
+          persona: liveTurn.bossMessage?.persona || 'Boss'
+        };
+        
+        // Add directly to RecycleBin via event
+        eventBus.publish('message:soft-deleted', { 
+          turnId, 
+          deletedAt,
+          timestamp: Date.now(),
+          messageData: deletedMessage
+        });
+        
+        console.log(`✅ Live Turn: Moved ${turnId} to RecycleBin directly`);
+      } else {
+        console.error('❌ Turn not found in live or historical turns:', turnId);
+        eventBus.publish('notification:show', {
+          message: 'Message not found - cannot delete',
+          type: 'error',
+          duration: 3000
+        });
+        return;
+      }
+      
+      // STEP 2: Remove from scrollback display (hide from user view)
+      // NOTE: Data still exists in SuperJournal, just marked as deleted
+      historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
+      
+      // STEP 3: Also remove from live turns if present (current session)
+      if (messageTurnState) {
+        const updatedTurns = messageTurnState.turns.filter(turn => turn.id !== turnId);
+        stateBus.set('messageTurn', {
+          ...messageTurnState,
+          turns: updatedTurns
+        });
+      }
+      
+      // STEP 4: Update localStorage cache to hide deleted entries
+      // NOTE: We filter out the entry from cache so it doesn't show in scrollback
+      const cacheKey = 'superjournal_cache';
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const { entries, timestamp } = JSON.parse(cached);
+          const filteredEntries = entries.filter((e: any) => e.id !== turnId);
+          localStorage.setItem(cacheKey, JSON.stringify({
+            entries: filteredEntries,
+            timestamp
+          }));
+          console.log(`📦 Cache updated: Removed turn ${turnId} from scrollback cache`);
+        } catch (e) {
+          console.error('❌ Failed to update cache:', e);
+        }
+      }
+      
+      // STEP 5: Publish soft-delete event for RecycleBin to catch (only for historical turns)
+      // BOSS REQUIREMENT: RecycleBin should show this message in deleted state
+      if (isHistoricalTurn) {
+        eventBus.publish('message:soft-deleted', { 
+          turnId, 
+          deletedAt,
+          timestamp: Date.now()
+        });
+      }
+      
+      // STEP 6: Show user feedback about successful soft-delete
+      eventBus.publish('notification:show', {
+        message: 'Message moved to recycle bin',
+        type: 'success',
+        duration: 2000
+      });
+      
+      // STEP 7: Clear hover state to hide action buttons
+      hoveredTurnId = null;
+      
+      console.log(`🎉 MessageScrollback: Successfully soft-deleted turn ${turnId}`);
+      
+    } catch (error) {
+      console.error('❌ Error during soft-delete operation:', error);
+      eventBus.publish('notification:show', {
+        message: 'Failed to move message to recycle bin',
+        type: 'error',
+        duration: 3000
       });
     }
-    
-    // Update localStorage cache to reflect deletion
-    const cacheKey = 'superjournal_cache';
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-      try {
-        const { entries, timestamp } = JSON.parse(cached);
-        const filteredEntries = entries.filter((e: any) => e.id !== turnId);
-        localStorage.setItem(cacheKey, JSON.stringify({
-          entries: filteredEntries,
-          timestamp
-        }));
-      } catch (e) {
-        console.error('Failed to update cache:', e);
-      }
-    }
-    
-    // Publish event for other components
-    eventBus.publish('message:deleted', { turnId });
-    
-    // Clear hover state
-    hoveredTurnId = null;
   }
   
   // Handle copy action
@@ -451,8 +537,12 @@
                 </button>
                 <button 
                   class="icon-button"
-                  onclick={() => handleDelete(turn.id)}
-                  aria-label="Delete message"
+                  onclick={() => {
+                    console.log(`🖱️ DEBUG: Soft-delete button clicked for turn:`, turn);
+                    console.log(`🖱️ DEBUG: turn.id:`, turn.id);
+                    handleSoftDelete(turn.id);
+                  }}
+                  aria-label="Move to recycle bin"
                 >
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>

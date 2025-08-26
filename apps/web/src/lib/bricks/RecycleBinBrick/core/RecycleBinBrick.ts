@@ -41,7 +41,12 @@ export class RecycleBinBrick {
     // Then load from SuperJournal (may have more/different entries)
     this.loadDeletedMessagesFromSuperJournal();
     
-    // Listen for message deletion events
+    // BOSS REQUIREMENT: Listen for soft-delete events from MessageScrollback
+    this.eventBus.subscribe('message:soft-deleted', (data: any) => {
+      this.handleMessageSoftDeleted(data);
+    });
+    
+    // Keep legacy support for old hard-delete events
     this.eventBus.subscribe('message:deleted', (data: any) => {
       this.handleMessageDeleted(data);
     });
@@ -56,7 +61,12 @@ export class RecycleBinBrick {
       this.publishDeletedMessages();
     });
     
-    // Listen for permanent delete requests
+    // BOSS REQUIREMENT: Listen for hard-delete requests from RecycleBin UI
+    this.eventBus.subscribe('message:hard-delete', (data: any) => {
+      this.handleHardDelete(data);
+    });
+    
+    // Keep legacy support for permanent delete events
     this.eventBus.subscribe('message:delete-permanent', (data: any) => {
       this.handlePermanentDelete(data);
     });
@@ -89,7 +99,8 @@ export class RecycleBinBrick {
     try {
       console.log('🗑️ RecycleBin: Loading deleted messages from SuperJournal...');
       
-      const response = await fetch('/api/superjournal/deleted');
+      // BOSS REQUIREMENT: Use onlyDeleted=true to fetch only soft-deleted entries
+      const response = await fetch('/api/superjournal/read?onlyDeleted=true&limit=1000');
       if (!response.ok) {
         console.error('Failed to fetch deleted messages from SuperJournal');
         return;
@@ -114,9 +125,10 @@ export class RecycleBinBrick {
             userMessage: userMsg,
             assistantMessage: assistantMsg,
             timestamp: entry.timestamp,
-            deletedAt: Date.now(), // We don't have exact deletion time
-            model: entry.model || entry.data?.model,
-            persona: entry.persona || entry.data?.persona
+            // BOSS REQUIREMENT: Use actual deletedAt timestamp from SuperJournal
+            deletedAt: entry.deletedAt || Date.now(),
+            model: entry.metadata?.model || entry.model || entry.data?.model,
+            persona: entry.metadata?.persona || entry.persona || entry.data?.persona
           };
           superJournalDeleted.push(deleted);
         }
@@ -131,7 +143,7 @@ export class RecycleBinBrick {
         }
       }
       
-      // Sort by conversation chronology (oldest first for natural conversation flow)
+      // BOSS REQUIREMENT: Sort by createdAt timestamp (conversation chronology order)
       this.deletedMessages.sort((a, b) => a.timestamp - b.timestamp);
       
       // Save the merged list
@@ -156,6 +168,99 @@ export class RecycleBinBrick {
     }
   }
   
+  /**
+   * BOSS REQUIREMENT: Handle soft-delete events from MessageScrollback
+   * 
+   * When a message is soft-deleted:
+   * 1. It should appear in RecycleBin immediately
+   * 2. It should be ordered by createdAt timestamp (conversation chronology)
+   * 3. It should be restorable back to scrollback
+   * 4. Data comes from the soft-delete event payload
+   */
+  private async handleMessageSoftDeleted(data: any) {
+    const { turnId, deletedAt, messageData } = data;
+    console.log(`🗑️ RecycleBin: Handling soft-delete for turn ${turnId}`);
+    
+    try {
+      let deletedMessage: DeletedMessage;
+      
+      if (messageData) {
+        // LIVE TURN: Use provided messageData directly (from current session)
+        console.log('🔄 Processing live turn deletion with provided data');
+        deletedMessage = {
+          turnId: messageData.turnId,
+          userMessage: messageData.userMessage,
+          assistantMessage: messageData.assistantMessage,
+          timestamp: messageData.timestamp,
+          deletedAt: messageData.deletedAt,
+          model: messageData.model,
+          persona: messageData.persona
+        };
+        
+      } else {
+        // HISTORICAL TURN: Fetch from SuperJournal
+        console.log('📜 Processing historical turn deletion from SuperJournal');
+        const response = await fetch(`/api/superjournal/read?onlyDeleted=true&limit=1000`);
+        if (!response.ok) {
+          console.error('❌ Failed to fetch deleted entry from SuperJournal');
+          return;
+        }
+        
+        const responseData = await response.json();
+        const entries = responseData.entries || [];
+        
+        // FIND THE DELETED ENTRY: Look for our specific turnId
+        const deletedEntry = entries.find((entry: any) => entry.id === turnId);
+        
+        if (!deletedEntry) {
+          console.error(`❌ Deleted entry ${turnId} not found in SuperJournal`);
+          return;
+        }
+        
+        // CONVERT TO DELETED MESSAGE: Create RecycleBin format
+        const userMsg = deletedEntry.userMessage || deletedEntry.bossMessage || '';
+        const assistantMsg = deletedEntry.assistantMessage || deletedEntry.samaraMessage || '';
+        
+        deletedMessage = {
+          turnId: deletedEntry.id,
+          userMessage: userMsg,
+          assistantMessage: assistantMsg,
+          timestamp: deletedEntry.timestamp || deletedEntry.createdAt,
+          deletedAt: deletedEntry.deletedAt || deletedAt,
+          model: deletedEntry.metadata?.model,
+          persona: deletedEntry.metadata?.persona
+        };
+      }
+      
+      // AVOID DUPLICATES: Check if already in RecycleBin
+      const existingIndex = this.deletedMessages.findIndex(m => m.turnId === turnId);
+      if (existingIndex !== -1) {
+        // UPDATE EXISTING: Update the deletion timestamp
+        this.deletedMessages[existingIndex] = deletedMessage;
+        console.log(`🔄 RecycleBin: Updated existing deleted message ${turnId}`);
+      } else {
+        // ADD NEW: Add to RecycleBin
+        this.deletedMessages.push(deletedMessage);
+        console.log(`➕ RecycleBin: Added new deleted message ${turnId}`);
+      }
+      
+      // SORT BY CHRONOLOGY: BOSS REQUIREMENT - order by createdAt timestamp
+      this.deletedMessages.sort((a, b) => a.timestamp - b.timestamp);
+      
+      // SAVE TO LOCALSTORAGE: Persist the updated RecycleBin state
+      this.saveDeletedMessages();
+      
+      // PUBLISH UPDATE: Notify RecycleBin UI to refresh
+      this.publishDeletedMessages();
+      
+      console.log(`✅ RecycleBin: Successfully processed soft-delete for ${turnId}`);
+      
+    } catch (error) {
+      console.error(`❌ Error handling soft-delete for ${turnId}:`, error);
+      this.errorBus.report(error as Error, 'RecycleBinBrick');
+    }
+  }
+
   private async handleMessageDeleted(data: any) {
     const { turnId } = data;
     
@@ -185,18 +290,58 @@ export class RecycleBinBrick {
     }
   }
   
+  /**
+   * BOSS REQUIREMENT: Handle restore action (return message to scrollback)
+   * 
+   * Restore process:
+   * 1. Remove deleted markers from SuperJournal (set status: 'active', remove deletedAt)
+   * 2. Remove deleted markers from Journal entries for referential integrity
+   * 3. Remove from RecycleBin localStorage
+   * 4. Publish restore event for MessageScrollback to display again
+   */
   private async handleMessageRestore(data: any) {
     const { turnId } = data;
+    console.log(`♻️ RecycleBin: Starting restore for turn ${turnId}`);
     
     const messageIndex = this.deletedMessages.findIndex(m => m.turnId === turnId);
-    if (messageIndex !== -1) {
-      const messageToRestore = this.deletedMessages[messageIndex];
+    if (messageIndex === -1) {
+      console.error(`❌ Message ${turnId} not found in RecycleBin for restore`);
+      return;
+    }
+    
+    const messageToRestore = this.deletedMessages[messageIndex];
+    
+    try {
+      // STEP 1: Call restore API to remove deleted markers from SuperJournal
+      const response = await fetch('/api/superjournal/restore', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ turnId })
+      });
       
-      // Remove from recycle bin
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error(`❌ Failed to restore ${turnId} in SuperJournal:`, errorData.error);
+        
+        // Show error to user
+        this.eventBus.publish('notification:show', {
+          message: `Failed to restore message: ${errorData.error}`,
+          type: 'error',
+          duration: 5000
+        });
+        return;
+      }
+      
+      const result = await response.json();
+      console.log(`✅ SuperJournal: Restored ${turnId} - removed deleted markers`);
+      
+      // STEP 2: Remove from RecycleBin localStorage
       this.deletedMessages.splice(messageIndex, 1);
       this.saveDeletedMessages();
       
-      // Restore to main messages
+      // STEP 3: Prepare restored message data for MessageScrollback
       const restoredMessage = {
         turnId: messageToRestore.turnId,
         userMessage: messageToRestore.userMessage,
@@ -206,16 +351,103 @@ export class RecycleBinBrick {
         persona: messageToRestore.persona
       };
       
-      // Publish restore event for MessageScrollback to handle
+      // STEP 4: Publish restore event for MessageScrollback to handle
+      // MessageScrollback will re-fetch from SuperJournal and display the restored message
       this.eventBus.publish('message:restored', restoredMessage);
       
-      console.log(`♻️ RecycleBin: Message ${turnId} restored`);
+      console.log(`♻️ RecycleBin: Successfully restored message ${turnId} to scrollback`);
       
-      // Update recycle bin view
+      // STEP 5: Update RecycleBin UI to reflect removal
       this.publishDeletedMessages();
+      
+    } catch (error) {
+      console.error(`❌ Error during restore for ${turnId}:`, error);
+      this.errorBus.report(error as Error, 'RecycleBinBrick');
     }
   }
   
+  /**
+   * BOSS REQUIREMENT: Handle hard-delete action (permanent removal from all storage)
+   * 
+   * Hard-delete process:
+   * 1. Remove from RecycleBin localStorage (immediate UI update)  
+   * 2. Call hard-delete API endpoint to permanently remove from SuperJournal & Journal
+   * 3. Update RecycleBin UI to reflect removal
+   * 4. This action is irreversible - no recovery possible
+   */
+  private async handleHardDelete(data: any) {
+    const { turnId } = data;
+    console.log(`🔥 RecycleBin: Starting hard-delete for turn ${turnId}`);
+    
+    try {
+      // STEP 1: Remove from RecycleBin localStorage immediately (optimistic update)
+      const messageIndex = this.deletedMessages.findIndex(m => m.turnId === turnId);
+      if (messageIndex === -1) {
+        console.error(`❌ Message ${turnId} not found in RecycleBin`);
+        return;
+      }
+      
+      // Keep reference for rollback if API fails
+      const messageToDelete = this.deletedMessages[messageIndex];
+      
+      // Remove from local state
+      this.deletedMessages.splice(messageIndex, 1);
+      this.saveDeletedMessages();
+      
+      // Update UI immediately
+      this.publishDeletedMessages();
+      
+      console.log(`🗑️ RecycleBin: Removed ${turnId} from local state`);
+      
+      // STEP 2: Call hard-delete API endpoint for permanent removal
+      const response = await fetch('/api/superjournal/hard-delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ turnId })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error(`❌ Hard-delete API failed for ${turnId}:`, errorData.error);
+        
+        // ROLLBACK: Restore message to RecycleBin if API failed
+        this.deletedMessages.splice(messageIndex, 0, messageToDelete);
+        this.deletedMessages.sort((a, b) => a.timestamp - b.timestamp);
+        this.saveDeletedMessages();
+        this.publishDeletedMessages();
+        
+        // Show error to user
+        this.eventBus.publish('notification:show', {
+          message: `Failed to permanently delete message: ${errorData.error}`,
+          type: 'error',
+          duration: 5000
+        });
+        return;
+      }
+      
+      const result = await response.json();
+      console.log(`✅ RecycleBin: Successfully hard-deleted ${turnId} from all storage`);
+      console.log(`🔥 Permanent deletion completed - no recovery possible`);
+      
+    } catch (error) {
+      console.error(`❌ Error during hard-delete for ${turnId}:`, error);
+      
+      // ROLLBACK: Restore message if there was an error
+      const messageIndex = this.deletedMessages.findIndex(m => m.turnId === turnId);
+      if (messageIndex === -1) {
+        // Re-add the message since we removed it optimistically
+        this.deletedMessages.push(data.messageToDelete);
+        this.deletedMessages.sort((a, b) => a.timestamp - b.timestamp);
+        this.saveDeletedMessages();
+        this.publishDeletedMessages();
+      }
+      
+      this.errorBus.report(error as Error, 'RecycleBinBrick');
+    }
+  }
+
   private handlePermanentDelete(data: any) {
     const { turnId } = data;
     

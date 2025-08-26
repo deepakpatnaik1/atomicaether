@@ -33,6 +33,10 @@ export const GET: RequestHandler = async ({ url }) => {
     const limit = parseInt(url.searchParams.get('limit') || '100');
     const offset = parseInt(url.searchParams.get('offset') || '0');
     const sessionId = url.searchParams.get('sessionId');
+    // SOFT-DELETE SUPPORT: includeDeleted parameter allows RecycleBin to fetch deleted entries
+    const includeDeleted = url.searchParams.get('includeDeleted') === 'true';
+    // SOFT-DELETE SUPPORT: onlyDeleted parameter for RecycleBin to show only deleted entries
+    const onlyDeleted = url.searchParams.get('onlyDeleted') === 'true';
     
     // Check if R2 is configured
     if (!s3Client || !R2_SUPERJOURNAL_BUCKET) {
@@ -60,8 +64,15 @@ export const GET: RequestHandler = async ({ url }) => {
       entries = entries.filter(e => e.metadata.sessionId === sessionId);
     }
     
-    // Filter out soft-deleted entries (those with deletedAt timestamp)
-    entries = entries.filter(e => !e.deletedAt);
+    // SOFT-DELETE SUPPORT: Filter entries based on deletion status
+    if (onlyDeleted) {
+      // RecycleBin request: show only deleted entries
+      entries = entries.filter(e => e.deletedAt && e.status === 'deleted');
+    } else if (!includeDeleted) {
+      // Normal scrollback request: hide deleted entries (default behavior)
+      entries = entries.filter(e => !e.deletedAt && e.status !== 'deleted');
+    }
+    // If includeDeleted=true, show all entries (deleted and active)
     
     // Sort by createdAt ascending (conversation chronology)
     entries.sort((a, b) => (a.createdAt || a.timestamp) - (b.createdAt || b.timestamp));

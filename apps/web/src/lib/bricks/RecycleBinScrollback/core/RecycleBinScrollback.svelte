@@ -30,17 +30,37 @@
     eventBus.publish('recyclebin:request', {});
   });
   
-  // Handle restore action
+  // BOSS REQUIREMENT: Handle restore action (return message to scrollback)
   function handleRestore(turnId: string) {
-    console.log('♻️ Restoring message:', turnId);
+    console.log(`♻️ RecycleBinScrollback: Restoring message ${turnId}`);
     eventBus.publish('message:restore', { turnId });
     
-    // Show feedback
+    // Show user feedback
     eventBus.publish('notification:show', {
-      message: 'Message restored',
+      message: 'Message restored to chat',
       type: 'success',
       duration: 2000
     });
+  }
+  
+  // BOSS REQUIREMENT: Handle hard-delete action (permanent removal)
+  function handleHardDelete(turnId: string) {
+    console.log(`🔥 RecycleBinScrollback: Hard-deleting message ${turnId}`);
+    
+    // Confirm with user since this is permanent
+    const confirmed = confirm('Are you sure you want to permanently delete this message? This action cannot be undone.');
+    
+    if (confirmed) {
+      // Publish hard-delete event for RecycleBinBrick to handle
+      eventBus.publish('message:hard-delete', { turnId });
+      
+      // Show user feedback
+      eventBus.publish('notification:show', {
+        message: 'Message permanently deleted',
+        type: 'warning',
+        duration: 3000
+      });
+    }
   }
   
   // Format timestamp - show actual date/time
@@ -96,17 +116,28 @@
               <MarkdownRenderer content={message.assistantMessage} speaker="samara" />
             </div>
             
-            <!-- Professional action icons -->
+            <!-- BOSS REQUIREMENT: Two icons per message pair - restore and hard delete -->
             {#if hoveredTurnId === message.turnId}
               <div class="action-icons-group">
                 <button 
                   class="icon-button"
                   onclick={() => handleRestore(message.turnId)}
-                  aria-label="Restore message"
+                  aria-label="Restore message to chat"
                 >
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M3 7h7c2.2 0 4 1.8 4 4s-1.8 4-4 4H7"/>
                     <polyline points="6 4 3 7 6 10"/>
+                  </svg>
+                </button>
+                <button 
+                  class="icon-button icon-button-danger"
+                  onclick={() => handleHardDelete(message.turnId)}
+                  aria-label="Permanently delete message"
+                >
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>
+                    <!-- Add X overlay to indicate permanent deletion -->
+                    <path d="M5 5l6 6M11 5l-6 6" stroke-width="2" opacity="0.7"/>
                   </svg>
                 </button>
               </div>
@@ -149,5 +180,15 @@
   
   .samara-message {
     margin-bottom: var(--scrollback-messages-gap);
+  }
+  
+  /* BOSS REQUIREMENT: Danger styling for hard-delete button */
+  .icon-button-danger {
+    color: #ff6b6b;
+  }
+  
+  .icon-button-danger:hover {
+    color: #ff4757;
+    background: rgba(255, 107, 107, 0.1);
   }
 </style>
