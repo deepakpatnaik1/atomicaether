@@ -112,8 +112,8 @@ export class RecycleBinBrick {
         }
       }
       
-      // Sort by deletion time (most recent first)
-      this.deletedMessages.sort((a, b) => b.deletedAt - a.deletedAt);
+      // Sort by conversation chronology (oldest first for natural conversation flow)
+      this.deletedMessages.sort((a, b) => a.timestamp - b.timestamp);
       
       // Save the merged list
       this.saveDeletedMessages();

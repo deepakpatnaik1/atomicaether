@@ -71,9 +71,9 @@
         onmouseenter={() => hoveredTurnId = message.turnId}
         onmouseleave={() => hoveredTurnId = null}
       >
-        <!-- Show deletion timestamp subtly -->
-        <div class="deletion-timestamp">
-          Deleted: {formatTimestamp(message.timestamp)}
+        <!-- Show conversation context subtly -->
+        <div class="conversation-timestamp">
+          From conversation: {formatTimestamp(message.timestamp)}
         </div>
         
         {#if message.userMessage}
@@ -132,9 +132,9 @@
   @import '$lib/../styles/shared.css';
   
   /* Only unique styles for recycle bin */
-  .deletion-timestamp {
+  .conversation-timestamp {
     font-size: var(--typography-font-size-tiny);
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.4);
     margin-bottom: var(--spacing-medium);
     margin-left: var(--scrollback-message-content-margin-left);
   }
