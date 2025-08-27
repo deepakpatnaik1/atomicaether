@@ -19,11 +19,13 @@
   import { LLMBrick } from '$lib/bricks/LLMBrick';
   import { SelectionPersistenceBrick } from '$lib/bricks/SelectionPersistenceBrick/core/SelectionPersistenceBrick';
   import { RecycleBinBrick } from '$lib/bricks/RecycleBinBrick';
+  import { SuperJournalBrick } from '$lib/bricks/SuperJournalBrick/core/SuperJournalBrick';
   
   let messageTurnBrick;
   let llmBrick;
   let selectionPersistenceBrick;
   let recycleBinBrick;
+  let superJournalBrick;
   let scrollbackRef: HTMLDivElement;
 
   // Handle wheel events on the main container
@@ -54,6 +56,9 @@
       // Initialize RecycleBin - Trash management system
       recycleBinBrick = new RecycleBinBrick(eventBus, stateBus, configBus, errorBus);
       console.log('🗑️ RecycleBin: Trash management system activated');
+      
+      // Initialize SuperJournal - Message pair persistence (Rule 9: Add, don't modify existing)
+      superJournalBrick = new SuperJournalBrick(eventBus, stateBus, configBus, errorBus);
       
       // App ready
       eventBus.publish('app:ready', { timestamp: Date.now() });
