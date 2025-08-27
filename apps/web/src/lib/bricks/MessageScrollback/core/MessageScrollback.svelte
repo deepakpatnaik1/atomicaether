@@ -275,6 +275,91 @@
       });
     }
   }
+
+  // Handle hard delete action - immediate permanent removal
+  async function handleHardDelete(turnId: string) {
+    console.log('🗑️ MessageScrollback: Hard-deleting turn:', turnId);
+    
+    // Store original state for potential rollback
+    const originalHistoricalTurns = [...historicalTurns];
+    const originalLiveTurns = messageTurnState ? [...messageTurnState.turns] : [];
+    
+    // Optimistic UI update - remove immediately
+    historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
+    
+    if (messageTurnState) {
+      const updatedTurns = messageTurnState.turns.filter(turn => turn.id !== turnId);
+      stateBus.set('messageTurn', {
+        ...messageTurnState,
+        turns: updatedTurns
+      });
+    }
+    
+    // Clear hover state immediately
+    hoveredTurnId = null;
+    
+    try {
+      // Call hard-delete API
+      const response = await fetch('/api/superjournal/hard-delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ turnId })
+      });
+      
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Hard-delete API failed');
+      }
+      
+      console.log(`🗑️ Successfully hard-deleted: ${turnId}`);
+      
+      // Update localStorage cache - remove the deleted entry
+      const cacheKey = 'superjournal_cache';
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const cacheData = JSON.parse(cached);
+          cacheData.lastModified = Date.now();
+          cacheData.entries = cacheData.entries.filter((e: any) => e.id !== turnId);
+          localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+          console.log('🗑️ Updated cache after hard-delete');
+        } catch (e) {
+          console.error('Failed to update cache:', e);
+          localStorage.removeItem(cacheKey);
+        }
+      }
+      
+      // Show success feedback
+      eventBus.publish('notification:show', {
+        message: 'Message deleted permanently',
+        type: 'success',
+        duration: 2000
+      });
+      
+    } catch (error) {
+      console.error('Hard-delete failed:', error);
+      
+      // Rollback UI changes on error
+      historicalTurns = originalHistoricalTurns;
+      
+      if (messageTurnState) {
+        stateBus.set('messageTurn', {
+          ...messageTurnState,
+          turns: originalLiveTurns
+        });
+      }
+      
+      // Show error feedback
+      eventBus.publish('notification:show', {
+        message: 'Failed to delete message',
+        type: 'error',
+        duration: 3000
+      });
+    }
+  }
   
 </script>
 
@@ -306,7 +391,7 @@
               <MarkdownRenderer content={turn.samaraMessage.content} speaker="samara" />
             </div>
             
-            <!-- Copy button only -->
+            <!-- Copy and Delete buttons -->
             {#if hoveredTurnId === turn.id}
               <div class="action-icons-group">
                 <button 
@@ -317,6 +402,15 @@
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="5.5" y="5.5" width="8" height="8" rx="1"/>
                     <path d="M10.5 5.5V3.5C10.5 2.94772 10.0523 2.5 9.5 2.5H3.5C2.94772 2.5 2.5 2.94772 2.5 3.5V9.5C2.5 10.0523 2.94772 10.5 3.5 10.5H5.5"/>
+                  </svg>
+                </button>
+                <button 
+                  class="icon-button"
+                  onclick={() => handleHardDelete(turn.id)}
+                  aria-label="Delete message permanently"
+                >
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>
                   </svg>
                 </button>
               </div>
