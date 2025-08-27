@@ -90,6 +90,15 @@
           "outputTokens": 8192,
           "tier": "balanced",
           "capabilities": ["text", "streaming", "multilingual"]
+        },
+        {
+          "id": "accounts/fireworks/models/llama4-maverick-instruct-basic",
+          "name": "Llama 4 Maverick",
+          "description": "17B active parameters, multimodal with 1M token context",
+          "contextWindow": 1000000,
+          "outputTokens": 8192,
+          "tier": "flagship",
+          "capabilities": ["text", "vision", "streaming", "multimodal", "function-calling"]
         }
       ]
     }
@@ -103,7 +112,8 @@
         "claude-opus-4-1-20250805",
         "gpt-5",
         "gpt-4-turbo",
-        "accounts/fireworks/models/llama-v3p1-405b-instruct"
+        "accounts/fireworks/models/llama-v3p1-405b-instruct",
+        "accounts/fireworks/models/llama4-maverick-instruct-basic"
       ]
     },
     "balanced": {

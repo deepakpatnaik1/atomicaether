@@ -50,6 +50,11 @@
         "name": "Llama 3.3 70B", 
         "id": "accounts/fireworks/models/llama-v3p3-70b-instruct",
         "_note": "Powerful open model with great performance"
+      },
+      { 
+        "name": "Llama 4 Maverick", 
+        "id": "accounts/fireworks/models/llama4-maverick-instruct-basic",
+        "_note": "17B active parameters, multimodal with 1M token context"
       }
     ],
     "_usage": "Add new providers as top-level keys, models as arrays with name/id objects"

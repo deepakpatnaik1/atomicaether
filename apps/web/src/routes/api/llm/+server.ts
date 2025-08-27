@@ -121,17 +121,28 @@ export const POST: RequestHandler = async ({ request }) => {
               // Anthropic API streaming
               const formattedMessages = formatAnthropicMessages(messages, fileUrls);
               
+              // Claude 4 models support higher token limits and extended context
+              const isClaude4 = model.includes('claude-sonnet-4') || model.includes('claude-opus-4');
+              const tokenLimit = isClaude4 ? 8192 : 4096;
+              
+              const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+                'x-api-key': VITE_ANTHROPIC_API_KEY,
+                'anthropic-version': '2023-06-01'
+              };
+              
+              // Add beta headers for Claude 4 extended features
+              if (model.includes('claude-sonnet-4')) {
+                headers['anthropic-beta'] = 'context-1m-2025-08-07';
+              }
+              
               apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'x-api-key': VITE_ANTHROPIC_API_KEY,
-                  'anthropic-version': '2023-06-01'
-                },
+                headers,
                 body: JSON.stringify({
                   model,
                   messages: formattedMessages,
-                  max_tokens: 4096,
+                  max_tokens: tokenLimit,
                   stream: true
                 })
               });
@@ -141,6 +152,7 @@ export const POST: RequestHandler = async ({ request }) => {
               
               // GPT-5 requires max_completion_tokens instead of max_tokens
               const useNewParam = model === 'gpt-5';
+              const tokenLimit = useNewParam ? 16384 : 4096; // GPT-5 supports higher output tokens
               
               apiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
@@ -151,12 +163,16 @@ export const POST: RequestHandler = async ({ request }) => {
                 body: JSON.stringify({
                   model,
                   messages: formattedMessages,
-                  ...(useNewParam ? { max_completion_tokens: 4096 } : { max_tokens: 4096 }),
+                  ...(useNewParam ? { max_completion_tokens: tokenLimit } : { max_tokens: tokenLimit }),
                   stream: true
                 })
               });
             } else {
               // Fireworks API streaming
+              // Llama 4 Maverick supports higher token limits
+              const isLlama4 = model.includes('llama4-maverick');
+              const tokenLimit = isLlama4 ? 8192 : 4096;
+              
               apiResponse = await fetch('https://api.fireworks.ai/inference/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -166,7 +182,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 body: JSON.stringify({
                   model,
                   messages,
-                  max_tokens: 4096,
+                  max_tokens: tokenLimit,
                   stream: true
                 })
               });
@@ -223,17 +239,28 @@ export const POST: RequestHandler = async ({ request }) => {
       // Anthropic API
       const formattedMessages = formatAnthropicMessages(messages, fileUrls);
       
+      // Claude 4 models support higher token limits and extended context
+      const isClaude4 = model.includes('claude-sonnet-4') || model.includes('claude-opus-4');
+      const tokenLimit = isClaude4 ? 8192 : 4096;
+      
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'x-api-key': VITE_ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      };
+      
+      // Add beta headers for Claude 4 extended features
+      if (model.includes('claude-sonnet-4')) {
+        headers['anthropic-beta'] = 'context-1m-2025-08-07';
+      }
+      
       apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': VITE_ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01'
-        },
+        headers,
         body: JSON.stringify({
           model,
           messages: formattedMessages,
-          max_tokens: 4096,
+          max_tokens: tokenLimit,
           stream: false
         })
       });
@@ -255,6 +282,7 @@ export const POST: RequestHandler = async ({ request }) => {
       
       // GPT-5 requires max_completion_tokens instead of max_tokens
       const useNewParam = model === 'gpt-5';
+      const tokenLimit = useNewParam ? 16384 : 4096; // GPT-5 supports higher output tokens
       
       apiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -265,7 +293,7 @@ export const POST: RequestHandler = async ({ request }) => {
         body: JSON.stringify({
           model,
           messages: formattedMessages,
-          ...(useNewParam ? { max_completion_tokens: 4096 } : { max_tokens: 4096 }),
+          ...(useNewParam ? { max_completion_tokens: tokenLimit } : { max_tokens: tokenLimit }),
           stream: false
         })
       });
@@ -284,6 +312,10 @@ export const POST: RequestHandler = async ({ request }) => {
     } else {
       // Fireworks API (usually doesn't support images directly)
       // Just send text messages for now
+      // Llama 4 Maverick supports higher token limits
+      const isLlama4 = model.includes('llama4-maverick');
+      const tokenLimit = isLlama4 ? 8192 : 4096;
+      
       apiResponse = await fetch('https://api.fireworks.ai/inference/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -293,7 +325,7 @@ export const POST: RequestHandler = async ({ request }) => {
         body: JSON.stringify({
           model,
           messages,
-          max_tokens: 4096,
+          max_tokens: tokenLimit,
           stream: false
         })
       });
