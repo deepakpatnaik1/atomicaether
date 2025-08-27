@@ -267,38 +267,9 @@
     }
   }
   
-  // Handle delete action
+  // Handle delete action  
   async function handleDelete(turnId: string) {
-    // First, delete from SuperJournal (permanent storage)
-    try {
-      const response = await fetch('/api/superjournal/delete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ turnId })
-      });
-      
-      if (!response.ok) {
-        console.error('Failed to delete from SuperJournal');
-        eventBus.publish('notification:show', {
-          message: 'Failed to delete message',
-          type: 'error',
-          duration: 3000
-        });
-        return;
-      }
-      
-      console.log('🧠 SuperJournal: Deleted turn:', turnId);
-    } catch (error) {
-      console.error('Error deleting from SuperJournal:', error);
-      eventBus.publish('notification:show', {
-        message: 'Failed to delete message',
-        type: 'error',
-        duration: 3000
-      });
-      return;
-    }
+    console.log('🗑️ MessageScrollback: Deleting turn (local-only mode):', turnId);
     
     // Remove from historical turns
     historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
