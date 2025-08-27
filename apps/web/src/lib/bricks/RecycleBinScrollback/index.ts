@@ -1,1 +1,0 @@
-export { default as RecycleBinScrollback } from './core/RecycleBinScrollback.svelte';

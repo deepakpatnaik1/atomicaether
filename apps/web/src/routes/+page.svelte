@@ -18,13 +18,11 @@
   import { MessageTurnBrick } from '$lib/bricks/MessageTurnBrick';
   import { LLMBrick } from '$lib/bricks/LLMBrick';
   import { SelectionPersistenceBrick } from '$lib/bricks/SelectionPersistenceBrick/core/SelectionPersistenceBrick';
-  import { RecycleBinBrick } from '$lib/bricks/RecycleBinBrick';
   import { SuperJournalBrick } from '$lib/bricks/SuperJournalBrick/core/SuperJournalBrick';
   
   let messageTurnBrick;
   let llmBrick;
   let selectionPersistenceBrick;
-  let recycleBinBrick;
   let superJournalBrick;
   let scrollbackRef: HTMLDivElement;
 
@@ -53,9 +51,6 @@
       // Initialize LLMBrick - it will listen from the void
       llmBrick = new LLMBrick(eventBus, configBus, stateBus, errorBus);
       
-      // Initialize RecycleBin - Trash management system
-      recycleBinBrick = new RecycleBinBrick(eventBus, stateBus, configBus, errorBus);
-      console.log('🗑️ RecycleBin: Trash management system activated');
       
       // Initialize SuperJournal - Message pair persistence (Rule 9: Add, don't modify existing)
       superJournalBrick = new SuperJournalBrick(eventBus, stateBus, configBus, errorBus);
@@ -73,12 +68,6 @@
 </script>
 
 <main class="app flex-column position-relative" onwheel={handleMainWheel}>
-  <!-- Recycle Bin Icon -->
-  <a href="/recyclebin" class="recycle-bin-icon icon-button" title="Recycle Bin" aria-label="Recycle Bin">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-      <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>
-    </svg>
-  </a>
   
   <MessageScrollback bind:scrollContainer={scrollbackRef} />
   <InputBarUI />
@@ -101,11 +90,4 @@
     overflow: hidden;
   }
   
-  .recycle-bin-icon {
-    position: fixed;
-    bottom: var(--spacing-standard);
-    right: var(--spacing-standard);
-    z-index: 100;
-    text-decoration: none;
-  }
 </style>

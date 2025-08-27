@@ -33,14 +33,13 @@ export const POST: RequestHandler = async ({ request }) => {
       }
     });
 
-    // Create entry with status field for soft-delete support
+    // Create entry
     const entry = {
       id: turnId,
       userMessage,
       assistantMessage,
       timestamp,
-      savedAt: Date.now(),
-      status: 'active'
+      savedAt: Date.now()
     };
 
     // Date-organized key

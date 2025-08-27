@@ -109,35 +109,6 @@
     // Load historical messages from SuperJournal
     await loadHistoricalMessages();
     
-    // Listen for restored messages from RecycleBin
-    eventBus.subscribe('message:restored', (message: any) => {
-      console.log('♻️ Restoring message:', message.turnId);
-      
-      // Add to historical turns (at the correct position based on timestamp)
-      const restoredTurn = {
-        id: message.turnId,
-        bossMessage: message.userMessage ? { content: message.userMessage, timestamp: message.timestamp } : null,
-        samaraMessage: message.assistantMessage ? { content: message.assistantMessage, timestamp: message.timestamp } : null
-      };
-      
-      // Insert in chronological order
-      const insertIndex = historicalTurns.findIndex(turn => {
-        const turnTimestamp = turn.bossMessage?.timestamp || turn.samaraMessage?.timestamp || 0;
-        return turnTimestamp > message.timestamp;
-      });
-      
-      if (insertIndex === -1) {
-        historicalTurns.push(restoredTurn);
-      } else {
-        historicalTurns.splice(insertIndex, 0, restoredTurn);
-      }
-      
-      // Trigger re-render
-      historicalTurns = [...historicalTurns];
-      
-      // Also restore to SuperJournal
-      restoreToSuperJournal(message);
-    });
     
     // Set up polling interval for live updates
     const interval = setInterval(() => {
@@ -162,13 +133,13 @@
           const { entries, timestamp, lastModified } = cacheData;
           const cacheAge = Date.now() - timestamp;
           
-          // Use cache if less than 5 minutes old AND no recent modifications
-          if (cacheAge < 5 * 60 * 1000) {
+          // Use cache if less than 1 minute old (much shorter TTL)
+          if (cacheAge < 60 * 1000) {
             console.log('📜 Using cached messages (age:', Math.round(cacheAge/1000), 'seconds)');
             processEntries(entries);
             isLoadingHistory = false;
             
-            // Validate cache in background and refresh if stale
+            // Always validate cache in background
             validateAndUpdateCache(cacheKey, lastModified);
             return;
           }
@@ -189,6 +160,12 @@
       
       const data = await response.json();
       const entries: JournalEntry[] = data.entries || [];
+      
+      // If R2 is empty but we have cached entries, clear the cache (bucket was wiped)
+      if (entries.length === 0 && cached) {
+        console.log('📜 R2 empty but cache exists - clearing stale cache');
+        localStorage.removeItem(cacheKey);
+      }
       
       // Cache the data with lastModified for validation
       const cacheData = {
@@ -277,88 +254,6 @@
     }
   }
   
-  // Handle delete action with soft-delete API
-  async function handleDelete(turnId: string) {
-    console.log('🗑️ MessageScrollback: Soft-deleting turn:', turnId);
-    
-    try {
-      // Find the message data to pass to RecycleBin
-      const messageToDelete = historicalTurns.find(turn => turn.id === turnId) || 
-                             (messageTurnState?.turns || []).find(turn => turn.id === turnId);
-      
-      if (!messageToDelete) {
-        console.error('Message not found for deletion:', turnId);
-        return;
-      }
-      
-      // Call soft-delete API
-      const response = await fetch('/api/superjournal/delete', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ turnId })
-      });
-      
-      const result = await response.json();
-      
-      if (!result.success) {
-        console.error('Soft-delete API failed:', result.error);
-        // Fallback to local-only deletion
-        console.warn('Falling back to local-only deletion');
-      }
-      
-      // Remove from UI (both historical and live turns)
-      historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
-      
-      if (messageTurnState) {
-        const updatedTurns = messageTurnState.turns.filter(turn => turn.id !== turnId);
-        stateBus.set('messageTurn', {
-          ...messageTurnState,
-          turns: updatedTurns
-        });
-      }
-      
-      // Update localStorage cache to mark it as stale (proper cache invalidation)
-      const cacheKey = 'superjournal_cache';
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        try {
-          const cacheData = JSON.parse(cached);
-          // Mark cache as stale by setting lastModified to deletion time
-          cacheData.lastModified = Date.now();
-          cacheData.entries = cacheData.entries.filter((e: any) => e.id !== turnId);
-          localStorage.setItem(cacheKey, JSON.stringify(cacheData));
-          console.log('🗑️ Updated cache with deletion');
-        } catch (e) {
-          console.error('Failed to update cache:', e);
-          localStorage.removeItem(cacheKey);
-        }
-      }
-      
-      // Publish event for RecycleBin with full message data
-      const deletedMessageData = {
-        turnId,
-        userMessage: messageToDelete.bossMessage?.content || '',
-        assistantMessage: messageToDelete.samaraMessage?.content || '',
-        timestamp: messageToDelete.bossMessage?.timestamp || messageToDelete.samaraMessage?.timestamp || Date.now(),
-        model: messageToDelete.bossMessage?.model || messageToDelete.samaraMessage?.model,
-        persona: messageToDelete.bossMessage?.persona
-      };
-      
-      eventBus.publish('message:deleted', deletedMessageData);
-      
-      // Clear hover state
-      hoveredTurnId = null;
-      
-    } catch (error) {
-      console.error('Error during soft-delete:', error);
-      // Fallback to local removal on network errors
-      historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
-      eventBus.publish('message:deleted', { turnId });
-      hoveredTurnId = null;
-    }
-  }
   
   // Handle copy action
   async function handleCopy(content: string) {
@@ -381,56 +276,6 @@
     }
   }
   
-  // Restore message to SuperJournal
-  async function restoreToSuperJournal(message: any) {
-    try {
-      const entry: JournalEntry = {
-        id: message.turnId,
-        type: 'message-turn',
-        timestamp: message.timestamp,
-        data: {
-          turnId: message.turnId,
-          userMessage: message.userMessage,
-          assistantMessage: message.assistantMessage,
-          model: message.model,
-          persona: message.persona
-        }
-      };
-      
-      const response = await fetch('/api/superjournal/write', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ entry })
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to restore to SuperJournal');
-      }
-      
-      console.log('🧠 SuperJournal: Restored turn:', message.turnId);
-      
-      // Update cache
-      const cacheKey = 'superjournal_cache';
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        try {
-          const { entries, timestamp } = JSON.parse(cached);
-          entries.push(entry);
-          entries.sort((a: any, b: any) => a.timestamp - b.timestamp);
-          localStorage.setItem(cacheKey, JSON.stringify({ entries, timestamp }));
-        } catch (e) {
-          console.error('Failed to update cache:', e);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to restore to SuperJournal:', error);
-      eventBus.publish('notification:show', {
-        message: 'Failed to restore message',
-        type: 'error',
-        duration: 3000
-      });
-    }
-  }
 </script>
 
 <div class="scrollback-container" bind:this={scrollContainer} onscroll={handleScroll}>
@@ -461,7 +306,7 @@
               <MarkdownRenderer content={turn.samaraMessage.content} speaker="samara" />
             </div>
             
-            <!-- Professional action icons -->
+            <!-- Copy button only -->
             {#if hoveredTurnId === turn.id}
               <div class="action-icons-group">
                 <button 
@@ -472,15 +317,6 @@
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="5.5" y="5.5" width="8" height="8" rx="1"/>
                     <path d="M10.5 5.5V3.5C10.5 2.94772 10.0523 2.5 9.5 2.5H3.5C2.94772 2.5 2.5 2.94772 2.5 3.5V9.5C2.5 10.0523 2.94772 10.5 3.5 10.5H5.5"/>
-                  </svg>
-                </button>
-                <button 
-                  class="icon-button"
-                  onclick={() => handleDelete(turn.id)}
-                  aria-label="Delete message"
-                >
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M5.5 2.5V1.5C5.5 1.22386 5.72386 1 6 1H10C10.2761 1 10.5 1.22386 10.5 1.5V2.5M2 4H14M3 4V13.5C3 14.0523 3.44772 14.5 4 14.5H12C12.5523 14.5 13 14.0523 13 13.5V4M6.5 7V11.5M9.5 7V11.5"/>
                   </svg>
                 </button>
               </div>

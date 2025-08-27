@@ -103,11 +103,6 @@ export const GET: RequestHandler = async ({ url }) => {
           const content = await getResponse.Body.transformToString();
           const data = JSON.parse(content);
           
-          // Skip deleted messages (soft-delete support)
-          // Backward compatibility: entries without status are treated as 'active'
-          if (data.status === 'deleted') {
-            return null;
-          }
           
           // Convert to JournalEntry format expected by MessageScrollback
           const entry: JournalEntry = {
