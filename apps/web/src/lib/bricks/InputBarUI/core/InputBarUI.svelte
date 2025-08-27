@@ -65,12 +65,7 @@
       selectedTheme = dropdownData.defaults.selectedTheme;
     }
     
-    // Request persisted values (will override defaults if they exist)
-    eventBus.publish('selection:model:request', {});
-    eventBus.publish('selection:persona:request', {});
-    eventBus.publish('selection:theme:request', {});
-    
-    // Listen for responses with persisted values
+    // Listen for responses with persisted values first
     eventBus.subscribe('selection:model:current', (data: any) => {
       if (data.model) {
         selectedModel = data.model;
@@ -88,6 +83,14 @@
         selectedTheme = data.theme;
       }
     });
+    
+    // Request persisted values (will override defaults if they exist)
+    // Use setTimeout to ensure all subscribers are set up first
+    setTimeout(() => {
+      eventBus.publish('selection:model:request', {});
+      eventBus.publish('selection:persona:request', {});
+      eventBus.publish('selection:theme:request', {});
+    }, 0);
     
     // Initialize textarea height
     if (textarea && behavior) {
