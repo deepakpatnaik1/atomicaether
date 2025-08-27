@@ -158,17 +158,18 @@
       
       if (cached) {
         try {
-          const { entries, timestamp } = JSON.parse(cached);
+          const cacheData = JSON.parse(cached);
+          const { entries, timestamp, lastModified } = cacheData;
           const cacheAge = Date.now() - timestamp;
           
-          // Use cache if less than 5 minutes old
+          // Use cache if less than 5 minutes old AND no recent modifications
           if (cacheAge < 5 * 60 * 1000) {
             console.log('📜 Using cached messages (age:', Math.round(cacheAge/1000), 'seconds)');
             processEntries(entries);
             isLoadingHistory = false;
             
-            // Fetch fresh data in background
-            fetchAndUpdateCache(cacheKey);
+            // Validate cache in background and refresh if stale
+            validateAndUpdateCache(cacheKey, lastModified);
             return;
           }
         } catch (e) {
@@ -189,11 +190,13 @@
       const data = await response.json();
       const entries: JournalEntry[] = data.entries || [];
       
-      // Cache the data
-      localStorage.setItem(cacheKey, JSON.stringify({
+      // Cache the data with lastModified for validation
+      const cacheData = {
         entries,
-        timestamp: Date.now()
-      }));
+        timestamp: Date.now(),
+        lastModified: data.metadata?.lastModified || Date.now()
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData));
       
       processEntries(entries);
       
@@ -242,68 +245,119 @@
     console.log(`📜 Loaded ${historicalTurns.length} historical message pairs`);
   }
   
-  // Fetch fresh data in background and update cache
-  async function fetchAndUpdateCache(cacheKey: string) {
+  // Validate cache and update if stale
+  async function validateAndUpdateCache(cacheKey: string, cachedLastModified: number) {
     try {
       const response = await fetch('/api/superjournal/read?limit=1000');
       if (response.ok) {
         const data = await response.json();
-        const entries: JournalEntry[] = data.entries || [];
+        const serverLastModified = data.metadata?.lastModified || 0;
         
-        // Update cache
-        localStorage.setItem(cacheKey, JSON.stringify({
-          entries,
-          timestamp: Date.now()
-        }));
-        
-        // Update display if there are new messages
-        if (entries.length > historicalTurns.length) {
-          console.log('📜 Found new messages in background fetch');
+        // Check if server data is newer than cache
+        if (serverLastModified > cachedLastModified) {
+          console.log('📜 Server data is newer, updating cache and display');
+          const entries: JournalEntry[] = data.entries || [];
+          
+          // Update cache
+          const cacheData = {
+            entries,
+            timestamp: Date.now(),
+            lastModified: serverLastModified
+          };
+          localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+          
+          // Update display
           processEntries(entries);
+        } else {
+          console.log('📜 Cache is up to date');
         }
       }
     } catch (error) {
-      console.log('📜 Background fetch failed:', error);
+      console.log('📜 Cache validation failed:', error);
     }
   }
   
-  // Handle delete action  
+  // Handle delete action with soft-delete API
   async function handleDelete(turnId: string) {
-    console.log('🗑️ MessageScrollback: Deleting turn (local-only mode):', turnId);
+    console.log('🗑️ MessageScrollback: Soft-deleting turn:', turnId);
     
-    // Remove from historical turns
-    historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
-    
-    // Also remove from live turns if present
-    if (messageTurnState) {
-      const updatedTurns = messageTurnState.turns.filter(turn => turn.id !== turnId);
-      stateBus.set('messageTurn', {
-        ...messageTurnState,
-        turns: updatedTurns
-      });
-    }
-    
-    // Update localStorage cache to reflect deletion
-    const cacheKey = 'superjournal_cache';
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-      try {
-        const { entries, timestamp } = JSON.parse(cached);
-        const filteredEntries = entries.filter((e: any) => e.id !== turnId);
-        localStorage.setItem(cacheKey, JSON.stringify({
-          entries: filteredEntries,
-          timestamp
-        }));
-      } catch (e) {
-        console.error('Failed to update cache:', e);
+    try {
+      // Find the message data to pass to RecycleBin
+      const messageToDelete = historicalTurns.find(turn => turn.id === turnId) || 
+                             (messageTurnState?.turns || []).find(turn => turn.id === turnId);
+      
+      if (!messageToDelete) {
+        console.error('Message not found for deletion:', turnId);
+        return;
       }
+      
+      // Call soft-delete API
+      const response = await fetch('/api/superjournal/delete', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ turnId })
+      });
+      
+      const result = await response.json();
+      
+      if (!result.success) {
+        console.error('Soft-delete API failed:', result.error);
+        // Fallback to local-only deletion
+        console.warn('Falling back to local-only deletion');
+      }
+      
+      // Remove from UI (both historical and live turns)
+      historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
+      
+      if (messageTurnState) {
+        const updatedTurns = messageTurnState.turns.filter(turn => turn.id !== turnId);
+        stateBus.set('messageTurn', {
+          ...messageTurnState,
+          turns: updatedTurns
+        });
+      }
+      
+      // Update localStorage cache to mark it as stale (proper cache invalidation)
+      const cacheKey = 'superjournal_cache';
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const cacheData = JSON.parse(cached);
+          // Mark cache as stale by setting lastModified to deletion time
+          cacheData.lastModified = Date.now();
+          cacheData.entries = cacheData.entries.filter((e: any) => e.id !== turnId);
+          localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+          console.log('🗑️ Updated cache with deletion');
+        } catch (e) {
+          console.error('Failed to update cache:', e);
+          localStorage.removeItem(cacheKey);
+        }
+      }
+      
+      // Publish event for RecycleBin with full message data
+      const deletedMessageData = {
+        turnId,
+        userMessage: messageToDelete.bossMessage?.content || '',
+        assistantMessage: messageToDelete.samaraMessage?.content || '',
+        timestamp: messageToDelete.bossMessage?.timestamp || messageToDelete.samaraMessage?.timestamp || Date.now(),
+        model: messageToDelete.bossMessage?.model || messageToDelete.samaraMessage?.model,
+        persona: messageToDelete.bossMessage?.persona
+      };
+      
+      eventBus.publish('message:deleted', deletedMessageData);
+      
+      // Clear hover state
+      hoveredTurnId = null;
+      
+    } catch (error) {
+      console.error('Error during soft-delete:', error);
+      // Fallback to local removal on network errors
+      historicalTurns = historicalTurns.filter(turn => turn.id !== turnId);
+      eventBus.publish('message:deleted', { turnId });
+      hoveredTurnId = null;
     }
-    
-    // Publish event for other components
-    eventBus.publish('message:deleted', { turnId });
-    
-    // Clear hover state
-    hoveredTurnId = null;
   }
   
   // Handle copy action

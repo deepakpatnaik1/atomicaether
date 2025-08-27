@@ -103,6 +103,12 @@ export const GET: RequestHandler = async ({ url }) => {
           const content = await getResponse.Body.transformToString();
           const data = JSON.parse(content);
           
+          // Skip deleted messages (soft-delete support)
+          // Backward compatibility: entries without status are treated as 'active'
+          if (data.status === 'deleted') {
+            return null;
+          }
+          
           // Convert to JournalEntry format expected by MessageScrollback
           const entry: JournalEntry = {
             id: data.id,
@@ -133,6 +139,15 @@ export const GET: RequestHandler = async ({ url }) => {
     // Final sort by timestamp (chronological order)
     entries.sort((a, b) => a.timestamp - b.timestamp);
     
+    // Calculate lastModified timestamp for cache validation
+    let lastModified = 0;
+    for (const entry of entries) {
+      const entryModified = Math.max(entry.timestamp, entry.metadata?.savedAt || 0);
+      if (entryModified > lastModified) {
+        lastModified = entryModified;
+      }
+    }
+    
     return json({
       success: true,
       entries,
@@ -140,7 +155,8 @@ export const GET: RequestHandler = async ({ url }) => {
         count: entries.length,
         hasMore: listResponse.IsTruncated,
         nextContinuationToken: listResponse.NextContinuationToken,
-        lastKey: sortedObjects[sortedObjects.length - 1]?.Key
+        lastKey: sortedObjects[sortedObjects.length - 1]?.Key,
+        lastModified
       }
     });
     
