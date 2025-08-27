@@ -15,6 +15,7 @@ export class MessageTurnBrick {
   private turns: MessageTurn[] = [];
   private currentTurn: MessageTurn | null = null;
   private turnCounter: number = 0;
+  private sessionId: string;
   
   constructor(
     eventBus: EventBus,
@@ -26,6 +27,7 @@ export class MessageTurnBrick {
     this.stateBus = stateBus;
     this.configBus = configBus;
     this.errorBus = errorBus;
+    this.sessionId = this.generateSessionId();
     
     this.initialize();
   }
@@ -171,7 +173,15 @@ export class MessageTurnBrick {
     
     // Publish turn completed event
     this.eventBus.publish('turn:completed', { 
-      turn: this.currentTurn 
+      turn: this.currentTurn,
+      // SuperJournal v2 format
+      sessionId: this.sessionId,
+      model: this.currentTurn.bossMessage.model,
+      persona: this.currentTurn.bossMessage.persona,
+      userMessage: this.currentTurn.bossMessage.content,
+      assistantMessage: this.currentTurn.samaraMessage.content,
+      streamDuration: this.currentTurn.samaraMessage.processingTime,
+      timestamp: this.currentTurn.completedAt
     });
     
     // Clear current turn
@@ -227,5 +237,10 @@ export class MessageTurnBrick {
     this.currentTurn = null;
     this.turnCounter = 0;
     this.publishState();
+  }
+
+  private generateSessionId(): string {
+    // Generate a simple session ID based on timestamp and random number
+    return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 }
