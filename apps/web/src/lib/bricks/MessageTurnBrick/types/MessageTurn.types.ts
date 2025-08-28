@@ -36,3 +36,7 @@ export interface MessageTurnState {
   currentTurnId: string | null;
   totalTurns: number;
 }
+
+export interface MessageTurnConfig {
+  enableDualResponse?: boolean;
+}
