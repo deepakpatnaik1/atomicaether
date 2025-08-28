@@ -1,0 +1,8 @@
+{
+  "bucketName": "atomicaether-journal",
+  "region": "auto",
+  "endpoint": "${VITE_R2_ENDPOINT}",
+  "dateOrganized": true,
+  "retryAttempts": 3,
+  "timeoutMs": 10000
+}
