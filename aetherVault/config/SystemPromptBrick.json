@@ -1,0 +1,8 @@
+{
+  "templatesPath": "/aetherVault/prompts",
+  "defaultVariables": {
+    "model": "claude-sonnet-4",
+    "context": "general conversation"
+  },
+  "enableHotReload": true
+}
