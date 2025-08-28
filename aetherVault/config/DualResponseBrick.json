@@ -1,0 +1,10 @@
+{
+  "dualResponsePrompt": "After providing your complete response, add a new line and write \"MACHINE_TRIM:\" followed by a compressed version that preserves all semantic meaning while removing conversational elements, pleasantries, and redundant phrasing. The machine trim should be 40-70% shorter while maintaining 100% of the factual content.",
+  "machineTrimsDelimiter": "MACHINE_TRIM:",
+  "fallbackBehavior": "normal_only",
+  "timeoutMs": 30000,
+  "maxRetries": 2,
+  "compressionTarget": 0.6,
+  "enableInferabilityDetection": true,
+  "debugMode": false
+}
