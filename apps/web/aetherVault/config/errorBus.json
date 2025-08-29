@@ -1,9 +1,0 @@
-{
-    "captureGlobalErrors": true,
-    "captureUnhandledRejections": true,
-    "logToConsole": true,
-    "deduplication": {
-        "enabled": true,
-        "windowMs": 100
-    }
-}

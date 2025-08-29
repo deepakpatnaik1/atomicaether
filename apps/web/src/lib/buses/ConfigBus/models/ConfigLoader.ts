@@ -75,7 +75,7 @@ export class BuildTimeConfigLoader implements ConfigLoader {
         try {
             // Dynamic import from aetherVault
             // Vite will bundle these at build time
-            const module = await import(`../../../../../aetherVault/config/${path}.json`);
+            const module = await import(`../../../../../../aetherVault/config/${path}.json`);
             
             // Handle both default export and direct export
             const config = module.default || module;

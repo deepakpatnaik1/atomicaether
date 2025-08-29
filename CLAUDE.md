@@ -154,3 +154,26 @@ When debugging, maintain awareness of the entire system. The bug you're fixing i
 These rules form the architectural foundation of AtomicAether. They ensure code quality, maintainability, and developer productivity. Every decision I make must align with these principles. When facing conflicts or unclear requirements, I will ask for guidance rather than making assumptions.
 
 This document serves as the complete reference for my role and your expectations. In future sessions, pointing to this file will immediately establish context and operational guidelines.
+
+## Official File and Folder Locations
+
+**CRITICAL: Always use these official paths. Never create duplicates.**
+
+### **Documentation and Planning**
+- **Blueprint Files**: `/Users/d.patnaik/code/blueprint/`
+- **Field Reports**: `/Users/d.patnaik/code/field-reports/`
+
+### **Configuration and Assets**  
+- **aetherVault (Root)**: `/Users/d.patnaik/code/atomicaether/aetherVault/`
+- **Configuration Files**: `/Users/d.patnaik/code/atomicaether/aetherVault/config/`
+- **Theme Files**: `/Users/d.patnaik/code/atomicaether/aetherVault/themes/`
+
+### **Application Code**
+- **Web Application**: `/Users/d.patnaik/code/atomicaether/apps/web/`
+- **API Application**: `/Users/d.patnaik/code/atomicaether/apps/api/`
+
+### **Web Static Assets (Symlinks Only)**
+- **Config Access**: `/Users/d.patnaik/code/atomicaether/apps/web/static/config/` → `../../../aetherVault/config/`
+- **Theme Access**: `/Users/d.patnaik/code/atomicaether/apps/web/static/themes/` → `../../../aetherVault/themes/`
+
+**Rule**: When creating new documentation, configuration, or theme files, ALWAYS use the official locations above. If you find duplicates during development, consolidate to the official location and update all references.
