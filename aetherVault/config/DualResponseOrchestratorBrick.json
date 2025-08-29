@@ -1,0 +1,28 @@
+{
+  "enableDualResponse": true,
+  "enableMachineTrim": true,
+  "enableResponseRouting": true,
+  "enableSynchronizedDeletion": true,
+  "storageTargets": {
+    "primary": "SuperJournalBrick",
+    "secondary": "JournalBrick"
+  },
+  "timeouts": {
+    "messageTurn": 30000,
+    "machineTrim": 60000,
+    "responseRouting": 15000,
+    "storagePersistence": 30000,
+    "deletion": 15000
+  },
+  "retries": {
+    "maxAttempts": 3,
+    "backoffMs": 1000,
+    "enableExponentialBackoff": true
+  },
+  "monitoring": {
+    "enablePerformanceTracking": true,
+    "enableDetailedLogging": false,
+    "enableErrorReporting": true
+  },
+  "debugMode": false
+}
