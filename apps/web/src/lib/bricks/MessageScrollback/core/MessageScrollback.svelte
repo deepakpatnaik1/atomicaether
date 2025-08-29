@@ -276,9 +276,8 @@
     }
   }
 
-  // Handle hard delete action - immediate permanent removal
-  async function handleHardDelete(turnId: string) {
-    console.log('🗑️ MessageScrollback: Hard-deleting turn:', turnId);
+  async function handleSynchronizedDelete(turnId: string) {
+    console.log('🗑️ MessageScrollback: Requesting synchronized deletion:', turnId);
     
     // Store original state for potential rollback
     const originalHistoricalTurns = [...historicalTurns];
@@ -299,48 +298,23 @@
     hoveredTurnId = null;
     
     try {
-      // Call hard-delete API
-      const response = await fetch('/api/superjournal/hard-delete', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ turnId })
+      eventBus.publish('turn:delete:request', {
+        turnId,
+        requestedBy: 'MessageScrollback',
+        reason: 'user_requested',
+        timestamp: Date.now()
       });
       
-      const result = await response.json();
+      console.log(`🗑️ Synchronized deletion requested for: ${turnId}`);
       
-      if (!result.success) {
-        throw new Error(result.error || 'Hard-delete API failed');
-      }
-      
-      console.log(`🗑️ Successfully hard-deleted: ${turnId}`);
-      
-      // Update localStorage cache - remove the deleted entry
-      const cacheKey = 'superjournal_cache';
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        try {
-          const cacheData = JSON.parse(cached);
-          cacheData.lastModified = Date.now();
-          cacheData.entries = cacheData.entries.filter((e: any) => e.id !== turnId);
-          localStorage.setItem(cacheKey, JSON.stringify(cacheData));
-          console.log('🗑️ Updated cache after hard-delete');
-        } catch (e) {
-          console.error('Failed to update cache:', e);
-          localStorage.removeItem(cacheKey);
-        }
-      }
-      
-      // Show success feedback
       eventBus.publish('notification:show', {
-        message: 'Message deleted permanently',
+        message: 'Message deletion requested',
         type: 'success',
         duration: 2000
       });
       
     } catch (error) {
-      console.error('Hard-delete failed:', error);
+      console.error('Synchronized delete failed:', error);
       
       // Rollback UI changes on error
       historicalTurns = originalHistoricalTurns;
@@ -352,9 +326,8 @@
         });
       }
       
-      // Show error feedback
       eventBus.publish('notification:show', {
-        message: 'Failed to delete message',
+        message: 'Failed to request message deletion',
         type: 'error',
         duration: 3000
       });
@@ -406,7 +379,7 @@
                 </button>
                 <button 
                   class="icon-button"
-                  onclick={() => handleHardDelete(turn.id)}
+                  onclick={() => handleSynchronizedDelete(turn.id)}
                   aria-label="Delete message permanently"
                 >
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">

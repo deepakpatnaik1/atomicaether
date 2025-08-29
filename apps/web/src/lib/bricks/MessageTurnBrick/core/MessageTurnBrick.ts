@@ -77,12 +77,9 @@ export class MessageTurnBrick {
       this.handleSamaraError(data);
     });
     
-    // Listen for dual response completion when enabled
-    if (this.config.enableDualResponse) {
-      this.eventBus.subscribe('dual-response:generated', (data: any) => {
-        this.handleDualResponseGenerated(data);
-      });
-    }
+    this.eventBus.subscribe('dual-response:generated', (data: any) => {
+      this.handleDualResponseGenerated(data);
+    });
   }
   
   private handleBossInput(data: any) {
@@ -114,21 +111,10 @@ export class MessageTurnBrick {
     // Publish turn created event
     this.eventBus.publish('turn:created', { turn });
     
-    // CONDITIONAL ROUTING: Route based on external configuration
-    if (this.config.enableDualResponse) {
-      // Route to DualResponseBrick for dual-response workflow
-      this.eventBus.publish('dual-response:request', {
-        ...data,
-        turnId: turn.id
-      });
-    } else {
-      // CRITICAL: Publish turn:input:ready to prevent race condition (original behavior)
-      // This ensures MessageTurnBrick creates the turn BEFORE LLMBrick processes
-      this.eventBus.publish('turn:input:ready', {
-        ...data,
-        turnId: turn.id
-      });
-    }
+    this.eventBus.publish('dual-response:request', {
+      ...data,
+      turnId: turn.id
+    });
     
     // Update state
     this.publishState();

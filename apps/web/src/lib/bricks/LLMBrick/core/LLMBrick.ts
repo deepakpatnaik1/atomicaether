@@ -115,12 +115,6 @@ export class LLMBrick {
   }
 
   private subscribeToEvents() {
-    // CRITICAL: Listen for turn:input:ready instead of input:submit
-    // This ensures MessageTurnBrick has created the turn before we process
-    this.eventBus.subscribe('turn:input:ready', async (data: any) => {
-      await this.handleInputFromVoid(data);
-    });
-    
     // Listen for model change events
     this.eventBus.subscribe('model:change', (detail: any) => {
       this.changeModel(detail.model);
