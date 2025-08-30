@@ -116,6 +116,13 @@ export class MessageTurnBrick {
       turnId: turn.id
     });
     
+    console.log('📡 MessageTurnBrick: Published dual-response:request event', {
+      turnId: turn.id,
+      textLength: data.text?.length || 0,
+      persona: data.persona,
+      model: data.model
+    });
+    
     // Update state
     this.publishState();
   }
@@ -223,6 +230,14 @@ export class MessageTurnBrick {
   }
   
   private handleDualResponseGenerated(data: any) {
+    console.log('📡 MessageTurnBrick: Received dual-response:generated event', {
+      turnId: data.turnId,
+      success: data.success,
+      hasNormalResponse: !!data.normalResponse,
+      hasMachineTrim: !!data.machineTrim,
+      error: data.error
+    });
+    
     if (!this.currentTurn) {
       this.errorBus.reportError(
         new Error('Dual response generated without current turn'),
@@ -231,21 +246,39 @@ export class MessageTurnBrick {
       return;
     }
     
-    // Extract normal response from dual response for display
-    const normalResponse = data.response?.normal_response || '';
-    
-    // Create Samara message from normal response
-    this.currentTurn.samaraMessage = {
-      id: `samara-${Date.now()}`,
-      content: normalResponse,
-      model: data.metadata?.model || 'unknown',
-      timestamp: Date.now(),
-      processingTime: Date.now() - this.currentTurn.startedAt
-    };
-    
-    // Mark turn as completed
-    this.currentTurn.status = 'completed';
-    this.currentTurn.completedAt = Date.now();
+    // Handle success vs error cases
+    if (data.success && data.normalResponse) {
+      // Extract normal response from dual response for display
+      const normalResponse = data.normalResponse;
+      
+      // Create Samara message from normal response
+      this.currentTurn.samaraMessage = {
+        id: `samara-${Date.now()}`,
+        content: normalResponse,
+        model: data.metadata?.model || 'unknown',
+        timestamp: Date.now(),
+        processingTime: Date.now() - this.currentTurn.startedAt
+      };
+      
+      // Mark turn as completed
+      this.currentTurn.status = 'completed';
+      this.currentTurn.completedAt = Date.now();
+      
+      console.log('✅ MessageTurnBrick: Turn completed successfully', {
+        turnId: this.currentTurn.id,
+        responseLength: normalResponse.length
+      });
+      
+    } else {
+      // Handle error case
+      this.currentTurn.status = 'error';
+      this.currentTurn.completedAt = Date.now();
+      
+      console.error('❌ MessageTurnBrick: Turn failed', {
+        turnId: this.currentTurn.id,
+        error: data.error
+      });
+    }
     
     // Publish turn completed event
     this.eventBus.publish('turn:completed', { 

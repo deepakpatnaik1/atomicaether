@@ -197,6 +197,9 @@ export class WorkflowCoordinator {
       // Update brick utilization metrics
       this.updateBrickMetrics(result);
       
+      // INTEGRATION CONTRACT: Publish dual-response:generated event for MessageTurnBrick
+      this.publishDualResponseGeneratedEvent(metadata, result);
+      
       if (this.config.debugMode) {
         console.log(`${result.success ? '✅' : '❌'} WorkflowCoordinator: Message processed`, {
           workflowId,
@@ -219,6 +222,9 @@ export class WorkflowCoordinator {
         error: errorMessage,
         stage: workflow.state.currentStage
       });
+      
+      // INTEGRATION CONTRACT: Publish dual-response:generated error event
+      this.publishDualResponseGeneratedEvent(metadata, null, errorMessage);
       
       if (this.config.debugMode) {
         console.error('❌ WorkflowCoordinator: Message processing failed', {
@@ -459,6 +465,65 @@ export class WorkflowCoordinator {
     });
   }
   
+  /**
+   * INTEGRATION CONTRACT: Publish dual-response:generated event for MessageTurnBrick
+   * Implements DualResponseGeneratedEvent interface from integration contracts
+   */
+  private publishDualResponseGeneratedEvent(metadata: any, result: any = null, error: string | null = null): void {
+    if (!this.eventBus) {
+      console.warn('⚠️ WorkflowCoordinator: Cannot publish dual-response:generated - no EventBus');
+      return;
+    }
+
+    const turnId = metadata?.turnId || 'unknown';
+    const success = result?.success === true && !error;
+    
+    try {
+      // Build event payload matching integration contract
+      const eventPayload: any = {
+        turnId,
+        success,
+        timestamp: Date.now(),
+        metadata: {
+          processingTimeMs: result?.performance?.totalDuration || 0,
+          provider: result?.outputs?.provider || 'unknown',
+          model: result?.outputs?.model || 'unknown'
+        }
+      };
+
+      if (success && result?.outputs) {
+        // For now, create mock dual response data
+        // Branch 3 will implement real LLM integration
+        eventPayload.normalResponse = `Mock normal response for turn ${turnId}`;
+        eventPayload.machineTrim = {
+          user_message: metadata?.originalMessage || 'Mock user message',
+          ai_response: `Mock machine trim response for turn ${turnId}`,
+          inferability: 'stored' as const
+        };
+      } else {
+        // Error case
+        eventPayload.error = error || 'Workflow execution failed';
+      }
+
+      // Publish the event
+      this.eventBus.publish('dual-response:generated', eventPayload);
+      
+      console.log('📡 WorkflowCoordinator: Published dual-response:generated event', {
+        turnId,
+        success,
+        hasNormalResponse: !!eventPayload.normalResponse,
+        hasMachineTrim: !!eventPayload.machineTrim,
+        error: eventPayload.error
+      });
+      
+    } catch (publishError) {
+      console.error('❌ WorkflowCoordinator: Failed to publish dual-response:generated event', {
+        turnId,
+        error: publishError instanceof Error ? publishError.message : 'Unknown error'
+      });
+    }
+  }
+
   /**
    * Generate unique workflow ID
    */

@@ -119,6 +119,12 @@ export class DualResponseOrchestratorBrick {
       this.buses.configBus.subscribe('DualResponseOrchestratorBrick', this.handleConfigUpdate.bind(this));
     }
     
+    // INTEGRATION CONTRACT: Subscribe to dual-response:request events
+    if (this.buses.eventBus && typeof this.buses.eventBus.subscribe === 'function') {
+      this.buses.eventBus.subscribe('dual-response:request', this.handleDualResponseRequest.bind(this));
+      console.log('📡 DualResponseOrchestratorBrick: Subscribed to dual-response:request events');
+    }
+    
     if (this.config?.debugMode) {
       console.log('🚌 DualResponseOrchestratorBrick: Buses configured', {
         eventBus: !!buses.eventBus,
@@ -211,6 +217,66 @@ export class DualResponseOrchestratorBrick {
     }
   }
   
+  /**
+   * INTEGRATION CONTRACT: Handle dual-response:request events from MessageTurnBrick
+   * Implements DualResponseRequestEvent interface from integration contracts
+   */
+  private async handleDualResponseRequest(data: any): Promise<void> {
+    console.log('📡 DualResponseOrchestratorBrick: Received dual-response:request event', {
+      turnId: data.turnId,
+      textLength: data.text?.length || 0,
+      persona: data.persona,
+      model: data.model,
+      timestamp: data.timestamp
+    });
+    
+    try {
+      // Validate event data matches integration contract
+      if (!data.turnId || !data.text || !data.timestamp) {
+        throw new Error('Invalid dual-response:request event data - missing required fields');
+      }
+      
+      // Ensure orchestrator is initialized
+      if (!this.isInitialized || !this.coordinator) {
+        console.log('📡 DualResponseOrchestratorBrick: Initializing for event handling...');
+        await this.initialize();
+      }
+      
+      // Process the message through WorkflowCoordinator
+      const result = await this.coordinator!.processMessage(data.text, {
+        turnId: data.turnId,
+        persona: data.persona,
+        model: data.model,
+        fileUrls: data.fileUrls,
+        files: data.files,
+        originalTimestamp: data.timestamp
+      });
+      
+      // INTEGRATION CONTRACT: Publish dual-response:generated event
+      // This will be implemented next - for now, log the mock response
+      console.log('📡 DualResponseOrchestratorBrick: Workflow completed, preparing response event...', {
+        turnId: data.turnId,
+        success: result.success,
+        finalStage: result.finalStage
+      });
+      
+    } catch (error) {
+      console.error('❌ DualResponseOrchestratorBrick: Error handling dual-response:request', {
+        turnId: data.turnId,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      
+      // Report error to ErrorBus
+      if (this.buses.errorBus) {
+        this.buses.errorBus.report(
+          error instanceof Error ? error : new Error('Dual-response request handling failed'),
+          'DualResponseOrchestratorBrick',
+          false
+        );
+      }
+    }
+  }
+
   /**
    * Process user message through complete dual-response workflow
    */
