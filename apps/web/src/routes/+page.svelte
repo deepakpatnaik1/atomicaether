@@ -79,11 +79,13 @@
       dualResponseBrick = new DualResponseBrick();
       await dualResponseBrick.setBuses({ eventBus, configBus, stateBus, errorBus });
       
-      responseRouterBrick = new ResponseRouterBrick();
-      await responseRouterBrick.setBuses({ eventBus, configBus, stateBus, errorBus });
+      responseRouterBrick = new ResponseRouterBrick(eventBus, configBus, stateBus, errorBus);
       
       synchronizedDeletionBrick = new SynchronizedDeletionBrick();
       await synchronizedDeletionBrick.setBuses({ eventBus, configBus, stateBus, errorBus });
+      
+      // Wire storage brick dependencies
+      responseRouterBrick.setStorageBricks(superJournalBrick, journalBrick);
       
       // Register all brick dependencies with orchestrator
       dualResponseOrchestratorBrick.setBricks({
