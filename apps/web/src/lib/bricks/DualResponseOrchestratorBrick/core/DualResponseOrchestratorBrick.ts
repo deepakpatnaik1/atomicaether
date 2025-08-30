@@ -145,6 +145,8 @@ export class DualResponseOrchestratorBrick {
     superJournalBrick?: any;
     journalBrick?: any;
     synchronizedDeletionBrick?: any;
+    dualResponseBrick?: any;
+    llmBrick?: any;
   }): void {
     // Store bricks to register after initialization
     this.pendingBricks = bricks;
@@ -249,6 +251,7 @@ export class DualResponseOrchestratorBrick {
         model: data.model,
         fileUrls: data.fileUrls,
         files: data.files,
+        originalMessage: data.text, // Add original message for dual response generation
         originalTimestamp: data.timestamp
       });
       

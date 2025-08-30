@@ -92,7 +92,9 @@
         responseRouterBrick,
         superJournalBrick,
         journalBrick,
-        synchronizedDeletionBrick
+        synchronizedDeletionBrick,
+        dualResponseBrick,
+        llmBrick
       });
       
       // Initialize orchestrator with all dependencies
