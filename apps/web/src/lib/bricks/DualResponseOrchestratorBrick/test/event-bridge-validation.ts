@@ -254,6 +254,6 @@ export async function runEventBridgeValidation(): Promise<void> {
 }
 
 // Export for standalone execution
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runEventBridgeValidation();
 }
