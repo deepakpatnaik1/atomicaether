@@ -77,7 +77,7 @@
   
   onMount(async () => {
     // Load theme config
-    theme = await configBus.load('themes/rainy-night');
+    theme = await configBus.load('themes/grim-outlook');
   });
 
   function formatContent(content: string): string {
