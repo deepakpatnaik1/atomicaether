@@ -154,3 +154,7 @@ When debugging, maintain awareness of the entire system. The bug you're fixing i
 These rules form the architectural foundation of AtomicAether. They ensure code quality, maintainability, and developer productivity. Every decision I make must align with these principles. When facing conflicts or unclear requirements, I will ask for guidance rather than making assumptions.
 
 This document serves as the complete reference for my role and your expectations. In future sessions, pointing to this file will immediately establish context and operational guidelines.
+
+# Critical File Paths
+
+# Claude's Journal
