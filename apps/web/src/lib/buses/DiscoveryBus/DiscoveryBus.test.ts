@@ -18,8 +18,8 @@ describe('DiscoveryBus', () => {
     describe('Registration', () => {
         it('should register content types', () => {
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/dark.json': vi.fn(),
-                '/aetherVault/themes/light.json': vi.fn()
+                '/aetherVault/config/themes/dark.json': vi.fn(),
+                '/aetherVault/config/themes/light.json': vi.fn()
             };
             
             discoveryBus.register('themes', mockModules);
@@ -38,11 +38,11 @@ describe('DiscoveryBus', () => {
         
         it('should overwrite existing registration', () => {
             const firstModules: ModuleMap = {
-                '/aetherVault/themes/old.json': vi.fn()
+                '/aetherVault/config/themes/old.json': vi.fn()
             };
             
             const secondModules: ModuleMap = {
-                '/aetherVault/themes/new.json': vi.fn()
+                '/aetherVault/config/themes/new.json': vi.fn()
             };
             
             discoveryBus.register('themes', firstModules);
@@ -57,9 +57,9 @@ describe('DiscoveryBus', () => {
     describe('Listing', () => {
         it('should list all IDs for a content type', () => {
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/rainy-night.json': vi.fn(),
-                '/aetherVault/themes/nord.json': vi.fn(),
-                '/aetherVault/themes/solarized-light.json': vi.fn()
+                '/aetherVault/config/themes/rainy-night.json': vi.fn(),
+                '/aetherVault/config/themes/nord.json': vi.fn(),
+                '/aetherVault/config/themes/solarized-light.json': vi.fn()
             };
             
             discoveryBus.register('themes', mockModules);
@@ -75,8 +75,8 @@ describe('DiscoveryBus', () => {
         
         it('should extract IDs correctly from various path formats', () => {
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/theme-1.json': vi.fn(),
-                '../../../aetherVault/themes/theme_2.json': vi.fn(),
+                '/aetherVault/config/themes/theme-1.json': vi.fn(),
+                '../../../aetherVault/config/themes/theme_2.json': vi.fn(),
                 './themes/theme.3.json': vi.fn(),
                 'theme-4.config.json': vi.fn()
             };
@@ -97,7 +97,7 @@ describe('DiscoveryBus', () => {
             const mockLoader = vi.fn().mockResolvedValue({ default: mockContent });
             
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/dark.json': mockLoader
+                '/aetherVault/config/themes/dark.json': mockLoader
             };
             
             discoveryBus.register('themes', mockModules);
@@ -112,7 +112,7 @@ describe('DiscoveryBus', () => {
             const mockLoader = vi.fn().mockResolvedValue({ default: mockContent });
             
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/dark.json': mockLoader
+                '/aetherVault/config/themes/dark.json': mockLoader
             };
             
             discoveryBus.register('themes', mockModules);
@@ -130,7 +130,7 @@ describe('DiscoveryBus', () => {
             const mockLoader = vi.fn().mockResolvedValue(mockContent); // No .default
             
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/light.json': mockLoader
+                '/aetherVault/config/themes/light.json': mockLoader
             };
             
             discoveryBus.register('themes', mockModules);
@@ -155,7 +155,7 @@ describe('DiscoveryBus', () => {
             const mockLoader = vi.fn().mockRejectedValue(new Error('Load failed'));
             
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/broken.json': mockLoader
+                '/aetherVault/config/themes/broken.json': mockLoader
             };
             
             discoveryBus.register('themes', mockModules);
@@ -176,8 +176,8 @@ describe('DiscoveryBus', () => {
     describe('Existence checking', () => {
         it('should check if content exists', () => {
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/dark.json': vi.fn(),
-                '/aetherVault/themes/light.json': vi.fn()
+                '/aetherVault/config/themes/dark.json': vi.fn(),
+                '/aetherVault/config/themes/light.json': vi.fn()
             };
             
             discoveryBus.register('themes', mockModules);
@@ -198,7 +198,7 @@ describe('DiscoveryBus', () => {
             const mockLoader = vi.fn().mockResolvedValue({ default: mockContent });
             
             const mockModules: ModuleMap = {
-                '/aetherVault/themes/dark.json': mockLoader
+                '/aetherVault/config/themes/dark.json': mockLoader
             };
             
             discoveryBus.register('themes', mockModules);
@@ -220,7 +220,7 @@ describe('DiscoveryBus', () => {
             const personaLoader = vi.fn().mockResolvedValue({ default: { id: 'assistant' } });
             
             discoveryBus.register('themes', {
-                '/aetherVault/themes/dark.json': themeLoader
+                '/aetherVault/config/themes/dark.json': themeLoader
             });
             
             discoveryBus.register('personas', {
@@ -266,7 +266,7 @@ describe('DiscoveryBus', () => {
             };
             
             discoveryBus.register('themes', {
-                '/aetherVault/themes/typed.json': vi.fn().mockResolvedValue({ default: mockTheme })
+                '/aetherVault/config/themes/typed.json': vi.fn().mockResolvedValue({ default: mockTheme })
             });
             
             const theme = await discoveryBus.load<ThemeData>('themes', 'typed');

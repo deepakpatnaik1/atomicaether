@@ -146,7 +146,7 @@
         "_note": "Special accent theme (not yet implemented)"
       }
     ],
-    "_usage": "Theme IDs must match actual theme file names in aetherVault/themes/"
+    "_usage": "Theme IDs must match actual theme file names in aetherVault/config/themes/"
   },
   
   "defaults": {

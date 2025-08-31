@@ -20,7 +20,7 @@ To remove DiscoveryBus completely:
 
 ```typescript
 // In ThemeRegistry
-const themeModules = import.meta.glob('/aetherVault/themes/*.json');
+const themeModules = import.meta.glob('/aetherVault/config/themes/*.json');
 discoveryBus.register('themes', themeModules);
 
 // In PersonaRegistry

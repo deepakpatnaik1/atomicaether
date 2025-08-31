@@ -25,7 +25,7 @@ export class DiscoveryBus {
      * @param modules - The module map from import.meta.glob
      * 
      * @example
-     * const themeModules = import.meta.glob('/aetherVault/themes/*.json');
+     * const themeModules = import.meta.glob('/aetherVault/config/themes/*.json');
      * discoveryBus.register('themes', themeModules);
      */
     register(type: string, modules: ModuleMap): void {
@@ -136,7 +136,7 @@ export class DiscoveryBus {
      * @returns The extracted ID
      * 
      * @example
-     * extractId('/aetherVault/themes/rainy-night.json') // 'rainy-night'
+     * extractId('/aetherVault/config/themes/rainy-night.json') // 'rainy-night'
      * extractId('../../../aetherVault/personas/assistant.json') // 'assistant'
      */
     private extractId(path: string): string {
