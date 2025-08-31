@@ -1,4 +1,4 @@
-import { eventBus } from '$lib/buses';
+import { eventBus, configBus } from '$lib/buses';
 
 class ThemeApplier {
   private unsubscribe?: () => void;
@@ -25,11 +25,14 @@ class ThemeApplier {
   /**
    * Recursively flatten theme object and apply as CSS variables
    */
-  applyTheme(theme: any): void {
+  async applyTheme(theme: any): Promise<void> {
     if (typeof document === 'undefined') return; // SSR safety
 
+    // Surgical transplant: Override globalBody with grim-outlook version
+    const modifiedTheme = await this.mergeGrimOutlookGlobalBody(theme);
+    
     const rootElement = document.documentElement;
-    const cssVariables = this.flattenThemeObject(theme);
+    const cssVariables = this.flattenThemeObject(modifiedTheme);
     
     // Apply each CSS variable
     Object.entries(cssVariables).forEach(([cssVar, value]) => {
@@ -43,6 +46,26 @@ class ThemeApplier {
     }
     
     console.log(`ThemeApplier: Applied ${Object.keys(cssVariables).length} CSS variables`);
+  }
+
+  /**
+   * Surgical transplant: Load globalBody from grim-outlook, keep everything else from base theme
+   */
+  private async mergeGrimOutlookGlobalBody(baseTheme: any): Promise<any> {
+    try {
+      const grimOutlook = await configBus.load('themes/grim-outlook');
+      
+      if (grimOutlook && grimOutlook.globalBody) {
+        return {
+          ...baseTheme,
+          globalBody: grimOutlook.globalBody
+        };
+      }
+    } catch (error) {
+      console.warn('ThemeApplier: Failed to load grim-outlook globalBody, using base theme:', error);
+    }
+    
+    return baseTheme;
   }
 
   /**

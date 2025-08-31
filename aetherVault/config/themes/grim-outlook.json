@@ -157,5 +157,13 @@
       "right": "linear-gradient(to left, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5))",
       "_gradientNote": "Fades from screen edges toward input bar. Change 0.5 to 0.7 = brighter connection to input bar"
     }
+  },
+  
+  "globalBody": {
+    "_comment": "Overall page background styling - transplanted from rainy-night",
+    "background": "#222831",
+    "color": "#e0e0e0",
+    "transition": "all 0.3s ease",
+    "_bodyNote": "Dark page background. Change #222831 to #1a1a1a = darker, #2a3440 = lighter"
   }
 }
