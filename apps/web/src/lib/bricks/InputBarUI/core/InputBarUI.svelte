@@ -52,7 +52,7 @@
     behavior = await configBus.load('inputBarBehavior');
     dropdownData = await configBus.load('dropdownData');
     bttConfig = await configBus.load('betterTouchTool');
-    theme = await configBus.load('themes/rainy-night');
+    theme = await configBus.load('themes/grim-outlook');
     fallbackMappings = await configBus.load('fallbackMappings');
     
     // Initialize service
