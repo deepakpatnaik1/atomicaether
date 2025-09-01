@@ -136,7 +136,7 @@ export class DiscoveryBus {
      * @returns The extracted ID
      * 
      * @example
-     * extractId('/aetherVault/themes/rainy-night.json') // 'rainy-night'
+     * extractId('/aetherVault/themes/grim-outlook.json') // 'grim-outlook'
      * extractId('../../../aetherVault/personas/assistant.json') // 'assistant'
      */
     private extractId(path: string): string {

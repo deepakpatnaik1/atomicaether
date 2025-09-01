@@ -158,7 +158,6 @@
 </div>
 
 <style>
-  /* Use dropdown theme from rainy-night.json */
   .theme-picker {
     position: relative;
     display: inline-block;
